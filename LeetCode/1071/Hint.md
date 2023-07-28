@@ -1,0 +1,1 @@
+GCD of string lengths
