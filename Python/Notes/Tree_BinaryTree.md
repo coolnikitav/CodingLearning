@@ -72,3 +72,25 @@ Perfect binary tree: each node has 2 children, all leaf nodes are at the same le
 Complete binary tree: all levels are filled, except last level, which has all notes to the left as much as possible
 
 Balanced binary tree: binary tree in which the height of the left and right subtree of any node differ by not more than 1.
+
+### Binary Tree Representation:
+
+Linked list.
+
+Array:
+
+- Index 0 is empty
+    
+- Left child = cell[2 * parentIndex]
+    
+- Right child = cell[2 * parentIndex + 1]
+
+Linked list binary tree operations:
+- Creation of a tree
+- Insertion of a node
+- Deletion of a node
+- Search for a value
+- Traverse all nodes
+- Deletion of tree
+
+### Creation of binary tree using linked list
