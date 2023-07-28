@@ -63,7 +63,7 @@ Definition: data structures in which each node has at most tow children, often r
 
 Tree examples: BST, Heap tree, AVL, red black tress, Syntax trees
 
-Types of binary tree:
+### Types of binary tree:
 
 Full binary tree: each node has 2 children or no children
 
