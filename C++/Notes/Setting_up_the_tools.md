@@ -23,3 +23,13 @@
 - Open command pallete. Go to C/C++: edit configurations. Set C++ standard to c++20.
 
 ## Linux
+
+- Download [VMware workstation player](https://www.vmware.com/products/workstation-player/workstation-player-evaluation.html).
+
+- Get Linux disc image file. Create virtual machine with VMware.
+
+- Run sudo apt update, then sudo apt install build-essential.
+
+- Check gcc version with gcc --version. Check g++ version with g++ --version.
+
+- Run sudo apt-get install gdb. Then check version.
