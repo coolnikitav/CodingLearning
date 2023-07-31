@@ -137,10 +137,42 @@ def inOrderTraversal(rootNode):
 inOrderTraversal(newBT)
 ```
 
-##PostOrderTraversal
+## PostOrder Traversal
 
 Left Subtree -> Right Subtree -> Root Node
 
 ```Python
+def postOrderTraversal(rootNode):
+    if not rootNode:
+        return
+    postOrderTraversal(rootNode.leftChild)
+    postOrderTraversal(rootNode.rightChild)
+    print(rootNode.data)
 
+postOrderTraversal(newBT)
+```
+
+## LevelOrder Traversal
+
+Level by level, left to right
+
+```Python
+import QueueLinkedList as queue
+
+def levelOrderTraversal(rootNode):
+    if not rootNode:
+        return
+    else:
+        customQueue = queue.Queue()
+        customQueue.enqueue(rootNode)
+        while not(customQueue.isEmpty()):
+            root = customQueue.dequeue()
+            print(root.value.data)
+            if (root.value.leftChild is not None):
+                customQueue.enqueue(root.value.leftChild)
+
+            if (root.value.rightChild is not None):
+                customQueue.enqueue(root.value.rightChild)
+
+levelOrderTraversal(newBT)
 ```
