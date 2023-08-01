@@ -33,3 +33,17 @@
 - Check gcc version with gcc --version. Check g++ version with g++ --version.
 
 - Run sudo apt-get install gdb. Then check version.
+
+- Run sudo apt-get install clang-12. Check version.
+
+- Get VSCode. Run sudo dpkg -i filename.deb.
+
+- Open VSCode. Download C/C++ extension.
+
+- Create a main.cpp file. Terminal -> configure tasks -> pick your g++ compiler.
+
+- Add "-std=c++20" flag.
+
+- Configure clang compiler too.
+
+- Choose proper c++ standard with edit configurations.
