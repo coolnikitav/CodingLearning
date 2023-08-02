@@ -303,3 +303,129 @@ def deleteNodeBT(rootNode, node):
 deleteNodeBT(newBT, "Hot")
 levelOrderTraversal(newBT)
 ```
+# Delete the entire binary tree
+
+Set rootNode to none and delete the link before root and left and right child.
+
+```Python
+def deleteBT(rootNode):
+    rootNode.data = None
+    rootNode.leftChild = None
+    rootNode.rightChild = None
+    return "The BT has been succesfully deleted"
+
+deleteBT(newBT)
+levelOrderTraversal(newBT)
+```
+
+# Create binary tree using python list
+
+First cell is empty.
+
+Left child = cell[2x]
+
+Right child = cell[2x+1]
+
+```Python
+class BinaryTree:
+    def __init__(self, size):
+        self.customList = size * [None]
+        self.lastUsedIndex = 0
+        self.maxSize = size
+
+newBT = BinaryTree(8)
+```
+
+# Insert a node into a binary tree
+
+2 cases:
+
+- Tree is full
+
+- Tree is not full. We look for first vacant place.
+
+```Python
+    def insertNode(self, value):
+        if self.lastUsedIndex + 1 == self.maxSize:
+            return "The binary tree is full"
+        self.customList[self.lastUsedIndex+1] = value
+        self.lastUsedIndex += 1
+        return "The value has been successfully inserted"
+
+newBT = BinaryTree(8)
+print(newBT.insertNode("Drinks"))
+print(newBT.insertNode("Hot"))
+print(newBT.insertNode("Cold"))
+```
+
+# Searching for a node in binary tree
+
+```Python
+def searchNode(self, nodeValue):
+        for i in range(len(self.customList)):
+            if self.customList[i] == nodeValue:
+                return "Success"
+        return "Not found"
+
+newBT = BinaryTree(8)
+print(newBT.insertNode("Drinks"))
+print(newBT.insertNode("Hot"))
+print(newBT.insertNode("Cold"))
+
+print(newBT.searchNode("Tea"))
+print(newBT.searchNode("Hot"))
+```
+
+# Preorder traversal of a binary tree
+
+root node -> left subtree -> right subtree
+
+```Python
+def preOrderTraversal(self, index):
+        if index > self.lastUsedIndex:
+            return
+        print(self.customList[index])
+        self.preOrderTraversal(index*2)
+        self.preOrderTraversal(index*2+1)
+
+
+newBT = BinaryTree(8)
+print(newBT.insertNode("Drinks"))
+print(newBT.insertNode("Hot"))
+print(newBT.insertNode("Cold"))
+newBT.insertNode("Tea")
+newBT.insertNode("Coffee")
+
+print(newBT.searchNode("Tea"))
+print(newBT.searchNode("Hot"))
+
+newBT.preOrderTraversal(1)
+```
+
+# Inorder traversal of a binary tree
+
+left subtree -> root node -> right subtree
+
+```Python
+def inOrderTraversal(self, index):
+        if index > self.lastUsedIndex:
+            return
+        self.inOrderTraversal(index*2)
+        print(self.customList[index])
+        self.inOrderTraversal(index*2+1)
+
+newBT = BinaryTree(8)
+print(newBT.insertNode("Drinks"))
+print(newBT.insertNode("Hot"))
+print(newBT.insertNode("Cold"))
+newBT.insertNode("Tea")
+newBT.insertNode("Coffee")
+
+print(newBT.searchNode("Tea"))
+print(newBT.searchNode("Hot"))
+
+print("\n")
+newBT.preOrderTraversal(1)
+print("\n")
+newBT.inOrderTraversal(1)
+```
