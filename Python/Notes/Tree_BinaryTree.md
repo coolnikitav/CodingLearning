@@ -550,3 +550,9 @@ def deleteBT(self):
 Time complexity: O(1)
 
 Space complexity: O(1)
+
+# Python list vs linked list
+
+linked list is space efficient, while python list is not
+
+If you know number of elements, its better to use python list.
