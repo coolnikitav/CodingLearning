@@ -57,6 +57,10 @@ hot.addChild(coffee)
 print(tree)
 ```
 
+Time complexity: O(1)
+
+Space complexity: O(1)
+
 # Binary Tree
 
 Definition: data structures in which each node has at most tow children, often referred to as the left and right children.
@@ -122,6 +126,10 @@ def preOrderTraversal(rootNode):
 preOrderTraversal(newBT)
 ```
 
+Time complexity: O(N)
+
+Space complexity: O(N)
+
 ## InOrder Traversal
 
 Left Subtree -> Root Node -> Right Subtree
@@ -137,6 +145,10 @@ def inOrderTraversal(rootNode):
 inOrderTraversal(newBT)
 ```
 
+Time complexity: O(N)
+
+Space complexity: O(N)
+
 ## PostOrder Traversal
 
 Left Subtree -> Right Subtree -> Root Node
@@ -151,6 +163,10 @@ def postOrderTraversal(rootNode):
 
 postOrderTraversal(newBT)
 ```
+
+Time complexity: O(N)
+
+Space complexity: O(N)
 
 ## LevelOrder Traversal
 
@@ -176,6 +192,11 @@ def levelOrderTraversal(rootNode):
 
 levelOrderTraversal(newBT)
 ```
+
+Time complexity: O(N)
+
+Space complexity: O(N)
+
 # Searching for a node in a binary tree
 
 Use level order traversal because queue performs better than a stack.
@@ -200,6 +221,10 @@ def searchBT(rootNode, nodeValue):
 
 print(searchBT(newBT, "Tea"))
 ```
+
+Time complexity: O(N)
+
+Space complexity: O(N)
 
 # Inserting a node in a binary tree
 
@@ -234,6 +259,10 @@ newNode = TreeNode("Cola")
 print(insertNodeBT(newBT, newNode))
 levelOrderTraversal(newBT)
 ```
+
+Time complexity: O(N)
+
+Space complexity: O(N)
 
 # Deleting a node from a binary tree
 
@@ -303,6 +332,11 @@ def deleteNodeBT(rootNode, node):
 deleteNodeBT(newBT, "Hot")
 levelOrderTraversal(newBT)
 ```
+
+Time complexity: O(N)
+
+Space complexity: O(N)
+
 # Delete the entire binary tree
 
 Set rootNode to none and delete the link before root and left and right child.
@@ -317,6 +351,10 @@ def deleteBT(rootNode):
 deleteBT(newBT)
 levelOrderTraversal(newBT)
 ```
+
+Time complexity: O(1)
+
+Space complexity: O(1)
 
 # Create binary tree using python list
 
@@ -335,6 +373,10 @@ class BinaryTree:
 
 newBT = BinaryTree(8)
 ```
+
+Time complexity: O(1)
+
+Space complexity: O(N)
 
 # Insert a node into a binary tree
 
@@ -358,6 +400,10 @@ print(newBT.insertNode("Hot"))
 print(newBT.insertNode("Cold"))
 ```
 
+Time complexity: O(1)
+
+Space complexity: O(1)
+
 # Searching for a node in binary tree
 
 ```Python
@@ -375,6 +421,10 @@ print(newBT.insertNode("Cold"))
 print(newBT.searchNode("Tea"))
 print(newBT.searchNode("Hot"))
 ```
+
+Time complexity: O(N)
+
+Space complexity: O(1)
 
 # Preorder traversal of a binary tree
 
@@ -401,6 +451,10 @@ print(newBT.searchNode("Hot"))
 
 newBT.preOrderTraversal(1)
 ```
+
+Time complexity: O(N)
+
+Space complexity: O(1)
 
 # Inorder traversal of a binary tree
 
@@ -429,3 +483,70 @@ newBT.preOrderTraversal(1)
 print("\n")
 newBT.inOrderTraversal(1)
 ```
+Time complexity: O(N)
+
+Space complexity: O(1)
+
+# Postorder traversal of a binary tree
+
+left subtree -> right subtree -> root node
+
+```Python
+def postOrderTraversal(self, index):
+        if index > self.lastUsedIndex:
+            return
+        self.postOrderTraversal(index*2)
+        self.postOrderTraversal(index*2+1)
+        print(self.customList[index])
+```
+
+Time complexity: O(N)
+
+Space complexity: O(1)
+
+# LevelOrder traversal of a binary tree
+
+```Python
+def levelOrderTraversal(self, index):
+        for i in range(index, self.lastUsedIndex+1):
+            print(self.customList[i])
+```
+
+Time complexity: O(N)
+
+Space complexity: O(1)
+
+# Delete a node from a binary tree
+
+Find the deepest node in the tree (last node during level order traversal, last used index in list). Swap the node with the deepest node, delete the deepest node
+
+
+```Python
+def deleteNode(self, value):
+        if self.lastUsedIndex == 0:
+            return "The tree is empty"
+        for i in range(1, self.lastUsedIndex+1):
+            if self.customList[i] == value:
+                self.customList[i] = self.customList[self.lastUsedIndex]
+                self.customList[self.lastUsedIndex] = None
+                self.lastUsedIndex -= 1
+                return "The node has been successfully deleted"
+```
+
+Time complexity: O(N)
+
+Space complexity: O(1)
+
+# Delete entire binary tree 
+
+Update list to None
+
+```Python
+def deleteBT(self):
+        self.customList = None
+        return "The BT has been successfully deleted"
+```
+
+Time complexity: O(1)
+
+Space complexity: O(1)
