@@ -1,1 +1,0 @@
-We will keep a window and keep adding elements as long as the count of 0s in it doesn't exceed one. Once the number of 0s exceeds one, we will shrink the window from the left side till the count of 0 comes under the limit; then, we can compare the size of the current window with the longest subarray we have got so far.
