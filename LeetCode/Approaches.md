@@ -10,6 +10,8 @@
 
 .1493 We will keep a window and keep adding elements as long as the count of 0s in it doesn't exceed one. Once the number of 0s exceeds one, we will shrink the window from the left side till the count of 0 comes under the limit; then, we can compare the size of the current window with the longest subarray we have got so far.
 
+.1657 Pyhon: use Counter(parameter) to transform a string into a dictionary. Use set.
+
 .1679 Sort the array. You can also use a hash map, but the goal of the exercise is to use 2 pointers.
 
 .1768 Traverse strings at the same time and check if index is smaller than string lengths.
