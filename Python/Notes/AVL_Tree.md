@@ -24,15 +24,88 @@ We need to do a right rotation.
 
 Algorithm:
 ```Python
-rotateRigth(disbalancedNode):
+rotateRight(disbalancedNode):
     newRoot = disbalancedNode.leftChild
     disbalancedNode.leftChild = disbalancedNode.leftChild.rightChild
     newRoot.rightChild = disbalancedNode
     update height of disbalancedNode and newRoot
     return newRoot
 ```
-
 Time complexity: O(1)
 
 Space complexity: O(1)
 
+# Inserting a node (left right condition)
+
+We need to do a left rotation (get to left left condition) and then a right rotation.
+
+Algorithm:
+
+Step 1: rotate Left disbalancedNode.leftChild
+
+Step 2: rotate Right disbalancedNode
+
+```Python
+rotateLeft(disbalancedNode):
+    newRoot = disbalancedNode.rightChild
+    disbalancedNode.rightChild = disbalancedNode.rightChild.leftChild
+    newRoot.leftChild = disbalancedNode
+    update height of disbalancedNode and newRoot
+    return newRoot
+
+rotateRight(disbalancedNode):
+    newRoot = disbalancedNode.leftChild
+    disbalancedNode.leftChild = disbalancedNode.leftChild.rightChild
+    newRoot.rightChild = disbalancedNode
+    update height of disbalancedNode and newRoot
+    return newRoot
+```
+Time complexity: O(1)
+
+Space complexity: O(1)
+
+# Inserting a node (right right condition)
+
+We need to do a left rotation.
+
+Algorithm:
+```Python
+rotateLeft(disbalancedNode):
+    newRoot = disbalancedNode.rightChild
+    disbalancedNode.rightChild = disbalancedNode.rightChild.leftChild
+    newRoot.leftChild = disbalancedNode
+    update height of disbalancedNode and newRoot
+    return newRoot
+```
+Time complexity: O(1)
+
+Space complexity: O(1)
+
+# Inserting a node (right left condition)
+
+We need to do a right rotation (get to right right condition) and then a left rotation.
+
+Algorithm:
+
+Step 1: rotate Right disbalancedNode.rightChild
+
+Step 2: rotate Left disbalancedNode
+
+```Python
+rotateRight(disbalancedNode):
+    newRoot = disbalancedNode.leftChild
+    disbalancedNode.leftChild = disbalancedNode.leftChild.rightChild
+    newRoot.rightChild = disbalancedNode
+    update height of disbalancedNode and newRoot
+    return newRoot
+
+rotateLeft(disbalancedNode):
+    newRoot = disbalancedNode.rightChild
+    disbalancedNode.rightChild = disbalancedNode.rightChild.leftChild
+    newRoot.leftChild = disbalancedNode
+    update height of disbalancedNode and newRoot
+    return newRoot
+```
+Time complexity: O(1)
+
+Space complexity: O(1)
