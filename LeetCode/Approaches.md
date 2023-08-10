@@ -15,3 +15,5 @@
 .1679 Sort the array. You can also use a hash map, but the goal of the exercise is to use 2 pointers.
 
 .1768 Traverse strings at the same time and check if index is smaller than string lengths.
+
+.2390 Python: use "''.join(stack)" to convert list of strings to a string.
