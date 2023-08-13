@@ -61,6 +61,8 @@ Time complexity: O(N^2)
 
 Space complexity: O(1)
 
+Stable: yes
+
 When to use Bubble sort?
 - When the input is already sorted
 - Space is a concern
@@ -87,6 +89,8 @@ selectionSort(cList)
 Time complexity: O(N^2)
 
 Space complexity: O(1)
+
+Stable: No
 
 When to use selection sort?
 - When we have insufficient memory
@@ -116,6 +120,8 @@ insertionSort(cList)
 Time complexity: O(N^2)
 
 Space complexity: O(1)
+
+Stable: Yes
 
 When to use insertion sort?
 - When we have insufficient memory
@@ -161,6 +167,8 @@ bucketSort(cList)
 Time complexity: O(N^2)
 
 Space complexity: O(N)
+
+Stable: Yes
 
 When to use bucket sort? 
 - When input uniformly distributed over range
@@ -222,9 +230,84 @@ Time complexity: O(NlogN)
 
 Space complexity: O(N)
 
+Stable: Yes
+
 When to use merge sort?
 - When you need stable sort
 - When average expected time is O(NlogN)
 
 When to avoid merge sort?
 - When space is a concern
+
+# Quick sort
+QuickSort is a sorting algorithm that works by selecting a pivot element from the array and rearranging the elements so that all smaller elements are on the left and larger elements are on the right. This creates two sub-arrays. The same process is then applied recursively to these sub-arrays until they're sorted. The pivot's final position is its correct place in the sorted array.
+```Python
+def swap(my_list, index1, index2):
+    my_list[index1], my_list[index2] = my_list[index2], my_list[index1]
+
+def pivot(my_list, pivot_index, end_index):
+    swap_index = pivot_index
+    for i in range(pivot_index+1, end_index+1):
+        if my_list[i] < my_list[pivot_index]:
+            swap_index += 1
+            swap(my_list, swap_index, i)
+    swap(my_list, pivot_index, swap_index)
+    return swap_index
+
+def quickSort_helper(my_list, left, right):
+    if left < right:
+        pivot_index = pivot(my_list, left, right)
+        quickSort_helper(my_list, left, pivot_index-1)
+        quickSort_helper(my_list, pivot_index+1, right)
+    return my_list
+
+def quickSort(my_list):
+    return quickSort_helper(my_list, 0, len(my_list)-1)
+
+my_list = [3,5,6,0,2,1,4]
+print(quickSort(my_list))
+```
+Time complexity: O(NlogN)
+
+Space complexity: O(1)
+
+Stable: No
+
+# Heap sort
+- Step 1: Insert data to binary heap tree
+- Step 2: Extract data from binary heap
+- It is best suited with array, it does not work with linked list
+```Python
+def heapify(customList, n, i):
+    smallest = i
+    l = 2*i + 1
+    r = 2*i + 2
+    if l < n and customList[l] < customList[smallest]:
+        smallest = l
+    
+    if r < n and customList[r] < customList[smallest]:
+        smallest = r
+
+    if smallest != i:
+        customList[i], customList[smallest] = customList[smallest], customList[i]
+        heapify(customList, n, smallest)
+
+def heapSort(customList):
+    n = len(customList)
+    for i in range(int(n/2)-1, -1, -1):
+        heapify(customList, n, i)
+    
+    for i in range(n-1, 0, -1):
+        customList[i], customList[0] = customList[0], customList[i]
+        heapify(customList, i, 0)
+    customList.reverse()
+
+cList = [2,1,7,6,5,3, 4, 9,8]
+heapSort(cList)
+print(cList)
+```
+Time complexity: O(NlogN)
+
+Space complexity: O(1)
+
+Stable: No

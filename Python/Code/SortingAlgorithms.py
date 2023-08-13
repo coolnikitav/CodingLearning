@@ -103,3 +103,56 @@ def mergeSort(customList, l, r):
 
 cList = [2,1,7,6,5,3, 4, 9,8]
 mergeSort(cList, 0, 8)
+
+def swap(my_list, index1, index2):
+    my_list[index1], my_list[index2] = my_list[index2], my_list[index1]
+
+def pivot(my_list, pivot_index, end_index):
+    swap_index = pivot_index
+    for i in range(pivot_index+1, end_index+1):
+        if my_list[i] < my_list[pivot_index]:
+            swap_index += 1
+            swap(my_list, swap_index, i)
+    swap(my_list, pivot_index, swap_index)
+    return swap_index
+
+def quickSort_helper(my_list, left, right):
+    if left < right:
+        pivot_index = pivot(my_list, left, right)
+        quickSort_helper(my_list, left, pivot_index-1)
+        quickSort_helper(my_list, pivot_index+1, right)
+    return my_list
+
+def quickSort(my_list):
+    return quickSort_helper(my_list, 0, len(my_list)-1)
+
+my_list = [3,5,6,0,2,1,4]
+print(quickSort(my_list))
+
+def heapify(customList, n, i):
+    smallest = i
+    l = 2*i + 1
+    r = 2*i + 2
+    if l < n and customList[l] < customList[smallest]:
+        smallest = l
+    
+    if r < n and customList[r] < customList[smallest]:
+        smallest = r
+
+    if smallest != i:
+        customList[i], customList[smallest] = customList[smallest], customList[i]
+        heapify(customList, n, smallest)
+
+def heapSort(customList):
+    n = len(customList)
+    for i in range(int(n/2)-1, -1, -1):
+        heapify(customList, n, i)
+    
+    for i in range(n-1, 0, -1):
+        customList[i], customList[0] = customList[0], customList[i]
+        heapify(customList, i, 0)
+    customList.reverse()
+
+cList = [2,1,7,6,5,3, 4, 9,8]
+heapSort(cList)
+print(cList)
