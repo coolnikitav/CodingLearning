@@ -29,19 +29,25 @@
     - Unweighted
 
 Unweighted - undirected
+
 ![Unweighted - undirected](image.png)
 
 Unweighted - directed
+
 ![Unweighted - directed](image-1.png)
 
 Positive - weighted - undirected
+
 ![Positive - weighted - undirected](image-2.png)
 
 Positive - weighted - directed
+
 ![Positive - weighted - directed](image-3.png)
 
 Negative - weighted - undirected
+
 ![Negative - weighted - undirected](image-4.png)
 
 Negative - weighted - directed
+
 ![Negative - weighted - directed](image-5.png)
