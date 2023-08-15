@@ -51,3 +51,29 @@ Negative - weighted - undirected
 Negative - weighted - directed
 
 ![Negative - weighted - directed](image-5.png)
+
+# Graph representation
+- Adjacency matrix: an adjancy matrix is a square matrix or a 2D array. And the elements of the matrix indicate whether pairs of verices are adjacent or not in the graph
+
+![Adj matrix](image-6.png)
+
+- Adjacency list: an adjacency list is a collection of unordered list used to represent a graph. Each list describes the set of neighbors of a vertex in the graph.
+
+![Adj list](image-7.png)
+
+If a graph is complete or almost complete we should use adjacency matrix. If the number of edges are few then we should use adjacency list.
+
+# Graphs in python
+
+Python dictionary implementation:
+
+![Dictionary](image-8.png)
+
+# Graph traversal
+
+Breadth first search (BFS):
+- Look at the dictionary structure. Start at vertex, go through all of its edges in order. If you have already visited an edge, move to the next one.
+
+Time complexity: O(V+E)
+
+Space complexity: O(V)
