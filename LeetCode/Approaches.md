@@ -16,4 +16,6 @@
 
 .1768 Traverse strings at the same time and check if index is smaller than string lengths.
 
+.2095 Use a slow and a fast pointer to get to the middle of the linked list.
+
 .2390 Python: use "''.join(stack)" to convert list of strings to a string.
