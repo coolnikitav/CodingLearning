@@ -2,6 +2,8 @@
 
 .238 Have a prefix and a suffix. Traverse the array and keep increasing them and multiplying into the output array.
 
+.328 Creataing an extra linked list is O(1) because you are only creating one node.
+
 .334 Set first and second int to max. Find a small number for first, the a bigger small number for second. Then if you find an even bigger number, there is a triplet.
 
 .724 Find the sum of nums first.
