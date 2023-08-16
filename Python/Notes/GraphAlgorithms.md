@@ -68,12 +68,3 @@ If a graph is complete or almost complete we should use adjacency matrix. If the
 Python dictionary implementation:
 
 ![Dictionary](image-8.png)
-
-# Graph traversal
-
-Breadth first search (BFS):
-- Look at the dictionary structure. Start at vertex, go through all of its edges in order. If you have already visited an edge, move to the next one.
-
-Time complexity: O(V+E)
-
-Space complexity: O(V)
