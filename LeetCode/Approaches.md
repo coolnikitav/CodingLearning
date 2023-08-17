@@ -1,5 +1,7 @@
 ## Approaches added to the toolset:
 
+.206 When you initialize a node (new_node = curr), you are referencing the curr node. So when you set next property of new_node, you are setting next property off curr.
+
 .238 Have a prefix and a suffix. Traverse the array and keep increasing them and multiplying into the output array.
 
 .328 Creataing an extra linked list is O(1) because you are only creating one node.
