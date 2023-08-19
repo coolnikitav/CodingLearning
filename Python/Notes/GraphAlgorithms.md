@@ -68,3 +68,10 @@ If a graph is complete or almost complete we should use adjacency matrix. If the
 Python dictionary implementation:
 
 ![Dictionary](image-8.png)
+
+# Negative cycles
+A path is called a negative cycle if:
+- There is a cycle (a cycle is a path of edges or vertices wherein a vertex is reachable from itself)
+- Total weight of a cycle is a negative number
+
+![Negative cycle graph](image-10.png)
