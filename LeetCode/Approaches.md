@@ -1,5 +1,7 @@
 ## Approaches added to the toolset:
 
+.33 Determine which half is sorted and which is not sorted.
+
 .104 Recursive DFS on left and right subtree.
 
 .206 When you initialize a node (new_node = curr), you are referencing the curr node. So when you set next property of new_node, you are setting next property off curr.
