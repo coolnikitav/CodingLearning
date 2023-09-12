@@ -31,3 +31,10 @@ Problem statement:
 - S1 and S2 are given strings
 - Convert S2 to S1 using delete, insert, or replace operations
 - Find the minimum count of edit operations
+
+# Zero One Knapsack Problem
+
+Problem statement:
+- Given the weights and profits of N items
+- Find the maximum profit within given capacity of C
+- Items cannot be broken
