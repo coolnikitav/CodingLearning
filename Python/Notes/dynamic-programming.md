@@ -65,3 +65,7 @@ Space complexity: O(n)
 | Runtime | Slow | Fast | 
 | Space efficiency | Unnecessary use of stack space | Stack is not used |
 | When to use | Need a quick solution | Need an efficient solution |
+
+## Is merge sort dynamic programming?
+1. Does it have optimal substructure property? - Yes
+2. Does it have overlapping subproblems property? - No
