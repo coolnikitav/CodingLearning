@@ -17,7 +17,7 @@ Subproblems are smaller versions of the original problem. Any problem has overla
 Solve the bigger problem by recursively finding the solution to smaller subproblems. Whenever we solve a sub-problem, we cache its result so that we don't end up solving
 it repeatedly if it's called multiple times. This technique of storing the results of already solved subproblems is called Memoization.
 
-Regular fibonacci:
+**Regular fibonacci:**
 ```
 Fibonacci(n):
   If n = 1 return 0
@@ -29,7 +29,7 @@ Time complexity: O(c^n)
 
 Space complexity: O(n)
 
-DP fibonacci:
+**DP fibonacci:**
 ```
 Fibonacci(n):
   if n = 1 return 0
@@ -41,3 +41,27 @@ Fibonacci(n):
 Time complexity: O(n)
 
 Space complexity: O(n)
+
+### Bottom Up with Tabulation
+
+Tabulation is the opposite of the top-down aproach and avoids recusrsion. In this approach, we solve the problem "bottom-up"
+(i.e. by solving all the related subproblems first). This is done by filling up a table. Based on the results in the table,
+the solution to the top/original problem is then computed.
+```Python
+def fibonacci_tab(n):
+  tb = [0, 1]
+  for i in range(2, n + 1);
+    tb.append(tb[i-1] + tb[i-2])
+  return tb[n-1]
+```
+Time complexity: O(n)
+
+Space complexity: O(n)
+
+### Top Down vs Bottom Up
+|  | Top Down | Bottom Up |
+| --- | :---: | :---: |
+| Easyness | Easy to come up with solutino as it <br>is an extension of divide and conquer | Difficult to come up with solution |
+| Runtime | Slow | Fast | 
+| Space efficiency | Unnecessary use of stack space | Stack is not used |
+| When to use | Need a quick solution | Need an efficient solution |
