@@ -26,11 +26,11 @@ houses = [6,7,1,30,8,2,4]
 print(house_robber(houses, 0, {}))
 
 # bottom up
-def house_robber(houses, curren_index):
+def house_robber(houses, current_index):
   temp_arr = [0]*(len(houses)+2)
   for i range(len(houses)-1, -1, -1):
     temp_arr[i] = max(houses[i] + temp_arr[i+2], temp_arr[i+1])
   return temp_arr[0]
 
 houses = [6,7,1,30,8,2,4]
-print(house_robber(houses, 0, {}))
+print(house_robber(houses, 0))
