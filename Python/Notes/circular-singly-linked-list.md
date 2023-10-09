@@ -51,3 +51,13 @@ Space complexity: O(1)
 Time complexity: O(N)
 
 Space complexity: O(1)
+
+### Pop first
+Time complexity: O(1)
+
+Space complexity: O(1)
+
+### Pop (remove and return last node)
+Time complexity: O(N)
+
+Space complexity: O(1)
