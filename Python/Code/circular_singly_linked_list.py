@@ -114,6 +114,36 @@ class CSLinkedList:
       return True
     return False
 
+  def pop_first(self):
+    popped_node = self.head
+    if self.length == 0:
+      return None
+    if self.length == 1:
+      self.head = None
+      self.tail = None
+    else:
+      self.head = self.head.next
+      self.tail.next = self.head
+      popped_node.next = None
+    self.length -= 1
+    return popped_node
+
+  def pop(self):
+    if self.length == 0:
+      return None
+    popped_node = self.tail
+    if self.length == 1:
+      self.head = self.tail = None
+    else:
+      temp = self.head
+      while temp.next is not self.tail:
+        temp = temp.next
+      temp.next = self.head
+      self.tail = temp
+      popped_node.next = None
+    self.length -= 1
+    return popped_node
+
 cslinkedlist = CSLinkedList()
 cslinkedlist.append(10)
 cslinkedlist.append(20)
@@ -132,4 +162,7 @@ print(cslinkedlist.get(2))
 print(cslinkedlist.get(-1))
 print(cslinkedlist.set(-1, 100))
 print(cslinkedlist.set(2, 11))
+print(cslinkedlist)
+print(cslinkedlist.pop_first())
+print(cslinkedlist.pop())
 print(cslinkedlist)
