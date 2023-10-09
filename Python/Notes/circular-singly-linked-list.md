@@ -18,3 +18,36 @@ Space complexity: O(1)
 Time complexity: O(N)
 
 Space complexity: O(1)
+
+### Prepend
+Time complexity: O(1)
+
+Space complexity: O(1)
+
+### Insert
+
+Loop until you get to the index before the spot where you want to insert a new node.
+
+Time complexity: O(N)
+
+Space complexity: O(1)
+
+### Traversal
+Time complexity: O(N)
+
+Space complexity: O(1)
+
+### Search
+Time complexity: O(N)
+
+Space complexity: O(1)
+
+### Get
+Time complexity: O(N)
+
+Space complexity: O(1)
+
+### Set
+Time complexity: O(N)
+
+Space complexity: O(1)
