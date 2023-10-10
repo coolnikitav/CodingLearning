@@ -61,3 +61,17 @@ Space complexity: O(1)
 Time complexity: O(N)
 
 Space complexity: O(1)
+
+### Remove
+
+Find the node you want to remove. Also, keep the node before that.
+
+Time complexity: O(N)
+
+Space complexity: O(1)
+
+### Delete all nodes
+
+Time complexity: O(1)
+
+Space complexity: O(1)
