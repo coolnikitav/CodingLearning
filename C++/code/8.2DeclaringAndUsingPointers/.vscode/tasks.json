@@ -1,0 +1,48 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "Build with GCC 11.4.0",
+			"command": "/usr/bin/g++-11",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"-std=c++20",
+				"${file}",
+				"-o",
+				"${fileDirname}/${fileBasenameNoExtension}"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: /usr/bin/g++-11"
+		},
+		{
+			"type": "cppbuild",
+			"label": "Build with clang 12.0.1",
+			"command": "/usr/bin/clang++-12",
+			"args": [
+				"-fcolor-diagnostics",
+				"-fansi-escape-codes",
+				"-g",
+				"-std=c++20",
+				"${file}",
+				"-o",
+				"${fileDirname}/${fileBasenameNoExtension}"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: /usr/bin/clang++-12"
+		}
+	]
+}
