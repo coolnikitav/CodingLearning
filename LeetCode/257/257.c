@@ -1,3 +1,7 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
 struct TreeNode {
     int val;
     struct TreeNode *left;
@@ -9,7 +13,7 @@ void dfs(struct TreeNode* node, char** paths, char* path, int path_len, int* pat
 	if (!node) return;
 	
 	//Add current node in path
-	int len = snprintf(path+path_len, 7, "%d->", node->val); //6("%d->")+1('\0'); len is strlen("%d->")
+	int len = snprintf(path + path_len, 14, "%d->", node->val); //6("%d->")+1('\0'); len is strlen("%d->")
 	path_len += len; //update path len
 	
 	if (!node->left && !node->right){ //Leaf node, add path to paths
@@ -35,11 +39,18 @@ char ** binaryTreePaths(struct TreeNode* root, int* returnSize){
 	return paths;
 }
 
+void free_paths(char** paths, int size) {
+	for (int i = 0; i < size; i++) {
+		free(paths[i]);
+	}
+	free(paths);
+}
+
 int main() {
-    struct TreeNode* root;
-    struct TreeNode* node2;
-    struct TreeNode* node3;
-    struct TreeNode* node5;
+    struct TreeNode* root = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    struct TreeNode* node2 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    struct TreeNode* node3 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    struct TreeNode* node5 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
     root->val = 1;
     node2->val = 2;
     node3->val = 3;
@@ -47,9 +58,19 @@ int main() {
     root->left = node2;
     root->right = node3;
     node2->right = node5;
-    int* returnSize;
+    int returnSize;
 
-    printf("%s\n", binaryTreePaths(root, returnSize));
+	char** paths = binaryTreePaths(root, &returnSize);
+
+    for (int i = 0; i < returnSize; i++) {
+		printf("%s\n", paths[i]);
+	}
+
+	free_paths(paths, returnSize);
+	free(root);
+	free(node2);
+	free(node3);
+	free(node5);
 
     return 0;
 }

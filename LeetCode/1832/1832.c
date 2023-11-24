@@ -1,25 +1,22 @@
 #include<stdio.h>
 #include<stdbool.h>
 
-bool check_if_alphabet_full(char* alphabet) {
-    int idx = 0;
-
-    while (alphabet[idx] != '\0') {
-        if (alphabet[idx] == '0') {
+bool check_if_alphabet_full(int* alphabet) {
+    for (int i = 0; i < 26; i++) {
+        if (alphabet[i] == 0) {
             return false;
         }
-        idx++;
     }
 
     return true;
 }
 
 bool checkIfPangram(char* sentence) {
-    char alphabet[26] = {'0'};
+    int alphabet[26] = {0};
 
     int idx = 0;
     while (sentence[idx] != '\0') {
-        alphabet[sentence[idx]-97] = '1';
+        alphabet[sentence[idx]-'a'] = 1;
         idx++;
     }
 
@@ -27,11 +24,14 @@ bool checkIfPangram(char* sentence) {
 }
 
 int main() {
-    char* sentence1 = "thequickbrownfoxjumpsoverthelazydog";
+    char sentence1[] = "thequickbrownfoxjumpsoverthelazydog";
     printf("%d\n", checkIfPangram(sentence1));
 
-    char* sentence2 = "leetcode";
+    char sentence2[] = "leetcode";
     printf("%d\n", checkIfPangram(sentence2));
+
+    char sentence3[] = "anmt";
+    printf("%d\n", checkIfPangram(sentence3));
 
     return 0;
 }
