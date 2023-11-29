@@ -35,3 +35,97 @@ wire
 
 reg
  - Only used in behavioral blocks: always, initial
+
+## Number Representation
+When you defined a number, the default size is 32 bit binary.
+
+<size><base><number>
+
+- Decimal (default) -> 10'd8 (0000001000)
+- Hex -> 9'hfe (011111110)
+- Binary -> 8'b1100 (00001100)
+- Octal -> 7'o67 (0110111)
+
+7'hfe (1111110) - truncates bits
+
+Can use _ for better readibility
+
+32'habcd_efab;
+
+Negative numbers:
+
+6 bit x wire = -6b'1_1011 (The num is 011011. We take 2's complement, so number stored will be 100101)
+
+4 bit x wire = -6b'1_1011 (It will truncate 100101 to 0101 and store it in x)
+
+8 bit x wire = -6b'1_1011 (x will store 11100101. So the number is sign extended)
+
+Valid number (only for simulation. Cannot synthesize):
+
+y = 5'b0_1zox
+
+6 bit wire y = 5'bz_1011; (Gets sign extended to zz1011)
+
+8 bit wire y = 5'bx_0011; (Gets sign extended to xxxx0011)
+
+## Bit and bus
+```
+input x,y; // both are single bits
+
+wire a,b; // both are single bits
+
+reg c,d; // both are single bits
+
+input [3:0]x; // bus, x[3] is MSB, x[0] is LSB
+a = x[0]; // LSB of x
+b = x[3]; // MSB of x
+
+wire [1:0]w;
+w = x[2:1]; 
+
+wire [0:7]w; // w[7] is LSB, w[0] is MSB
+```
+## Naming Conventions
+If our file name is ha.v, we want our module name to be "ha"
+
+Module name 
+ - Start with a letter (lower case)
+ - Can contain numbers and underscores (full_adder_4_bit)
+
+## Operator - Bitwise
+Work on each bit of the wire
+
+```
+wire a,b,c;
+wire [3:0]w,x,y;
+
+// not - used to complement
+a = ~b; // b gets inverted and flows to a
+x = ~y; // each bit of y gets inverted and becomes x
+
+// and - masking bits (for example you want to extract the last 2 bits: you apply ...00011),
+// force reset (pick which bits you want to reset)
+a = b & c;
+x = w & y; // each bit is anded together and become x
+
+// or - mask (set bits you want to 1),
+// force set values
+a = b | c;
+x = w | y; // 4 or gates
+
+// xor - selectively complement certain bits 
+a = b ^ c;
+x = w ^ y;
+
+// xnor - see which bits match
+a = b ~^ c;
+x = w ~^ y;
+
+// nor - force 0 and flip bits (use 1 to force 0 and 0 to flip bits)
+a = b ~| c;
+x = w ~| y;
+
+// nand - force 1 and flip bits (use 0 to force 1 and 1 to flip bits)
+a = b ~& c;
+x = w ~& y;
+```
