@@ -156,3 +156,32 @@ endmodule
 ```
 
 You can use a * if all of the inputs are going into the sensitivity list
+
+## My first test bench
+
+We will write a testbench for the behavioral full adder
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c3078320-4526-43ad-82ad-1d5c2f6f6db0)
+
+```
+`timescale 1ns/100ps
+module FA_bh_tb;
+  reg a, b, cin;
+  wire s,c;
+
+  FA_bh FA1(s,c,a,b,in);
+
+  initial
+    begin
+      $monitor("time = %d \t a = %b \t b = %b \t cin = %b \t s = %b \t c = %b",
+                $time, a, b, cin, s, c);
+      a = 0; b = 0; cin = 0;  // {a, b, cin} = 0 -> time = 0ns
+      #10 a = 1;  // {a, b, cin} = 100 -> time = 10ns
+      #10 b = 1;  // {a, b, cin} = 110 -> time = 20ns
+      #10 cin = 1;  // {a, b, cin} = 111 -> time = 30ns
+      #10 $stop
+    end
+endmodule
+```
+
+Initial block executes only once and cannot be synthesized.
