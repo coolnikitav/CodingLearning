@@ -92,7 +92,7 @@ Module name
  - Start with a letter (lower case)
  - Can contain numbers and underscores (full_adder_4_bit)
 
-## Operator - Bitwise
+## Operators - Bitwise
 Work on each bit of the wire
 
 ```
@@ -128,4 +128,61 @@ x = w ~| y;
 // nand - force 1 and flip bits (use 0 to force 1 and 1 to flip bits)
 a = b ~& c;
 x = w ~& y;
+```
+
+## Operators - Arithmetic
+```
+// +
+c = a + b; // if a and b are both one bit and are both 1, then c will be zero because 1+1=10, it be not capture the carry bit
+{c,s} = a + b; // if a = b = 1, then c will be 1 and s will be 0
+y = w + x // w and x are 4 bit each and are 1111, then y will need to be 5 bits to capture the whole sum 11110
+{c,s} = w + x; // w and x are 4 bits, c is 1 bit, s is 4 bits
+
+// -
+c = a - b; // it is actually a + (-b), b's 2 bit complement is used
+y = w - x; / if w and x are 4 bits, y would need to be 5 bit
+
+// *
+y = w * x; // if w and x are 4 bits, y would need to be 8 bits
+
+// / division is not fully synthesizable, some cases where it is synthesizable
+y = w / x; // if divisor is 2^n, then its synthesizable, it is done by shifting bits
+
+// % not synthesizable at all
+y = w % x; // y will be the remainder
+```
+
+## Operators - Logical
+```
+// ==
+c = (a == b); // c will be true or false, use xnor gate for this
+c = (w == y); // w and y are 4 bit, c will also just be true or false
+
+// !=
+c = (a != b); // use xor gate for this
+c = (w != y);
+
+// === (only when you have x or z for a or b, not synthesizable)
+a = 10z1;
+b = 1x11;
+c = (a === b); // c will be true because a and be will be taken as 10_1 and 1_11 (_ as dont care)
+
+// !==
+a = 10z1;
+b = 1x11;
+c = (a !== b); // c will be false
+
+// AND (&&)
+c = a && b; // a, b are 1 bit. If a and b is true, c is true
+c = w && y; // w, y are 4 bit. If w and y are nonzero values, c is true. If either/both w and y are 0000, c is false.
+// Pass w through an OR gate to see if any of the bits are 1. Then do that with y. Then put those 2 values into an AND gate.
+
+// OR (||)
+c = a || b; // a, b are 1 bit. If a or b is 1, c is true.
+c = w || y; // w, y are 4 bit. If w or y is a nonzero num, c is true.
+// Pass w through an OR gate. Pass y through an OR gate. Pass those 2 values through an OR gate.
+
+// NOT (!)
+c = !a;
+c = !w; // If w is nonzero, c if false. If w is 0000, c is true.
 ```
