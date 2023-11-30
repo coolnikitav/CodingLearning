@@ -238,3 +238,90 @@ y = w >>> 2; // w = 11001010, num becomes 00110010 after logical shift, but the 
 // <<< arithmetic left shift (only for signed nums), no synthesis tools support this
 y = w <<< 2; // w = 11001010, y = 00101000
 ```
+
+## Operators - Concatenation
+```
+// { }
+y = {w,x}; // w,x are 4 bit. y is 8 bit
+y = {a,c,b};
+y = {x,w[1:0],z[3:2]};
+```
+
+## Operators - Repetition
+```
+// {{}}
+y = {4{a,b}}; // y = abababab
+```
+
+## Operators - Conditional
+```
+// ?
+y = s ? x : z; // if s is true, y = x. if s is false, y = z. HW is 2 input mux. s is select
+y = s ? a & b : a | b;
+y = a > b ? a & b : a | b;
+```
+
+## Output Resolution Table
+AND
+b\a|0|1|x|z
+---|-|-|-|-
+ 0 |0|0|0|0
+ 1 |0|1|x|x
+ x |0|x|x|x
+ z |0|x|x|x
+
+OR
+b\a|0|1|x|z
+---|-|-|-|-
+ 0 |0|1|x|x
+ 1 |1|1|1|1
+ x |x|1|x|x
+ z |x|1|x|x
+
+XOR
+ b\a|0|1|x|z
+---|-|-|-|-
+ 0 |0|1|x|x
+ 1 |1|0|x|x
+ x |x|x|x|x
+ z |x|x|x|x
+
+NAND
+ b\a|0|1|x|z
+---|-|-|-|-
+ 0 |1|1|1|1
+ 1 |1|0|x|x
+ x |1|x|x|x
+ z |1|x|x|x
+
+ NOR
+ b\a|0|1|x|z
+---|-|-|-|-
+ 0 |1|0|x|x
+ 1 |0|0|0|0
+ x |x|0|x|x
+ z |x|0|x|x
+
+ XNOR
+ b\a|0|1|x|z
+---|-|-|-|-
+ 0 |1|0|x|x
+ 1 |0|1|x|x
+ x |x|x|x|x
+ z |x|x|x|x
+
+ NOT
+ Input|Output
+:-:|:-:
+ 0|1
+ 1|0
+ x|x
+ z|x
+
+ buf
+ Input|Output
+ :-:|:-:
+ 0|0
+ 1|1
+ x|x
+ z|x
