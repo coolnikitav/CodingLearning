@@ -186,3 +186,23 @@ c = w || y; // w, y are 4 bit. If w or y is a nonzero num, c is true.
 c = !a;
 c = !w; // If w is nonzero, c if false. If w is 0000, c is true.
 ```
+
+## Operators - Relational
+```
+// >
+c = a > b;
+c = w > x;
+/* if (w[3] > x[3]) {
+     c is true
+   } else if (w[3] == x[3]) {
+       if (w[2] > x[2]) {
+         c is true
+       } else if ...
+     } */
+
+// <
+
+// >=
+
+// <=
+```
