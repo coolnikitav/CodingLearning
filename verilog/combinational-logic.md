@@ -206,3 +206,35 @@ c = w > x;
 
 // <=
 ```
+
+## Operators - Reduction
+```
+// &
+c = &w; // w is 4 bits, w[3] & w[2] & w[1] & w[0]. c is a 1 bit output
+
+// |
+c = |w; // w[3] | w[2] | w[1] | w[0]
+
+// ^
+
+// ~&
+
+// ~|
+
+// ~^
+```
+
+## Operators - Shift
+```
+// << logical left shift
+y = w << 2; // w = 10101100, y = 10110000
+
+// >> logical right shift
+y = w >> 2; // w = 10101100, y = 00101011
+
+// >>> arithmetic right shift (only used for signed nums), not all synthesis tools can synthesize
+y = w >>> 2; // w = 11001010, num becomes 00110010 after logical shift, but the sign bit needs to be retained, so y = 11110010
+
+// <<< arithmetic left shift (only for signed nums), no synthesis tools support this
+y = w <<< 2; // w = 11001010, y = 00101000
+```
