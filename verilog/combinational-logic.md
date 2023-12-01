@@ -325,3 +325,88 @@ NAND
  1|1
  x|x
  z|x
+
+## 4-bit Full Adder (Structural)
+
+Put together 4 1-bit full adders
+
+Ripple carry full adder:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/dfbb84e5-fafa-41f7-905a-867319c031c1)
+
+We cannot use dataflow or behavioral to connect blocks.
+
+```
+module full_adder_4bit_st(s,cout,a,b,cin);
+ input [3:0] a, b;
+ input cin;
+ output [3:0]s;
+ output cout;
+
+ wire n1, n2, n3;
+
+ full_adder_bh fa1(s[0],n1,a[0],b[0],cin);
+ full_adder_bh fa2(s[1],n2,a[1],b[1],n1);
+ full_adder_bh fa3(s[2],n3,a[2],b[2],n2);
+ full_adder_bh fa4(s[3],cout,a[3],b[3],n3);
+endmodule
+```
+
+## 4-bit Full Adder (Dataflow)
+```
+module full_adder_4bit_df(s,cout,a,b,cin);
+ input [3:0]a,b;
+ input cin;
+ output [3:0]s;
+ output cout;
+
+ assign {cout,s} = a + b + cin;
+
+endmodule
+```
+
+## 4-bit Full Adder (Behavioral)
+```
+module full_adde_4bit_bh(s,cout,a,b,cin);
+ input [3:0]a,b;
+ input cin;
+ output reg [3:0]s;
+ output reg cout;
+
+ always @(a,b,cin)
+     {cout,s} = a + b + cin;
+
+endmodule
+```
+
+## 4-bit full adder test bench
+```
+module full_adder_4bit_bh_tb;
+ // These need to be reg because they will be used on left side of the initial block
+ reg [3:0]a,b;
+ reg cin;
+
+ wire [3:0]s;
+ wire cout;
+
+ full_adder_4bit_bh fa4_dut(s,cout,a,b,cin);
+
+ initial
+ $monitor("time=%d \t a=%b \t b=%b \t cin=%b \t s=%b \t cout=%b",
+ $time,a,b,cin,s,cout);
+
+ initial begin
+  a = 0;
+  a = 0;
+  cin = 0;
+  repeat(16) begin
+   #10 a=a+1
+   repeat(16) begin
+    #10 b=b+1
+    repeat(2)
+     #10 cin=~cin
+   end // repeat(16)
+  end // repeat(16)
+ end
+endmodule
+```
