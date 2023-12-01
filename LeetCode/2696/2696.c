@@ -1,28 +1,24 @@
 #include<stdio.h>
 #include<string.h>
+#include<stdlib.h>
 
-void adjust_min_length(char* s, int s_length, int curr_idx, int* min_length) {
-    (*min_length) -= 2;
+int minLength(char * s){
+    int length = strlen(s);
+    char* stack =(char *)malloc(sizeof(char) * (length+1));
+    int top = 0;
 
-    int offset = 1;
-    while ((curr_idx-offset) >= 0 && (curr_idx+1+offset) < s_length && ((s[curr_idx-offset] == 'A' && s[curr_idx+1+offset] == 'B') || (s[curr_idx-offset] == 'C' && s[curr_idx+1+offset] == 'D'))) {
-        (*min_length) -= 2;
-        offset++;
-    }
-}
-
-int minLength(char* s) {
-    int s_length = strlen(s);
-    int min_length = s_length;
-
-    for (int i = 0; i < s_length-1; i++) {
-        if ((s[i] == 'A' && s[i+1] == 'B') || (s[i] == 'C' && s[i+1] == 'D')) {
-            adjust_min_length(s, s_length, i, &min_length);
+    for (int i = 0; i < length; i++) {
+        if ((stack[top] == 'A' && s[i] == 'B') || (stack[top] == 'C' && s[i] == 'D')) {
+            top--;
+        } else {
+            stack[++top] = s[i];
         }
     }
-
-    return min_length;
+    
+    free(stack);
+    return top;
 }
+
 
 int main() {
     char s1[9] = "ABFCACDB";
