@@ -410,3 +410,165 @@ module full_adder_4bit_bh_tb;
  end
 endmodule
 ```
+
+## 2 x 1 Multiplexer (Dataflow)
+```
+module mux_2_1_df(Y,I,S);
+  input [1:0]I;
+  input S;
+  output Y;
+
+  assign Y = S?I[1]:I[0];
+
+endmodule
+```
+
+## 2 x 1 Mux (behavioral)
+```
+module mux_2_1_bh(Y,I,S);
+ input [1:0]I;
+ input S;
+ output reg Y;
+
+ // We don't need begin and end because we have only 1 if statement
+ always @(*)
+  if(S)
+   Y = I[1];
+  else
+   Y = I[0];
+endmodule
+```
+
+Use dataflow when you know the boolean expression. Use behavioral when you do not.
+
+## 4 x 1 Mux (Dataflow 1)
+```
+module mux_4_1_df(Y,I,S);
+ input [3:0]I;
+ input [1:0]S;
+ output Y;
+
+ assign Y = I[S];
+endmodule
+```
+
+## 4 x 1 Mux (Dataflow 2)
+```
+module mux_4_1_df(Y,I,S);
+ input [3:0]I;
+ input [1:0]S;
+ output Y;
+
+ assign Y = ~|S?I[0]:(&S?I[3]:(S[0]?I[1]:I[2]));
+
+endmodule
+```
+
+## 4 x 1 Mux (Dataflow 3)
+```
+module mux_4_1_df(Y,I,S);
+ input [3:0]I;
+ input [1:0]S;
+ output Y;
+
+ assign Y = (S==2'd0)?I[0]:((S==2'd1)?I[1]:((S==2'd2)?I[2]:I[3]));
+
+endmodule
+```
+
+## 4 x 1 Mux (Behavioral)
+```
+module mux_2_1_df(Y,I,S);
+ input [3:0]I;
+ input [3:0]S;
+ output reg Y;
+
+ always @(*)
+  case (S)
+   2'd0: Y=I[0];
+   2'd1: Y=I[1];
+   2'd2: Y=I[2];
+   2'd3: Y=I[3];
+   default:$display("error");  // ignored by synthesis tool
+  endcase
+endmodule
+```
+
+## 2 x 4 Decode (Dataflow)
+```
+module decode_2_4_df1(Y,I,En);
+ input [1:0]I;
+ input En;
+ output [3:0]Y;
+
+ assign Y = {En & I[1] & I[0],
+             En & I[1] & ~I[0],
+             En & ~I[1] & I[0],
+             En & ~I[1] & ~I[0]};
+
+endmodule
+```
+
+Dataflow will usually produce the design with the least/simplest hardware.
+
+## 2 x 4 Decode (Behavioral)
+```
+module decode_2_4_bh(Y,I,En);
+ input [1:0]I;
+ input En;
+ output [3:0]Y;
+
+ always @(*) begin
+  case({En,I})  // case statement generates a mux
+   3'b100: Y=4'b0001;
+   3'b101: Y=4'b0010;
+   3'b110: Y=4'b0100;
+   3'b111: Y=4'b1000;
+   3'b000,
+   3'b001,
+   3'b010,
+   3'b011: Y=4'b0001;
+   default: $display("error");
+  endcase
+ end
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/90a42847-2028-4101-b439-4ae898fdbc3f)
+
+Depending on the synthesis tool, it may recognize that you are trying to make a decoder.
+
+## 3 x 8 Decoder (Dataflow)
+```
+module decode_3_8_df2(Y,I,En);
+ input [2:0]I;
+ input En;
+ output [7:0]Y;
+
+ assign Y = {En & I[2] & I[1] & I[0],
+             En & I[2] & I[1] & ~I[0],
+             En & I[2] & ~I[1] & I[0],
+             En & I[2] & ~I[1] & ~I[0],
+             En & ~I[2] & I[1] & I[0],
+             En & ~I[2] & I[1] & ~I[0],
+             En & ~I[2] & ~I[1] & I[0],
+             En & ~I[2] & ~I[1] & ~I[0]};
+endmodule
+```
+
+## 4 x 2 Encode (Dataflow)
+
+One of the outputs is a valid bit. That bit is 0 when the input is 0000, which is not 1 out of the 4 valid inputs.
+```
+module encode_4_2_df(Y,V,I);
+ input [3:0]I;
+ output [1:0]Y;
+ output V;
+
+ assign Y = {I[3]|I[2], I[3]|I[1]);
+ assign V = |I;
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7a80b780-e1e4-44ea-9542-f63e228613b9)
