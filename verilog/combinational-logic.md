@@ -556,7 +556,7 @@ module decode_3_8_df2(Y,I,En);
 endmodule
 ```
 
-## 4 x 2 Encode (Dataflow)
+## 4 x 2 Encoder (Dataflow)
 
 One of the outputs is a valid bit. That bit is 0 when the input is 0000, which is not 1 out of the 4 valid inputs.
 ```
@@ -572,3 +572,163 @@ endmodule
 ```
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7a80b780-e1e4-44ea-9542-f63e228613b9)
+
+## 4 x 2 Encoder (Behavioral)
+
+```
+module encode_4_2_bh(Y,V,I);
+ input [3:0]I;
+ output reg [1:0]Y;
+ output reg V;
+
+ always @(*) begin
+  case (I)
+   4'd1: {V,Y}=3'b100;
+   4'd2: {V,Y}=3'b101;
+   4'd4: {V,Y}=3'b110;
+   4'd8: {V,Y}=3'b111;
+   4'd0,4'd3,4'd5,4'd6,4'd7,4'd9,4'd10,
+   4'd11,4'd12,4'd13,4'd14,4'd15: {V,Y}=3'b000;
+   default: $display("error");
+  endcase
+ end
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/e3ca0150-9486-4c26-a661-cfacc53b775e)
+
+## 4 x 2 Priority Encoder (Behavioral)
+
+```
+module encode_4_2_priority_bh(Y,V,I);
+ input [3:0]I;
+ output reg [1:0]Y;
+ output reg V;
+
+ always @(*) begin
+  if (I[0]) {V,Y}=3'b100;
+  else if (I[1]) {V,Y}=3'b101;
+  else if (I[2]) {V,Y}=3'b110;
+  else if (I[3]) {V,Y}=3'b111;
+  else {V,Y}=3'b000;
+ end
+endmodule
+```
+
+Each if statement creates a mux:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0ee31665-0eae-454c-a90e-e1d878c34f1b)
+
+## 4 x 2 Priority Encoder (Dataflow)
+```
+module encode_4_2_priority_df(Y,V,I);
+ input [3:0]I;
+ output [1:0]Y;
+ output V;
+
+ assign {V,Y} = I[0]?3'b100:I[1]?3'b101:I[2]?3'b110:I[3]?3'b111:3'b000;
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/8db67dd4-14ee-4f76-aaa5-7ec824db2de2)
+
+## 4-bit Comparator (Dataflow 1)
+```
+module comparator_df1(Ed,Gt,Sm,A,B);
+ input [3:0]A,B;
+ output Eq,Gt,Sm;
+
+ assign Eq = &(A ~^ B); // A == B
+ assign Gt = (A[3]& ~B[3]) | ((A[3]~^B[3]) & (A[2]& ~B[2])) |
+             ((A[3]~^B[3]) & (A[2]~^B[2]) & (A[1]& ~B[1])) |
+             ((A[3]~^B[3]) & (A[2]~^B[2]) & (A[1]~^B[1]) & (A[0]& ~B[0])); //A > B
+ assign Sm = ~(Gt|Eq);
+
+endmodule
+```
+
+## 4-bit Comparator (Dataflow 2)
+```
+module comparator_df2(Eq,Gt,Sm,A,B);
+ input [3:0]A,B;
+ output Eq,Gt,Sm;
+ 
+ assign Eq= (A==B); // A==b
+ assign Gt= (A>B); // A>B
+ assign Sm= (A<B); // A<B
+
+ // Call also write "assign {Eq,Gt,Sm} = {A==B,A>B,A<B};
+
+endmodule
+```
+
+## 4-bit comparator (Behavioral)
+```
+module comparator_bh(Eq,Gt,Sm,A,B);
+ input [3:0]A,B;
+ output reg Eq,Gt,Sm;
+
+ always @(*) begin
+  Eq= (A==B);
+  Gt= (A>B);
+  Sm= (A<B);
+ end
+
+endmodule
+```
+
+## 8-bit Barrel Shifter (combinational left & right)
+```
+module barrel_bh(Out,In,Lr,n);
+ input [7:0]In;
+ input [2:0]n;
+ input Lr;
+ output reg [7:0]Out;
+
+ always @(*) begin
+  if(Lr)
+   Out = In << n;
+  else
+   Out = In >> n;
+ end
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/feb65af5-09ff-479c-bf4a-63b4e3f9ecd7)
+
+Right shift is the same, but inputs and outputs are in reverse order.
+
+## Designing Arithmetic & Logic Unit (ALU)
+```
+module ALU(x,y,a,b,opcode);
+ input [3:0]a,b,opcode;
+ output reg [3:0]x,y;
+
+ always @(a,b,opcode)
+  case (opcode)
+   4'b0000: x[0] = |a;
+   4'b0001: x[0] = &a;
+   4'b0010: x[0] = ^a;
+   4'b0011: x = a & b;
+   4'b0100: x = a | b;
+   4'b0101: x = a ^ b;
+   4'b0110: x[0] = a > b;
+   4'b0111: x[0] = a < b;
+   4'b1000: x[0] = !a;
+   4'b1001: x[0] = a==b;
+   4'b1010: {y[0],x} = a+b;
+   4'b1011: x = a-b;
+   4'b1100: {y,x} = a*b;
+   4'b1101: {y,x} = a>>b;
+   4'b1110: {y,x} = a<<b;
+   4'b1111: x = ~a;
+   default: $display("error");
+  endcase
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/42d6a463-9df0-47de-9104-adb9e594095e)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c2770fb2-8f8a-40de-9faa-1bf82d34be09)
