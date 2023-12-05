@@ -312,3 +312,167 @@ endmodule
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f491559e-4934-4559-9fdf-066ef528a6bc)
 
+## Designing a basic counter
+```
+module counter_up_basic(count,clk,rst);
+  input clk,rst;
+  output [7:0] count;
+
+  reg [7:0] count_temp;
+
+  always@(posedge clk)
+    if(!rst)
+      count_temp <= 8'd0;
+    else
+      count_temp <= count_temp + 1;
+
+  assign count = count_temp;
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/31c98be6-546a-476c-afba-543da17228a6)
+
+## Writing a test bench for a counter
+```
+module counter_up_basic_tb;
+  reg clk,rst;
+  wire [7:0] count;
+
+  counter_up_basic c0(.clk(clk), .rst(rst), .count(count));
+
+  always #5 clk = ~clk;
+
+  initial
+    begin
+      clk = 0;
+      rst = 1;
+  
+      #10 rst = 0;
+      #20 rst = 1;  // 30
+      #100 $stop;  // 130
+    end
+endmodule
+```
+
+## Designing an up counter with load option
+```
+module counter_up_load(count,clk,load,rst,data);
+  input [7:0] data;
+  input clk,rst,load;
+  output [7:0] count;
+
+  reg [7:0] count_temp;
+
+  always@(posedge clk)
+    if(!rst)
+      count_temp <= 8'd0;
+    else if(load)
+      count_temp <= data;
+    else
+      count_temp <= count_temp + 1;
+
+  assign count = count_temp;
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d3e4f542-73d9-415e-9607-2362d852b233)
+
+## Designing an up or down counter
+```
+module counter_up_down(count,u_d,load,clk,rst,data);
+  input [7:0] data;
+  input clk,rst,load,u_d;
+  output [7:0] count;
+
+  reg [7:0] count_temp;
+
+  always@(posedge clk)
+    if (!rst)
+      count_temp <= 8'd0;
+    else if (load)
+      count_temp <= data;
+    else if (u_d)
+      count_temp <= count_temp + 1;
+    else
+      count_temp <= count_temp - 1;
+
+  assign count = count_temp;
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/48028d45-f4ae-43ff-8e60-21a41838a089)
+
+## Designing a modulus counter
+MOD 47 counter
+```
+module counter_mod47_up(count,clk,rst,data);
+  input [7:0] data;
+  input clk,rst;
+  output [7:0] count;
+
+  reg [7:0] count_temp;
+
+  always@(posedge clk)
+    if(!rst | count_temp >= 8'd46) // self correcting
+      count_temp <= 8'd0;
+    else
+      count_temp <= count_temp + 1;
+
+  assign count = count_temp;
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/76634b9f-0f03-4d1d-9f2e-e8a4c84cbed2)
+
+## Designing a range up counter
+10 to 40 counter
+```
+module counter_10_to_40_up(count,clk,rst,data);
+  input [7:0] data;
+  input clk,rst;
+  output [7:0] count;
+
+  reg [7:0] count_temp;
+
+  always@(posedge clk)
+    if(!rst | count_temp>=8'd40 | count_temp<8'd10) // self correcting
+      count_temp <= 8'd10;
+    else
+      count_temp <= count_temp + 1;
+
+  assign count = count_temp;
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/153b198c-a59f-4560-936f-bf0bfd3d6cdf)
+
+## Designing a range up or down counter with load option
+```
+module counter_10_to_40_up_down(count,u_d,load,clk,rst,data);
+  input [7:0] data;
+  input clk,rst;
+  output [7:0] count;
+
+  reg [7:0] count_temp;
+
+  always@(posedge clk)
+    if(!rst | count_temp > 8'd40 | count_temp < 8'd10)
+      count_temp <= 8'd10;
+    else if(load)
+      count_temp <= data;
+    else if(u_d)
+      count_temp <= (count_temp >= 8'd40)?8'd10:count_temp + 1;
+    else
+      count_temp <= (count_temp <= 8'd10)8'd40:count_temp - 1;
+
+  assign count = count_temp;
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/440ac8e3-a5e5-4ada-864a-d6f33a0f768d)
