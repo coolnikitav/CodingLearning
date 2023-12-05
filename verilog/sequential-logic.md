@@ -218,3 +218,97 @@ Synch reset:
 Asynch reset:
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/132697f2-1fe1-459a-9095-ffeef7386b0b)
+
+## 8-bit twin register set
+```
+module Reg_set(Q1,Q2,clk,rst,D1,D2);
+  input clk,rst;
+  input [7:0]D1,D2;
+  output reg [7:0]Q1,Q2;
+
+  always@(posedge clk)
+    if(rst)
+      begin
+        Q1 <= 0;
+        Q2 <= 0;
+      end
+    else
+      begin
+        Q1 <= D1;
+        Q2 <= D2;
+      end
+
+endmodule
+```
+
+8 1-bit FF inside each:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/5bcfe989-0763-4a6a-a169-628f83cac5b1)
+
+## Designing a 5-bit Left to Right shift register
+```
+module SR_LR(SO,clk,rst,SI);
+  input SI,clk,rst;
+  output SO;
+
+  reg [4:0]SR;
+
+  always@(posedge clk, negedge rst)  // asynch reset
+    if(!rst)
+      SR <= 5'd0;
+    else
+      SR <= {SR[3:0],SI}; // SR <= {SI,SR[4:1]} for shift right
+
+  assign SO = SR[4];  // SO = SR[0] for shift right
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7823c959-2292-49d6-a648-25a51545b1c0)
+
+If reset is not built in, each input will have a mux in front of its input.
+```
+always@(posedge clk)
+  if (reset)
+    SR <= 0;
+  else
+    begin
+      // These statements can be in any order, since they are concurrent
+      SR[0] <= SI;
+      SR[1] <= SR[0];
+      SR[2] <= SR[1];
+      SR[3] <= SR[2];
+      SR[4] <= SR[3];
+    end
+```
+
+## Designing a 5-bit universal shift register
+```
+module USR(PO,SO,PI,sel,clk,rst,SI);
+  input [1:0] sel;
+  input [4:0] PI;
+  input clk,rst,SI;
+  output reg[4:0] PO;
+
+  always@(posedge clk)
+    if (rst)
+      PO <= 5'd0;
+    else
+      begin
+        case(sel)
+          2'b00: PO <= PO;
+          2'b01: PO <= {PO[3:0],SI};  // shift left
+          2'b10: PO <= {SI,PO[4:1]};  // shift right
+          2'b11: PO <= PI;
+          default: PO <= 0;
+        end
+      end
+
+  assign SO = (sel == 2'b01) ? PO[4] : PO[0];
+
+endmodule
+```
+5 sets of FF:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f491559e-4934-4559-9fdf-066ef528a6bc)
+
