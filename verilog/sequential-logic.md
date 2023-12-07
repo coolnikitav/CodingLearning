@@ -476,3 +476,254 @@ endmodule
 ```
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/440ac8e3-a5e5-4ada-864a-d6f33a0f768d)
+
+## Designing a clock frequency divider (Divide by 2)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/2a96e9c0-8b04-4db0-b67f-1b39295f51cd)
+
+```
+module freq_div_by_2(clk_out,clk,rst);
+  input clk,rst;
+  output reg clk_out;
+
+  always@(posedge clk)
+    if(rst)
+      clk_out <= 0;
+    else
+      clk_out <= ~clk_out;
+
+endmodule
+```
+
+## Designing a clock frequency divider (Divide by 4)
+```
+module freq_div_by_4(clk_out,clk,rst);
+  input clk,rst;
+  output reg clk_out;
+
+  always@(posedge clk)
+    if(rst)
+      clk_div2 <= 0;
+    else
+      clk_div2 <= ~clk_div2;
+  endmodule
+
+  always@(posedge clk_div2)
+    if(rst)
+      clk_out <= 0;
+    else
+      clk_out <= ~ clk_out;
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/ec900fbe-1cf7-4419-b051-269db3490f31)
+
+## Designing a clock frequency divider (Divide by 3)
+```
+module div_3(
+  input clk,
+  input reset,
+  output clk_out);
+
+  reg [1:0] pos_cnt;
+  reg [1:0] neg_cnt;
+
+  always@(posedge clk)
+    if(reset)
+      pos_cnt <= 0;
+    else if (pos_cnt == 2)
+      pos_cnt <= 0;
+    else
+      pos_cnt <= pos_cnt + 1;
+
+  always@(negedge clk)
+    if(reset)
+      neg_cnt <= 0;
+    else if (neg_cnt == 2)
+      neg_cnt <= 0;
+    else
+      neg_cnt <= neg_cnt + 1;
+
+  assign clk_out = ((pos_cnt == 2) | (neg_cnt == 2));
+
+endmodule
+```
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/9d9f1168-1985-467b-925a-cac0ecc952b4)
+
+## Designing a single clock first in and first out (FIFO)
+
+Need to synchronize data transfer between M1 and M2
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/e3d5fb9e-05e8-4b59-b80f-3953e0f2e45d)
+
+Circular buffer:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0fc9ec4d-489d-4187-b92d-dc0064a5fb98)
+
+```
+module FIFO(clk,rst,buf_in,buf_out,wr_en,rd_en,buf_empty,buf_full,fifo_counter);
+  input rst,clk,wr_en,rd_en;
+  input [7:0] buf_in;
+  output [7:0] buf_out;
+  output buf_empty, buf_full;
+  output [7:0] fifo_counter;
+
+  reg [7:0] buf_out;
+  reg buf_empty, buf_full;
+  reg [6:0] fifo_counter;
+  reg [3:0] rd_ptr, wr_ptr;
+  reg [7:0] buf_mem[63:0];
+
+  always@(fifo_counter)
+    begin
+      buf_empty = (fifo_counter == 0);
+      buf_full = (fifo_counter == 64);
+    end
+
+  always@(posedge clk or posedge rst)
+    begin
+      if(rst)
+        fifo_counter <= 0;
+      else if((!buf_full && wr_en) && (!buf_empty && rd_en)
+        fifo_counter <= fifo_counter;
+      else if(!buf_full && wr_en)
+        fifo_counter <= fifo_counter + 1;
+      else if(!buf_empty && rd_en)
+        fifo_counter <= fifo_counter - 1;
+      else
+        fifo_counter <= fifo_counter;
+    end
+
+  always@(posedge clk or posedge rst)
+    begin
+      if(rst)
+        buf_out <= 0;
+      else
+        begin
+          if(rd_en && !buf_empty)
+            buf_out <= buf_mem[rd_ptr];
+          else
+            buf_out <= buf_out;
+        end
+    end
+
+  always@(posedge clk)
+    begin
+      if(wr_en && !buf_full)
+        buf_mem[wr_ptr] <= buf_in;
+      else
+        buf_mem[wr_ptr] <= buf_mem[wr_ptr];
+    end
+
+  always@(posedge clk or posedge rst)
+    begin
+      if(rst)
+        begin
+          wr_ptr <= 0;
+          rd_ptr <= 0;
+        end
+      else
+        begin
+          if(!buf_full && wr_en)
+            wr_ptr <= wr_ptr + 1;
+          else
+            wr_ptr <= wr_ptr;
+          if(!buf_empty && rd_en)
+            rd_ptr <= rd_ptr + 1;
+          else
+            rd_ptr <= rd_ptr;
+        end
+    end
+
+endmodule
+```
+
+## Designing a dual clock first in first out (FIFO)
+
+A clock for writing and a clock for reading
+
+```
+module FIFO(clk_r,clk_w,rst,buf_in,buf_out,wr_en,rd_en,buf_empty,buf_full,fifo_counter);
+  input rst,clk_r,clk_w,wr_en,rd_en;
+  input [7:0] buf_in;
+  output [7:0] buf_out;
+  output buf_empty, buf_full;
+  output [3:0] fifo_counter;
+
+  reg [7:0] buf_out;
+  reg buf_empty, buf_full;
+  reg [6:0] fifo_counter;
+  reg [3:0] rd_ptr, wr_ptr;
+  reg [7:0] buf_mem[63:0];
+
+  always@(fifo_counter)
+    begin
+      buf_empty = (fifo_counter==0);
+      buf_full = (fifo_counter==64);
+    end
+
+  always@(posedge clk_w or posedge rst)
+    begin
+      if(rst)
+        fifo_counter <= 0;
+      else if(!buf_full && wr_en)
+        fifo_counter <= fifo_counter + 1;
+      else
+        fifo_counter <= fifo_counter;
+    end
+
+  always@(posedge clk_r)
+    begin
+      if(!buf_empty && rd_en)
+        fifo_counter <= fifo_counter - 1;
+      else
+        fifo_counter <= fifo_counter;
+    end
+
+  always@(posedge clk_w)
+    begin
+      if(rst)
+        buf_out <= 0;
+      else
+        begin
+          if(rd_en && !buf_empty)
+            buf_out <= buf_mem[rd_ptr];
+          else
+            buf_out <= buf_out;
+        end
+    end
+
+  always@(posedge clk_w)
+    begin
+      if(wr_en && !buf_full)
+        buf_mem[wr_ptr] <= buf_in;
+      else
+        buf_mem[wr_ptr] <= buf_mem[wr_ptr];
+    end
+
+  always@(posedge clk_r or posedge rst)
+    begin
+      if(rst)
+        rd_ptr <= 0;
+      else if(!buf_empty && rd_en)
+        rd_ptr <= rd_ptr + 1;
+      else
+        rd_ptr <= rd_ptr;
+    end
+  end
+
+  always@(posedge clk_r or posedge rst)
+    begin
+      if(rst)
+        rd_ptr <= 0;
+      else if(!buf_empty && rd_en)
+        rd_ptr <= rd_ptr + 1;
+      else
+        rd_ptr <= rd_ptr;
+    end
+  end
+
+endmodule
+```
