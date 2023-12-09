@@ -30,10 +30,16 @@ public:
         tree_to_vector(root, nodes);
 
         for (int i = 0; i < nodes.size()-1; i++) {
+            nodes[i]->left = nullptr;
             nodes[i]->right = nodes[i+1];
         }
 
-        return nodes[0];
+        if(!nodes.empty()) {
+            nodes.back()->left = nullptr;
+            nodes.back()->right = nullptr;
+        }
+
+        return nodes.empty() ? nullptr : nodes[0];
     }
 
     void print_tree(TreeNode* root) {
@@ -64,7 +70,7 @@ int main() {
 
     Solution::TreeNode* result = test.increasingBST(&node5);
     cout << "Got the result" << endl;
-    //test.print_tree(result);
+    test.print_tree(result);
     cout << "Printed the result" << endl;
 
     return 0;
