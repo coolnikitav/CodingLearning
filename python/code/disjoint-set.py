@@ -4,7 +4,7 @@ class DisjointSet:
     self.parent = {}
     for v in vertices:
       parent[v] = v
-    self.rank = dict.fromKeys(vertices, 0)
+    self.rank = dict.fromkeys(vertices, 0)
 
   def find(self, item):
     if self.parent[item] == item:

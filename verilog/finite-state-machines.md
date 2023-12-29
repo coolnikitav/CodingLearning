@@ -1,4 +1,5 @@
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/3b146a53-155e-49a7-b8ae-54355573a89d)# Designing finite state machines
+# Designing finite state machines
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/3b146a53-155e-49a7-b8ae-54355573a89d)
 
 ## Mealy vs Moore machine
 Mealy machine depends on inputs and the present state.
