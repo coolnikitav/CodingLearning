@@ -149,3 +149,92 @@ endmodule
     #15;
   end
 ```
+
+If your system needs, for example 16 MHz => Period = 62.5 nsec => Half period = 31.25 nsec or 8 MHz => Period = 125 nsec => Half period = 62.5 nsec, you need to have enough precision.
+
+In 
+```
+`timescale 1ns/1ps
+```
+1ns is the time unit and 1ps is the time precision. So you can have up to log10(1ns/1ps) = log10(1000) = 3 decimal points.
+
+31.25 will stay 31.25, but 31.4567 will be rounded to 31.457.
+```
+//`timescale 1ns / 1ns // cannot have any decimal
+`timescale 1ns / 1ps
+ 
+module tb();
+ 
+  reg clk16 = 0;
+  reg clk8 = 0;
+  
+  always #31.25 clk16 = ~clk16;
+  always #62.5 clk8 = ~clk8;
+ 
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+  end
+ 
+ 
+  initial begin
+    #200;
+    $finish();
+  end
+  
+endmodule
+```
+
+## Parameters for generating clock
+- Frequency: period = 1/freq
+- Duty cycle
+- Phase diff: how much it is shifted with relation to other clocks
+```
+`timescale 1ns / 1ps
+
+module tb();
+
+    reg clk = 0;
+    reg clk50 = 0;
+    
+    always #5 clk = ~clk;   // 100 MHz
+    
+    /*
+    real phase = 10;
+    real t_on = 5;
+    real t_off = 5;
+    */
+    
+    task calc (input real freq_hz, input real duty_cycle, input real phase, output real pout, output real t_on, output real t_off);real
+        pout = phase;
+        t_on = (1.0/freq_hz) * duty_cycle * 1000_000_000;
+        t_off = (1000_000_000 / freq_hz) - t_on;
+    endtask
+    
+    task clkgen(input real phase, input real t_on, input real t_off);
+        @(posedge clk);
+        #phase;  // delay
+        while (1) begin
+            clk50 = 1;
+            #t_on;
+            clk50 = 0;
+            #t_off;
+        end
+    endtask
+    
+    real phase;
+    real t_on;
+    real t_off;
+    
+    initial begin
+        calc(100_000_000, 0.1, 2, phase, t_on, t_off);
+        clkgen(phase, t_on, t_off);
+    end
+    
+    initial begin
+        #200;
+        $finish();
+    end
+    
+endmodule
+```
