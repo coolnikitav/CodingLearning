@@ -14,3 +14,5 @@
 - For simulation
   - Fixed point time: time -> 64-bit
   - Float point time: reatltime -> 64 bit
+
+reg cannot be output of a module
