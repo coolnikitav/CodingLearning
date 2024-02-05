@@ -100,3 +100,160 @@ int arr[10] = `{default : 2};
   // uninitialized
   int arr4[2];
 ```
+```
+module tb;
+  
+  bit [31:0] arr[10];
+  
+  initial begin
+    fill_arr(arr);
+    print(arr);
+    
+  end
+  
+  task fill_arr(output bit [31:0] arr[10]);
+    for (int i = 0; i < 10; i++) begin
+      arr[i] = $pow(i,2);  
+    end  
+  endtask
+  
+  task print(input bit [31:0] arr[10]);
+    for (int i = 0; i < 10; i++) begin
+      $display("arr[%0d] : %0d", i, arr[i]);  
+    end     
+  endtask
+  
+endmodule
+```
+## Loops
+- for loop
+- repeat
+- foreach
+
+Loops need to be in procedural statements, like initial or always
+```
+module tb;
+  
+  int arr[10];
+  int i;
+  
+  initial begin
+    for (i = 0; i < 10; i++) begin
+      arr[i] = i;
+    end
+    
+    $display("arr : %0p", arr);
+    
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  int arr[10];
+  
+  initial begin
+    foreach(arr[i]) begin  // 0-9
+      arr[i] = i;
+      $display("%0d",arr[i]);
+    end	
+  end 
+  
+endmodule
+```
+```
+module tb;
+  
+  int arr[10];
+  int i = 0;
+  
+  initial begin
+    repeat(10) begin
+      arr[i] = i;
+      i++;
+    end
+    
+    $display("arr : %0p",arr);
+    
+  end 
+  
+endmodule
+```
+## Array operations
+
+### Copy
+Array must be the same size and store the same datatypes
+```
+module tb;
+  
+  int arr1[5];
+  int arr2[5];
+  
+  initial begin
+    for (int i=0; i<5; i++) begin
+      arr1[i] = 5*i;  // 0 5 10 15 20
+    end
+    
+    arr2 = arr1;  // copy
+    
+    $display("arr1 : %0p", arr1);
+    $display("arr2 : %0p", arr2);
+    
+  end
+  
+endmodule
+```
+
+## Compare
+Compares element by element to see whether they are equal.
+
+Arrays must be the same size and store the same data type.
+
+Arrays are equal:
+
+```
+module tb;
+  
+  int arr1[5] = {1,2,3,4,5};
+  int arr2[5] = {1,2,3,4,5};
+  
+  int status;
+  
+  initial begin
+    status = arr1 == arr2;
+    
+    $display("status : %0d", status);
+    
+    if (status)
+      $display("arrays are equal");
+    else
+      $display("arrays are not equal");        
+  end
+  
+endmodule
+```
+
+Arrays are not equal:
+
+```
+module tb;
+  
+  int arr1[5] = {1,2,3,4,5};
+  int arr2[5] = {1,2,2,4,5};
+  
+  int status;
+  
+  initial begin
+    status = (arr1 != arr2);
+    
+    $display("status : %0d", status);
+    
+    if (status)
+      $display("arrays are not equal");
+    else
+      $display("arrays are equal");        
+  end
+  
+endmodule
+```
