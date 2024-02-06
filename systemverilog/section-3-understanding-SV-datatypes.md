@@ -257,3 +257,129 @@ module tb;
   
 endmodule
 ```
+
+## Dynamic Arrays
+```
+module tb;
+  
+  int arr[];
+  
+  initial begin
+    arr = new[5];
+    
+    for (int i = 0; i < 5; i++) begin
+      arr[i] = 5*i;
+    end
+    
+    $display("arr : %0p", arr);  // 0 5 10 15 20
+    
+    arr.delete();
+    
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  int arr[];
+  
+  initial begin
+    arr = new[5];
+    
+    for (int i = 0; i < 5; i++) begin
+      arr[i] = 5*i;
+    end
+    
+    $display("arr : %0p", arr);  // 0 5 10 15 20
+    
+    arr = new[30];
+    $display("arr : %0p", arr);  // 0..0 0 0 0 0
+    
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  int arr[];
+  
+  initial begin
+    arr = new[5];
+    
+    for (int i = 0; i < 5; i++) begin
+      arr[i] = 5*i;
+    end
+    
+    $display("arr : %0p", arr);  // 0 5 10 15 20
+    
+    arr = new[30](arr);
+    $display("arr : %0p", arr);  // 0 5 10 15 20 0 0 ... 0
+    
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  int arr[];
+  int fixed_size_arr[30];
+  
+  initial begin
+    arr = new[5];
+    
+    for (int i = 0; i < 5; i++) begin
+      arr[i] = 5*i;
+    end
+    
+    $display("arr : %0p", arr);  // 0 5 10 15 20
+    
+    arr = new[30](arr);
+    $display("arr : %0p", arr);  // 0 5 10 15 20 0 0 ... 0
+    
+    fixed_size_arr = arr;  // fixed size array must be the same size
+    $display("fixed_size_arr : %0p", fixed_size_arr);  // 0 5 10 15 20 0 0 ... 0
+    
+  end
+  
+endmodule
+```
+
+## Queue
+```
+module tb;
+  
+  int queue[$];
+  int j = 0;
+  
+  initial begin
+    queue = {1,2,3};
+    $display("queue: %0p", queue);
+    
+    queue.push_front(7);
+    $display("queue: %0p", queue);
+    
+    queue.push_back(9);
+    $display("queue: %0p", queue);
+    
+    queue.insert(2,10);
+    $display("queue: %0p", queue);
+    
+    j = queue.pop_front(); // j needs to be same type as elements
+    $display("queue: %0p", queue);
+    $display("j: %0d", j);
+    
+    j = queue.pop_back();
+    $display("queue: %0p", queue);
+    $display("j: %0d", j);
+    
+    queue.delete(1);
+    $display("queue: %0p", queue);
+    
+  end
+  
+endmodule
+```
+
