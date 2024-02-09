@@ -1,4 +1,4 @@
-# Fundamentals of System Verilog OOP Construct
+# Fundamentals of SystemVerilog OOP Construct
 
 ## Fundamentals of Class
 
@@ -172,10 +172,141 @@ module tb;
   
 endmodule
 ```
-Functions 
+Functions cannot contain time-controlled statements
 ```
 function void display_ain_bin();
     #10;  // error
     $display("ain : %0b, bin : %0b", ain, bin);
   endfunction
+```
+### Using function
+```
+module tb;
+  
+  // default direction : input
+  task add (input bit [3:0] a, input bit [3:0] b, output bit [4:0] y);
+    y = a + b;
+  endtask
+  
+  bit [3:0] a,b;
+  bit [4:0] y;
+  
+  initial begin
+    a = 7;
+    b = 7;
+    add(a,b,y);
+    $display("value of y : %0d", y);  // value of y : 14
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  // default direction : input
+  /*
+  task add (input bit [3:0] a, input bit [3:0] b, output bit [4:0] y);
+    y = a + b;
+  endtask
+  */
+  
+  bit [3:0] a,b;
+  bit [4:0] y;
+  
+  task add ();
+    y = a + b;
+  endtask
+  
+  initial begin
+    a = 7;
+    b = 7;
+    add();
+    $display("value of y : %0d", y);  // value of y : 14
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  bit [3:0] a,b;
+  bit [4:0] y;
+  
+  task add ();
+    y = a + b;
+    $display("a : %0d, b : %0d, value of y : %0d", a,b,y);
+  endtask
+  
+  task stim_a_b();
+    a = 1;
+    b = 3;
+    add();  // a : 1, b : 3, value of y : 4
+    #10;
+    a = 5;
+    b = 6;
+    add();  // a : 5, b : 6, value of y : 11
+    #10;
+    a = 7;
+    b = 8;
+    add();  // a : 7, b : 8, value of y : 15
+    #10;
+  endtask
+  
+  initial begin
+    stim_a_b();    
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  bit [3:0] a,b;
+  bit [4:0] y;
+  
+  bit clk = 0;
+  
+  always #10 clk = ~clk;  // 20 ns --> 50 MHz
+  
+  task add ();
+    y = a + b;
+    $display("a : %0d, b : %0d, value of y : %0d", a,b,y);
+  endtask
+  
+  task stim_a_b();
+    a = 1;
+    b = 3;
+    add();  // a : 1, b : 3, value of y : 4
+    #10;
+    a = 5;
+    b = 6;
+    add();  // a : 5, b : 6, value of y : 11
+    #10;
+    a = 7;
+    b = 8;
+    add();  // a : 7, b : 8, value of y : 15
+    #10;
+  endtask
+  
+  task stim_clk();
+    @(posedge clk); // wait
+    a = $urandom();  
+    b = $urandom();
+    add();
+  endtask
+  
+  initial begin
+    #110;
+    $finish;
+  end
+  
+  initial begin
+    // stim_a_b();
+    
+    for (int i = 0; i < 11; i++) begin
+      stim_clk();
+    end
+  end
+  
+endmodule
 ```
