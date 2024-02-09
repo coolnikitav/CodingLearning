@@ -68,3 +68,114 @@ module tb;
   
 endmodule
 ```
+
+## Ways to add method to class
+- task
+  - supports timing control: @ (posedge clk)
+  - multiple output port
+- function
+  - does not support timing control
+  - single output port
+ 
+### Using function
+```
+module tb;
+  
+  function bit [4:0] add (input bit [3:0] a,b);   
+    return a + b;   
+  endfunction
+  
+  bit [4:0] res = 0;
+  
+  initial begin
+    res = add(4'b0100,4'b0100);
+    $display("res : %0d", res);  // res : 8
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  function bit [4:0] add (input bit [3:0] a,b);   
+    return a + b;   
+  endfunction
+  
+  bit [4:0] res = 0;
+  bit [3:0] ain = 4'b0100;
+  bit [3:0] bin = 4'b0010;
+  
+  initial begin
+    res = add(ain,bin);
+    $display("res : %0d", res);  // res : 8
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  function bit [4:0] add (input bit [3:0] a = 4'b0100,b = 4'b0010);  // default values   
+    return a + b;   
+  endfunction
+  
+  bit [4:0] res = 0;
+  
+  initial begin
+    res = add();
+    $display("res : %0d", res);  // res : 6
+  end
+  
+endmodule
+```
+```
+module tb;
+
+  // it doesn't matter where in the code the values are declared
+  bit [4:0] res = 0;
+  bit [3:0] ain = 4'b0100;
+  bit [3:0] bin = 4'b0010;
+  
+  function bit [4:0] add ();
+    return ain + bin;   
+  endfunction
+  
+ 
+  
+  initial begin
+    res = add();
+    $display("res : %0d", res);  // res : 6
+  end
+  
+endmodule
+```
+```
+module tb;
+  
+  function bit [4:0] add ();
+    return ain + bin;   
+  endfunction
+  
+  function void display_ain_bin();
+    $display("ain : %0b, bin : %0b", ain, bin);
+  endfunction
+  
+  bit [4:0] res = 0;
+  bit [3:0] ain = 4'b0100;
+  bit [3:0] bin = 4'b0010;
+  
+  initial begin
+    res = add();
+    display_ain_bin();
+    $display("res : %0d", res);  // res : 6
+  end
+  
+endmodule
+```
+Functions 
+```
+function void display_ain_bin();
+    #10;  // error
+    $display("ain : %0b, bin : %0b", ain, bin);
+  endfunction
+```
