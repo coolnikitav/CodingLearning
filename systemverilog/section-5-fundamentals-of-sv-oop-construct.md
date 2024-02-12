@@ -665,3 +665,85 @@ module tb;
   
 endmodule
 ```
+
+## Copying object
+```
+class first;
+  
+  int data;
+  
+endclass
+
+module tb;
+  
+  first f1;
+  first p1;
+  
+  initial begin
+    f1 = new();  // 1. Constructor
+    f1.data = 24;  // 2. Processing
+    
+    p1 = new f1;  // 3. Copying data from f1 to p1
+    
+    $display("value of data member : %0d", p1.data);  // value of data member : 24            
+  end	  
+
+endmodule
+```
+You cannot change the value from the class copy, only read it.
+```
+class first;
+  
+  int data;
+  
+endclass
+
+module tb;
+  
+  first f1;
+  first p1;
+  
+  initial begin
+    f1 = new();  // 1. Constructor
+    f1.data = 24;  // 2. Processing
+    
+    p1 = new f1;  // 3. Copying data from f1 to p1
+    
+    $display("value of data member : %0d", p1.data);  // value of data member : 24  
+    
+    p1.data = 12;
+    $display("value of data member : %0d", f1.data);  // value of data member : 24  
+  end	  
+
+endmodule
+```
+
+## Custom method
+```
+class first;
+  int data = 34;
+  bit [7:0] temp = 8'h11;
+  
+  function first copy();
+    copy = new();
+    copy.data = data;
+    copy.temp = temp;
+  endfunction
+  
+endclass
+
+module tb;
+  
+  first f1;
+  first f2;
+  
+  initial begin
+    f1 = new();
+    f2 = new();
+    
+    f2 = f1.copy();
+    $display("data : %0d and temp : %0x", f2.data, f2.temp);  // data : 32 and temp : 11
+  end
+  
+endmodule
+```
