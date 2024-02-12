@@ -70,12 +70,16 @@ endmodule
 ```
 
 ## Ways to add method to class
-- task
-  - supports timing control: @ (posedge clk)
-  - multiple output port
-- function
-  - does not support timing control
-  - single output port
+- Task
+  - Supports timing control: @ (posedge clk)
+  - Multiple output port
+  - Use ref, automatic for array
+  - Common usage: time dependent expression, scheduling processes in class
+- Function
+  - Does not support timing control
+  - Single output port
+  - Use ref, automatic for array
+  - Common usage: printing values of data members, initializing variables, time independent expression, return data from class.
  
 ### Using function
 ```
@@ -309,4 +313,73 @@ module tb;
   end
   
 endmodule
+```
+## Pass by Value
+New memory is created for the function on the stack. After the function is ran and the result is stored, that memory is deleted. Uses local variables that are copies of the variables passed into the function.
+```
+module tb;
+  
+  task swap (input bit [1:0] a,b);
+    bit [1:0] temp;
+    
+    temp = a;
+    a = b;
+    b = temp;
+    
+    $display("Value of a : %0d and b : %0d",a,b);  // Value of a : 2 and b : 1
+    
+  endtask
+  
+  bit [1:0] a;
+  bit [1:0] b;
+  
+  initial begin
+    a = 1;
+    b = 2;
+    swap(a,b);
+    $display("Value of a : %0d and b : %0d",a,b);  // Value of a : 1 and b : 2
+  end
+  
+endmodule
+```
+
+## Pass by Reference
+Changes to variables are propagated to the variables in the testbench.
+```
+module tb;
+  
+  task automatic swap (ref bit [1:0] a,b);  // need automatic storage if using ref
+    bit [1:0] temp;
+    
+    temp = a;
+    a = b;
+    b = temp;
+    
+    $display("Value of a : %0d and b : %0d",a,b);  // Value of a : 2 and b : 1
+    
+  endtask
+  
+  bit [1:0] a;
+  bit [1:0] b;
+  
+  initial begin
+    a = 1;
+    b = 2;
+    swap(a,b);
+    $display("Value of a : %0d and b : %0d",a,b);  // Value of a : 2 and b : 1
+  end
+  
+endmodule
+```
+```
+task automatic swap (const ref bit [1:0] a, ref bit [1:0] b); // cannot change value of a
+    bit [1:0] temp;
+    
+    temp = a;
+    a = b;  // ERROR VCP5083 "Value cannot be assigned to a constant."
+    b = temp;
+    
+    $display("Value of a : %0d and b : %0d",a,b);  // Value of a : 2 and b : 1
+    
+  endtask
 ```
