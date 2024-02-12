@@ -383,3 +383,285 @@ task automatic swap (const ref bit [1:0] a, ref bit [1:0] b); // cannot change v
     
   endtask
 ```
+
+## Using array in function
+```
+module tb;
+  
+  bit [3:0] res[16];
+  
+  // you don't specify ref, it will create a copy, which consumes memory
+  function automatic void init_arr(ref bit [3:0] a[16]);
+    for (int i = 0; i <= 15; i++) begin
+      a[i] = i;
+    end
+  endfunction
+  
+  initial begin
+    init_arr(res);
+    for (int i = 0; i <= 15; i++) begin
+      $display("res[%0d] : %0d", i, res[i]);
+    end
+  end
+  
+endmodule
+```
+
+## Using defined constructor
+```
+class first;
+  
+  int data;
+  
+  function new();
+    data = 32;
+  endfunction
+  
+endclass
+
+module tb;
+  
+  first f1;
+  
+  initial begin
+    f1 = new();
+    $display("Data : %0d", f1.data);  // Data : 32
+  end
+  
+endmodule
+```
+```
+class first;
+  
+  int data;
+  
+  function new(input int datain);
+    data = datain;
+  endfunction
+  
+endclass
+
+module tb;
+  
+  first f1;
+  
+  initial begin
+    f1 = new(5);
+    $display("Data : %0d", f1.data);  // Data : 5
+  end
+  
+endmodule
+```
+
+## Multiple arguments to constructor
+```
+class first;
+  
+  int data1;
+  bit [7:0] data2;
+  shortint data3;
+  
+  function new(input int data1 = 0, input bit[7:0] data2 = 8'h00, input shortint data3 = 0);
+    this.data1 = data1;
+    this.data2 = data2;
+    this.data3 = data3;
+  endfunction
+  
+endclass
+
+module tb;
+  
+  first f1;
+  
+  initial begin
+    f1 = new(23,4,35);
+    $display("Data 1 : %0d", f1.data1); // Data 1 : 23
+    $display("Data 2 : %0d", f1.data2); // Data 2 : 4
+    $display("Data 3 : %0d", f1.data3); // Data 3 : 35
+  end
+  
+endmodule
+```
+```
+// f1 = new(23,4,35);  // follow position
+    f1 = new(.data2(4), .data3(35), .data1(23));
+    $display("Data 1 : %0d", f1.data1); // Data 1 : 23
+    $display("Data 2 : %0d", f1.data2); // Data 2 : 4
+    $display("Data 3 : %0d", f1.data3); // Data 3 : 35
+```
+
+## Using task in class
+```
+class first;
+  
+  int data1;
+  bit [7:0] data2;
+  shortint data3;
+  
+  function new(input int data1 = 0, input bit[7:0] data2 = 8'h00, input shortint data3 = 0);
+    this.data1 = data1;
+    this.data2 = data2;
+    this.data3 = data3;
+  endfunction
+  
+  task display();
+    $display("value of data1 : %0d, data2 : %0d, data3 : %0d",data1,data2,data3);
+  endtask
+  
+endclass
+
+module tb;
+  
+  first f1;
+  
+  initial begin
+    // f1 = new(23,4,35);  // follow position
+    f1 = new(.data2(4), .data3(35), .data1(23));
+    f1.display();
+  end
+  
+endmodule
+```
+
+## Using class in class
+```
+class first;
+  
+  int data = 34;
+  
+endclass
+
+class second;
+  
+  first f1;
+  
+  function new();
+    f1 = new();
+  endfunction
+  
+endclass
+
+module tb;
+  
+  second s;
+  
+  initial begin
+    s = new();
+    $display("value of data : %0d", s.f1.data);  // value of data : 34
+  end
+  
+endmodule
+```
+```
+class first;
+  
+  int data = 34;
+  
+  task display();
+    $display("value of data : %0d", data);
+  endtask
+  
+endclass
+
+class second;
+  
+  first f1;
+  
+  function new();
+    f1 = new();
+  endfunction
+  
+endclass
+
+module tb;
+  
+  second s;
+  
+  initial begin
+    s = new();
+    s.f1.display();  // value of data : 34
+    
+    s.f1.data = 45;
+    s.f1.display();  // value of data : 45
+  end
+  
+endmodule
+```
+
+## Scope of data members
+```
+class first;
+  
+  local int data = 34;
+  
+  task display();
+    $display("value of data : %0d", data);
+  endtask
+  
+endclass
+
+class second;
+  
+  first f1;
+  
+  function new();
+    f1 = new();
+  endfunction
+  
+endclass
+
+module tb;
+  
+  second s;
+  
+  initial begin
+    s = new();
+    s.f1.display();  // value of data : 34
+    
+    s.f1.data = 45;  // "Cannot access local/protected member ""s.f1.data"" from this scope."
+    s.f1.display();  
+  end
+  
+endmodule
+```
+```
+class first;
+  
+  local int data = 34;
+  
+  task set(input int data);
+    this.data = data;
+  endtask
+  
+  function int get();
+    return data;
+  endfunction
+  
+  task display();
+    $display("value of data : %0d", data);
+  endtask
+  
+endclass
+
+class second;
+  
+  first f1;
+  
+  function new();
+    f1 = new();
+  endfunction
+  
+endclass
+
+module tb;
+  
+  second s;
+  
+  initial begin
+    s = new();
+    s.f1.set(123);
+    $display("value of data : %0d", s.f1.get());  // value of data : 123
+  end
+  
+endmodule
+```
