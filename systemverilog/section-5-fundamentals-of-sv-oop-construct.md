@@ -860,3 +860,124 @@ endmodule
 - Class has DM and other class instance:
   - Shallow copy: copy the DM, but class handlers for both orig as well as copy remain the same (changes to one will be applied to both)
   - Deep copy: copy of DM and independent handler for the class (changes to one will not be applied to the other)
+
+## Inheritance
+```
+class first;  // parent class
+  
+  int data = 12;
+  
+  function void display();
+    $display("Value of data : %0d", data);
+  endfunction
+  
+endclass
+
+class second extends first;  // child class
+  
+  int temp = 34;
+  
+  function void add();
+    $display("value after process : %0d", temp+4);
+  endfunction
+  
+endclass
+
+module tb;
+  
+  second s;
+  
+  initial begin
+    s = new();
+    $display("value of data : %0d", s.data);  // value of data : 12
+    s.display();  // value of data : 12
+    $display("value of temp : %0d", s.temp);  // value of temp : 34
+    s.add();  // value after process : 38
+  end
+  
+endmodule
+```
+
+## Polymorphism
+```
+class first;  // parent class
+  
+  int data = 12;
+  
+  function void display();
+    $display("first: value of data : %0d", data);
+  endfunction
+  
+endclass
+
+class second extends first;  // child class
+  
+  int temp = 34;
+  
+  function void add();
+    $display("second: value after process : %0d", temp+4);
+  endfunction
+  
+  function void display();
+    $display("second: value of data : %0d", data);
+  endfunction
+  
+endclass
+
+module tb;
+  
+  first f;
+  second s;
+  
+  initial begin
+    f = new();
+    s = new();
+    
+    f = s;
+    f.display();  // first: value of data : 12
+    s.display();  // second: value of data : 12
+  end 
+  
+endmodule
+```
+```
+class first;  // parent class
+  
+  int data = 12;
+  
+  virtual function void display();
+    $display("first: value of data : %0d", data);
+  endfunction
+  
+endclass
+
+class second extends first;  // child class
+  
+  int temp = 34;
+  
+  function void add();
+    $display("second: value after process : %0d", temp+4);
+  endfunction
+  
+  function void display();
+    $display("second: value of data : %0d", data);
+  endfunction
+  
+endclass
+
+module tb;
+  
+  first f;
+  second s;
+  
+  initial begin
+    f = new();
+    s = new();
+    
+    f = s;
+    f.display();  // second: value of data : 12
+    s.display();  // second: value of data : 12
+  end 
+  
+endmodule
+```
