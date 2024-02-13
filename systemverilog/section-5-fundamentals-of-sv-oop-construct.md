@@ -747,3 +747,116 @@ module tb;
   
 endmodule
 ```
+## Shallow copy
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/9031f9b0-be82-4f27-9c3e-f680f42c253c)
+
+Shallow copy means that we do not make a new copy of everything.
+```
+class first;
+  
+  int data = 12;
+  
+endclass
+
+class second;
+  
+  int ds = 34;
+  
+  first f1;
+  
+  function new();
+    f1 = new();
+  endfunction
+  
+endclass
+
+module tb;
+  
+  second s1, s2;  // s1 is orig, s2 is copy
+  
+  initial begin
+    s1 = new();
+    
+    s1.ds = 45;
+    
+    s2 = new s1;  // copying
+    
+    $display("value of s2.ds : %0d",s2.ds);  // value of s2.ds : 45
+    
+    s2.ds = 78;
+    
+    $display("value of s2.ds : %0d",s2.ds);  // value of s2.ds : 78
+    $display("value of s1.ds : %0d",s1.ds);  // value of s1.ds : 45
+    
+    s2.f1.data = 56;
+    
+    // Both s1 and s2 point to the same handler
+    $display("value of s1.f1.data : %0d", s1.f1.data);  // value of s1.f1.data : 56
+    $display("value of s2.f1.data : %0d", s2.f1.data);  // value of s2.f1.data : 56
+
+  end
+  
+endmodule
+```
+
+## Deep copy
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d797c0db-906a-4641-9d85-e327d0d17dc2)
+```
+class first;
+  
+  int data = 12;
+  
+  function first copy();
+    copy = new();
+    copy.data = data;
+  endfunction
+  
+endclass
+
+class second;
+  
+  int ds = 34;
+  
+  first f1;
+  
+  function new();
+    f1 = new();
+  endfunction
+  
+  function second copy();
+    copy = new();
+    copy.ds = ds;
+    copy.f1 = f1.copy;
+  endfunction
+  
+endclass
+
+module tb;
+  
+  second s1, s2;  // s1 is orig, s2 is copy
+  
+  initial begin
+    s1 = new();
+    s2 = new();
+    
+    s1.ds = 45;
+    
+    s2 = s1.copy();
+    
+    $display("Value of s2.ds : %0d", s2.ds);  // Value of s2.ds : 45
+    
+    s2.ds = 78;
+    $display("Value of s1.ds : %0d", s1.ds);  // Value of s1.ds : 45
+    
+    s2.f1.data = 98;
+    $display("Value of s1.f1.data : %0d", s1.f1.data);  // Value of s1.f1.data : 12
+
+  end
+  
+endmodule
+```
+## Shallow/Deep copy summary
+- Class only has data members: create custom copy method using task.
+- Class has DM and other class instance:
+  - Shallow copy: copy the DM, but class handlers for both orig as well as copy remain the same (changes to one will be applied to both)
+  - Deep copy: copy of DM and independent handler for the class (changes to one will not be applied to the other)
