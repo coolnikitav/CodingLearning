@@ -981,3 +981,34 @@ module tb;
   
 endmodule
 ```
+## Super keyword
+```
+class first;  // parent class
+  int data;
+  
+  function new(input int data);
+  	this.data = data;  
+  endfunction
+  
+endclass
+
+class second extends first;
+  int temp;
+  
+  function new(int data, int temp);
+    super.new(data);
+    this.temp = temp;
+  endfunction
+  
+endclass
+
+module tb;
+  second s; 
+  
+  initial begin
+    s = new(67,45);
+    $display("s.data : %0d and s.temp : %0d", s.data,s.temp);  // s.data : 67 and s.temp : 45
+  end
+  
+endmodule
+```
