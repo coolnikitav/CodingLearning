@@ -451,3 +451,64 @@ endmodule
 # KERNEL: value of a : 4 and b : 5
 # KERNEL: value of a : 6 and b : 7
 ```
+## Weighted distribution
+:= will assign the weight to every item in the range
+
+:/ will divide the weight equally between all of the items in the range
+```
+dist {0 := 10; [1:3] := 60;}
+               =>
+{0 := 10; 1 := 60; 2 := 60; 3 := 60;}
+```
+P(0) = 10/(10+60+60+60) = 10/190
+
+P(1) = 60/190
+
+...
+```
+dist {0 :/ 10; [1:3] :/ 60;}
+               =>
+{0 :/ 10; 1 :/ 20; 2 :/ 20; 3 :/ 20;}
+```
+P(0) = 10/(10+20+20+20) = 10/70
+
+P(1) = 20/70
+
+...
+```
+class first;
+  
+  rand bit wr;
+  rand bit rd;
+  
+  rand bit [1:0] var1;
+  rand bit [1:0] var2;
+  
+  constraint data {
+    var1 dist {0 := 30, [1:3] := 90};
+    var2 dist {0 :/ 30, [1:3] :/ 90};
+  }
+  
+  constraint cntrl {
+    wr dist {0 := 30, 1 := 70};
+    rd dist {0 :/ 30, 1 :/ 70};
+  }
+  
+endclass
+
+module tb;
+  
+  first f;
+  
+  initial begin
+    f = new();
+    
+    for (int i = 0; i < 100; i++) begin
+      f.randomize();
+      //$display("value of wr (:=) : %0d and rd (:/) : %0d", f.wr, f.rd);
+      $display("value of var1 (:=) : %0d and var2 (:/) : %0d", f.var1, f.var2);
+    end
+  end
+  
+endmodule
+```
