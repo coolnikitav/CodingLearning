@@ -512,3 +512,241 @@ module tb;
   
 endmodule
 ```
+## Constraint operators
+- Implication
+  - ->
+  - (x==1)->(y==1), when x is 1, y must be 1
+- Equivalence
+  - <->
+  - (x==1) <-> (y==1), when one of them is 1, the other one must be 1
+- if else
+  ```
+  if ( ) {
+  
+  } else {
+
+  }
+  ```
+
+### Implication operator
+```
+class generator;
+  
+  randc bit [3:0] a;
+  rand bit ce;
+  rand bit rst;
+  
+  constraint control_rst {
+    rst dist {0 := 80, 1 := 20}; 
+  }
+  
+  constraint control_ce {
+    ce dist {1 := 80, 0 := 20}; 
+  }
+  
+  constraint control_rst_ce {
+    (rst == 0) -> (ce == 1); 
+  }
+  
+endclass
+
+module tb;
+  
+  generator g;
+  
+  initial begin
+    g = new();
+    
+    for (int i = 0; i < 10; i++) begin
+      assert(g.randomize()) else $display("Randomization failed");
+      $display("value of rst : %0b and ce : %0b", g.rst, g.ce);
+    end
+  end
+  
+endmodule
+```
+```
+# KERNEL: value of rst : 0 and ce : 1
+# KERNEL: value of rst : 1 and ce : 0
+# KERNEL: value of rst : 0 and ce : 1
+# KERNEL: value of rst : 0 and ce : 1
+# KERNEL: value of rst : 1 and ce : 1
+# KERNEL: value of rst : 0 and ce : 1
+# KERNEL: value of rst : 0 and ce : 1
+# KERNEL: value of rst : 0 and ce : 1
+# KERNEL: value of rst : 1 and ce : 1
+# KERNEL: value of rst : 0 and ce : 1
+```
+### Equivalence operator
+```
+class generator;
+  
+  randc bit [3:0] a;
+  rand bit wr;
+  rand bit oe;
+  
+  constraint wr_c {
+    wr dist {0 := 50, 1 := 50}; 
+  }
+  
+  constraint oe_c {
+    oe dist {1 := 50, 0 := 50}; 
+  }
+  
+  constraint wr_oe_c {
+    (wr == 1) <-> (oe == 0); 
+  }
+  
+endclass
+
+module tb;
+  
+  generator g;
+  
+  initial begin
+    g = new();
+    
+    for (int i = 0; i < 10; i++) begin
+      assert(g.randomize()) else $display("Randomization failed");
+      $display("value of wr : %0b and oe : %0b", g.wr, g.oe);
+    end
+  end
+  
+endmodule
+```
+```
+# KERNEL: value of wr : 0 and oe : 1
+# KERNEL: value of wr : 1 and oe : 0
+# KERNEL: value of wr : 0 and oe : 1
+# KERNEL: value of wr : 0 and oe : 1
+# KERNEL: value of wr : 1 and oe : 0
+# KERNEL: value of wr : 1 and oe : 0
+# KERNEL: value of wr : 1 and oe : 0
+# KERNEL: value of wr : 0 and oe : 1
+# KERNEL: value of wr : 1 and oe : 0
+# KERNEL: value of wr : 0 and oe : 1
+```
+### IF ELSE operator
+```
+class generator;
+  
+  randc bit [3:0] raddr, waddr;
+  rand bit wr;
+  rand bit oe;
+  
+  constraint wr_c {
+    wr dist {0 := 50, 1 := 50}; 
+  }
+  
+  constraint oe_c {
+    oe dist {1 := 50, 0 := 50}; 
+  }
+  
+  constraint wr_oe_c {
+    (wr == 1) <-> (oe == 0); 
+  }
+  
+  constraint write_read {
+    if (wr == 1) {
+      waddr inside {[11:15]};
+      raddr == 0;
+    } else {
+      waddr == 0;
+      raddr inside {[11:15]};
+    }
+  }
+  
+endclass
+
+module tb;
+  
+  generator g;
+  
+  initial begin
+    g = new();
+    
+    for (int i = 0; i<15 ; i++) begin
+      assert(g.randomize()) else $display("Randomization Failed");
+      $display("Value of wr : %0b | oe : %0b |  raddr : %0d | waddr : %0d |", g.wr, g.oe,g.raddr, g.waddr);
+    end
+  end
+  
+endmodule
+```
+```
+# KERNEL: Value of wr : 0 | oe : 1 |  raddr : 14 | waddr : 0 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 11 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 14 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 13 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 12 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 15 |
+# KERNEL: Value of wr : 0 | oe : 1 |  raddr : 13 | waddr : 0 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 15 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 14 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 12 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 11 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 13 |
+# KERNEL: Value of wr : 0 | oe : 1 |  raddr : 11 | waddr : 0 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 15 |
+# KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 11 |
+```
+## Enabling/Disabling constraints
+```
+class generator;
+  
+  randc bit [3:0] raddr, waddr;
+  rand bit wr;
+  rand bit oe;
+  
+  constraint wr_c {
+    wr dist {0 := 50, 1 := 50}; 
+  }
+  
+  constraint oe_c {
+    oe dist {1 := 50, 0 := 50}; 
+  }
+  
+  constraint wr_oe_c {
+    (wr == 1) <-> (oe == 0); 
+  }
+  
+  
+endclass
+
+module tb;
+  
+  generator g;
+  
+  initial begin
+    g = new();
+    
+    g.wr_oe_c.constraint_mode(0);  // turn constraint off
+    
+    $display("constraint status oe_c : %0d", g.wr_oe_c.constraint_mode());
+    
+    for (int i = 0; i<15 ; i++) begin
+      assert(g.randomize()) else $display("Randomization Failed");
+      $display("Value of wr : %0b | oe : %0b", g.wr, g.oe);
+    end
+  end
+  
+endmodule
+```
+```
+# KERNEL: constraint status oe_c : 0
+# KERNEL: Value of wr : 0 | oe : 1
+# KERNEL: Value of wr : 0 | oe : 1
+# KERNEL: Value of wr : 0 | oe : 1
+# KERNEL: Value of wr : 1 | oe : 1
+# KERNEL: Value of wr : 0 | oe : 1
+# KERNEL: Value of wr : 1 | oe : 1
+# KERNEL: Value of wr : 0 | oe : 1
+# KERNEL: Value of wr : 0 | oe : 0
+# KERNEL: Value of wr : 1 | oe : 1
+# KERNEL: Value of wr : 1 | oe : 1
+# KERNEL: Value of wr : 1 | oe : 0
+# KERNEL: Value of wr : 1 | oe : 0
+# KERNEL: Value of wr : 1 | oe : 0
+# KERNEL: Value of wr : 1 | oe : 0
+# KERNEL: Value of wr : 1 | oe : 1
+```
