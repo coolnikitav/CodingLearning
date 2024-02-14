@@ -214,3 +214,127 @@ endmodule
 # KERNEL: value of a : 4 and b : 1
 # KERNEL: value of a : 6 and b : 6
 ```
+## Adding constraint: working with ranges
+```
+class generator;
+  
+  randc bit [3:0] a,b;
+  bit [3:0] y;
+
+  constraint data {
+    a inside {[0:8],[10:11],15};
+    b inside {[3:11]};
+  }
+  
+endclass
+
+module tb;
+  generator g;
+  int i = 0;
+  
+  initial begin
+    g = new();
+    
+    for (i=0; i<10; i++) begin
+      
+      assert(g.randomize()) else begin
+        $display("Randomization Failed at %0t", $time);
+        $finish();
+      end
+      
+      $display("value of a : %0d and b : %0d", g.a,g.b);
+      #10;
+    end
+  end
+  
+endmodule
+```
+```
+# KERNEL: value of a : 1 and b : 5
+# KERNEL: value of a : 6 and b : 10
+# KERNEL: value of a : 5 and b : 8
+# KERNEL: value of a : 11 and b : 9
+# KERNEL: value of a : 3 and b : 6
+# KERNEL: value of a : 15 and b : 4
+# KERNEL: value of a : 7 and b : 7
+# KERNEL: value of a : 0 and b : 3
+# KERNEL: value of a : 8 and b : 11
+# KERNEL: value of a : 4 and b : 7
+```
+```
+class generator;
+  
+  randc bit [3:0] a,b;
+  bit [3:0] y;
+
+  constraint data {
+    !(a inside {[3:7]});  // skip the range of values
+    !(b inside {[5:9]});
+  }
+  
+endclass
+
+module tb;
+  generator g;
+  int i = 0;
+  
+  initial begin
+    g = new();
+    
+    for (i=0; i<10; i++) begin
+      
+      assert(g.randomize()) else begin
+        $display("Randomization Failed at %0t", $time);
+        $finish();
+      end
+      
+      $display("value of a : %0d and b : %0d", g.a,g.b);
+      #10;
+    end
+  end
+  
+endmodule
+```
+## External function and constraint
+```
+class generator;
+  
+  randc bit [3:0] a,b;
+  bit [3:0] y;
+
+  extern constraint data;
+  
+  extern function void display();
+  
+endclass
+
+constraint generator::data {
+  a inside {[0:3]};
+  b inside {[12:15]};
+};
+    
+    function void generator::display();
+      $display("value of a : %0d and b : %0d",a,b);
+    endfunction
+
+module tb;
+  generator g;
+  int i = 0;
+  
+  initial begin
+    g = new();
+    
+    for (i=0; i<15; i++) begin
+      
+      assert(g.randomize()) else begin
+        $display("Randomization Failed at %0t", $time);
+        $finish();
+      end
+      
+      g.display();
+      #10;
+    end
+  end
+  
+endmodule
+```
