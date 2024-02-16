@@ -183,7 +183,7 @@ function void display_ain_bin();
     $display("ain : %0b, bin : %0b", ain, bin);
   endfunction
 ```
-### Using function
+### Using task
 ```
 module tb;
   
