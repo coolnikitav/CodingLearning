@@ -1,3 +1,6 @@
+#include <iostream>
+#include <unordered_map>
+#include <queue>
 using namespace std;
 
 typedef pair<int,int> freq_num;
@@ -24,11 +27,6 @@ priority_queue<freq_num, vector<freq_num>, greater<freq_num>> create_pq(unordere
     }
     return pq;
 }
-
-#include <iostream>
-#include <unordered_map>
-#include <queue>
-using namespace std;
 
 int findLeastNumOfUniqueInts(vector<int>& arr, int k) {
     unordered_map<int,int> freq;
@@ -60,8 +58,6 @@ int main() {
 
     vector<int> arr2 = {4,3,1,1,3,3,2};
     cout << findLeastNumOfUniqueInts(arr2,3) << endl;
-
-    
 
     return -1;
 }
