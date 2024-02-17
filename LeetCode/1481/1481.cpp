@@ -3,45 +3,38 @@
 #include <queue>
 using namespace std;
 
-typedef pair<int,int> freq_num;
-
 unordered_map<int,int> create_freq_map(vector<int>& arr) {
     unordered_map<int,int> freq;
 
-    for (int i = 0; i < arr.size(); i++) {
-        if (freq.find(arr[i]) == freq.end()) {
-            freq[arr[i]] = 1;
-        } else {
-            freq[arr[i]]++;
-        }
+    for (int num : arr) {
+        freq[num]++;
     }
 
     return freq;
 }
 
-priority_queue<freq_num, vector<freq_num>, greater<freq_num>> create_pq(unordered_map<int,int> freq, vector<int>& arr) {
-    priority_queue<freq_num, vector<freq_num>, greater<freq_num>> pq;
-    for (auto key : freq) {
-        pair<int,int> new_pair = make_pair(key.second, key.first);
-        pq.push(new_pair);
+priority_queue<int, vector<int>, greater<int>> create_pq(unordered_map<int,int> freq, vector<int>& arr) {
+    priority_queue<int, vector<int>, greater<int>> pq;
+    for (auto item : freq) {
+        pq.push(item.second);
     }
     return pq;
 }
+
+
 
 int findLeastNumOfUniqueInts(vector<int>& arr, int k) {
     unordered_map<int,int> freq;
     freq = create_freq_map(arr);
 
-    priority_queue<freq_num, vector<freq_num>, greater<freq_num>> pq;
+    priority_queue<int, vector<int>, greater<int>> pq;
     pq = create_pq(freq, arr);
 
-    while (k > 0) {
-        if ((pq.top()).first > k) {
-            k -= (pq.top()).first;
-        } else {
-            k -= (pq.top()).first;
+    while(k>0){
+        k=k-pq.top();
+        if(k>=0){
             pq.pop();
-        } 
+        }
     }
     return pq.size();
 }
