@@ -290,3 +290,210 @@ endmodule
 # KERNEL: Task 1 completed at 20
 # KERNEL: Task 2 completed at 30
 ```
+## Semaphore
+```
+class first;
+  
+  rand int data;
+  
+  constraint data_c {data < 10; data > 0;}
+  
+endclass
+
+class second;
+  
+  rand int data;
+  
+  constraint data_c {data > 10; data < 20;}
+  
+endclass
+
+class main;
+  
+  semaphore sem;
+  
+  first f;
+  second s;
+  
+  int data;
+  int i = 0;
+  
+  task send_first();
+    sem.get(1);  // ensures that only 1 task can execute its critical section at a time
+    for (i = 0; i < 10; i++) begin
+      f.randomize();
+      data = f.data;
+      $display("First access semaphore and data sent : %0d", f.data);
+      #10;
+    end
+    sem.put(1);
+    $display("Semaphore unoccupied");
+  endtask
+  
+  task send_second();
+    sem.get(1);
+    for (i = 0; i < 10; i++) begin
+      s.randomize();
+      data = s.data;
+      $display("Second access semaphore and data sent : %0d", s.data);
+      #10;
+    end
+    sem.put(1);
+    $display("Semaphore unoccupied");
+  endtask
+  
+  task run();
+    sem = new(1);
+    f = new();
+    s = new();
+    
+    fork
+      send_first();
+      send_second();
+    join
+  endtask
+  
+endclass
+
+module tb;
+  
+  main m;
+  
+  initial begin
+    m = new();
+    m.run();
+  end
+  
+  initial begin
+    #250;
+    $finish();
+  end
+  
+endmodule
+```
+```
+# KERNEL: First access semaphore and data sent : 4
+# KERNEL: First access semaphore and data sent : 6
+# KERNEL: First access semaphore and data sent : 1
+# KERNEL: First access semaphore and data sent : 9
+# KERNEL: First access semaphore and data sent : 2
+# KERNEL: First access semaphore and data sent : 2
+# KERNEL: First access semaphore and data sent : 3
+# KERNEL: First access semaphore and data sent : 6
+# KERNEL: First access semaphore and data sent : 1
+# KERNEL: First access semaphore and data sent : 3
+# KERNEL: Semaphore unoccupied
+# KERNEL: Second access semaphore and data sent : 13
+# KERNEL: Second access semaphore and data sent : 15
+# KERNEL: Second access semaphore and data sent : 11
+# KERNEL: Second access semaphore and data sent : 12
+# KERNEL: Second access semaphore and data sent : 16
+# KERNEL: Second access semaphore and data sent : 14
+# KERNEL: Second access semaphore and data sent : 17
+# KERNEL: Second access semaphore and data sent : 11
+# KERNEL: Second access semaphore and data sent : 17
+# KERNEL: Second access semaphore and data sent : 12
+# KERNEL: Semaphore unoccupied
+```
+## Mailbox
+```
+class generator;
+  
+  int data = 12;
+  mailbox mbx;  // gen2drv
+  
+  task run();
+    mbx.put(data);
+    $display("[GEN] : SENT DATA : %0d", data);
+  endtask
+  
+endclass
+
+class driver;
+  
+  int datac = 0;  
+  mailbox mbx;
+  
+  task run();
+    mbx.get(datac);
+    $display("[DRV] : RCVD DATA : %0d", datac);
+  endtask
+  
+endclass
+
+module tb;
+  
+  generator gen;
+  driver drv;
+  mailbox mbx;
+  
+  initial begin
+    gen = new();
+    drv = new();
+    mbx = new();
+    
+    gen.mbx = mbx;
+    drv.mbx = mbx;
+    
+    gen.run();
+    drv.run();
+  end
+  
+endmodule
+```
+```
+# KERNEL: [GEN] : SENT DATA : 12
+# KERNEL: [DRV] : RCVD DATA : 12
+```
+### Specifying mailbox with a custome constructor
+```
+class generator;
+  
+  int data = 12;
+  mailbox mbx;  // gen2drv
+  
+  function new(mailbox mbx);
+    this.mbx = mbx;
+  endfunction
+  
+  task run();
+    mbx.put(data);
+    $display("[GEN] : SENT DATA : %0d", data);
+  endtask
+  
+endclass
+
+class driver;
+  
+  int datac = 0;  
+  mailbox mbx;
+  
+  function new(mailbox mbx);
+    this.mbx = mbx;
+  endfunction
+  
+  task run();
+    mbx.get(datac);
+    $display("[DRV] : RCVD DATA : %0d", datac);
+  endtask
+  
+endclass
+
+module tb;
+  
+  generator gen;
+  driver drv;
+  mailbox mbx;
+  
+  initial begin
+    mbx = new();
+    
+    gen = new(mbx);
+    drv = new(mbx);  
+    
+    gen.run();
+    drv.run();
+  end
+  
+endmodule
+```
