@@ -719,3 +719,355 @@ endmodule
 ```
 
 ## Adding monitor and scoreboard
+```
+// will send transaction class between monitor and scoreboard
+class transaction;
+	randc bit [3:0] a;
+	randc bit [3:0] b;
+    bit [4:0] sum;
+  
+  	function void display();
+    	$display("a : %0d \t b: %0d \t sum : %0d",a,b,sum);
+  	endfunction
+  
+endclass
+
+interface add_if;
+  logic [3:0] a;
+  logic [3:0] b;
+  logic [4:0] sum;
+  logic clk;
+endinterface
+
+class monitor;
+  mailbox #(transaction) mbx;
+  transaction trans;
+  virtual add_if aif;
+  
+  function new(mailbox #(transaction) mbx);
+    this.mbx = mbx;
+  endfunction
+  
+  task run();
+  	forever begin
+      trans = new();
+      @(posedge aif.clk); 
+      // we only need non-blocking if we are assigning values to interface
+      trans.a = aif.a;
+      trans.b = aif.b;
+      trans.sum = aif.sum;
+      $display("[MON] : DATA SENT TO SCOREBOARD");
+      trans.display();
+      mbx.put(trans);
+    end
+  endtask
+endclass
+
+class scoreboard;
+  mailbox #(transaction) mbx;
+  transaction trans;
+  
+  function new(mailbox #(transaction) mbx);
+    this.mbx = mbx;
+  endfunction
+  
+  task run();
+    forever begin
+      mbx.get(trans);
+      $display("[SCO] : DATA RCVD FROM MONITOR");
+      trans.display();
+      #20;
+    end
+  endtask
+endclass
+
+module tb;
+  
+  add_if aif();
+  monitor mon;
+  scoreboard sco;
+  mailbox #(transaction) mbx;
+
+  add dut (aif.a, aif.b, aif.sum, aif.clk );
+
+  initial begin
+    aif.clk <= 0;
+  end
+  
+  always #10 aif.clk <= ~aif.clk;
+ 
+  initial begin
+    for (int i = 0; i < 20; i++) begin
+      @(posedge aif.clk);
+      aif.a <= $urandom_range(0,15);
+      aif.b <= $urandom_range(0,15);
+    end
+  end
+  
+  initial begin
+    mbx = new();
+    mon = new(mbx);
+    sco = new(mbx);
+    mon.aif = aif;
+  end
+  
+  initial begin
+    fork
+      mon.run();
+      sco.run();
+    join
+  end
+
+  initial begin
+    $dumpfile("dump.vcd"); 
+    $dumpvars;  
+    #450;
+    $finish();
+  end
+  
+endmodule
+```
+```
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 0 	 b: 0 	 sum : 0
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 0 	 b: 0 	 sum : 0
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 3 	 b: 11 	 sum : 0
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 3 	 b: 11 	 sum : 0
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 11 	 b: 3 	 sum : 14
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 11 	 b: 3 	 sum : 14
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 4 	 b: 9 	 sum : 14
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 4 	 b: 9 	 sum : 14
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 15 	 b: 15 	 sum : 13
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 15 	 b: 15 	 sum : 13
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 4 	 b: 1 	 sum : 30
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 4 	 b: 1 	 sum : 30
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 10 	 b: 12 	 sum : 5
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 10 	 b: 12 	 sum : 5
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 11 	 b: 9 	 sum : 22
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 11 	 b: 9 	 sum : 22
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 5 	 b: 15 	 sum : 20
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 5 	 b: 15 	 sum : 20
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 11 	 b: 13 	 sum : 20
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 11 	 b: 13 	 sum : 20
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 14 	 b: 9 	 sum : 24
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 14 	 b: 9 	 sum : 24
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 8 	 b: 3 	 sum : 23
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 8 	 b: 3 	 sum : 23
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 15 	 b: 4 	 sum : 11
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 15 	 b: 4 	 sum : 11
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 10 	 b: 2 	 sum : 19
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 10 	 b: 2 	 sum : 19
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 15 	 b: 0 	 sum : 12
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 15 	 b: 0 	 sum : 12
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 0 	 b: 4 	 sum : 15
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 0 	 b: 4 	 sum : 15
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 7 	 b: 14 	 sum : 4
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 7 	 b: 14 	 sum : 4
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 8 	 b: 10 	 sum : 21
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 8 	 b: 10 	 sum : 21
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 8 	 b: 10 	 sum : 18
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 8 	 b: 10 	 sum : 18
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 13 	 b: 15 	 sum : 18
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 13 	 b: 15 	 sum : 18
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 11 	 b: 15 	 sum : 28
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 11 	 b: 15 	 sum : 28
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 11 	 b: 15 	 sum : 26
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 11 	 b: 15 	 sum : 26
+```
+```
+// will send transaction class between monitor and scoreboard
+class transaction;
+	randc bit [3:0] a;
+	randc bit [3:0] b;
+    bit [4:0] sum;
+  
+  	function void display();
+    	$display("a : %0d \t b: %0d \t sum : %0d",a,b,sum);
+  	endfunction
+  
+endclass
+
+interface add_if;
+  logic [3:0] a;
+  logic [3:0] b;
+  logic [4:0] sum;
+  logic clk;
+endinterface
+
+class monitor;
+  mailbox #(transaction) mbx;
+  transaction trans;
+  virtual add_if aif;
+  
+  function new(mailbox #(transaction) mbx);
+    this.mbx = mbx;
+  endfunction
+  
+  task run();
+  	forever begin
+      trans = new();
+      repeat (2) @(posedge aif.clk); 
+      // we only need non-blocking if we are assigning values to interface
+      trans.a = aif.a;
+      trans.b = aif.b;
+      trans.sum = aif.sum;
+      $display("[MON] : DATA SENT TO SCOREBOARD");
+      trans.display();
+      mbx.put(trans);
+    end
+  endtask
+endclass
+
+class scoreboard;
+  mailbox #(transaction) mbx;
+  transaction trans;
+  
+  function new(mailbox #(transaction) mbx);
+    this.mbx = mbx;
+  endfunction
+  
+  task run();
+    forever begin
+      mbx.get(trans);
+      $display("[SCO] : DATA RCVD FROM MONITOR");
+      trans.display();
+      #40;
+    end
+  endtask
+endclass
+
+module tb;
+  
+  add_if aif();
+  monitor mon;
+  scoreboard sco;
+  mailbox #(transaction) mbx;
+
+  add dut (aif.a, aif.b, aif.sum, aif.clk );
+
+  initial begin
+    aif.clk <= 0;
+  end
+  
+  always #10 aif.clk <= ~aif.clk;
+ 
+  initial begin
+    for (int i = 0; i < 20; i++) begin
+      repeat(2) @(posedge aif.clk);
+      aif.a <= $urandom_range(0,15);
+      aif.b <= $urandom_range(0,15);
+    end
+  end
+  
+  initial begin
+    mbx = new();
+    mon = new(mbx);
+    sco = new(mbx);
+    mon.aif = aif;
+  end
+  
+  initial begin
+    fork
+      mon.run();
+      sco.run();
+    join
+  end
+
+  initial begin
+    $dumpfile("dump.vcd"); 
+    $dumpvars;  
+    #450;
+    $finish();
+  end
+  
+endmodule
+```
+```
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 0 	 b: 0 	 sum : 0
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 0 	 b: 0 	 sum : 0
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 3 	 b: 11 	 sum : 14
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 3 	 b: 11 	 sum : 14
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 11 	 b: 3 	 sum : 14
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 11 	 b: 3 	 sum : 14
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 4 	 b: 9 	 sum : 13
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 4 	 b: 9 	 sum : 13
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 15 	 b: 15 	 sum : 30
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 15 	 b: 15 	 sum : 30
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 4 	 b: 1 	 sum : 5
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 4 	 b: 1 	 sum : 5
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 10 	 b: 12 	 sum : 22
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 10 	 b: 12 	 sum : 22
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 11 	 b: 9 	 sum : 20
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 11 	 b: 9 	 sum : 20
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 5 	 b: 15 	 sum : 20
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 5 	 b: 15 	 sum : 20
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 11 	 b: 13 	 sum : 24
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 11 	 b: 13 	 sum : 24
+# KERNEL: [MON] : DATA SENT TO SCOREBOARD
+# KERNEL: a : 14 	 b: 9 	 sum : 23
+# KERNEL: [SCO] : DATA RCVD FROM MONITOR
+# KERNEL: a : 14 	 b: 9 	 sum : 23
+```
