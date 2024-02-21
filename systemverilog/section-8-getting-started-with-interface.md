@@ -167,3 +167,24 @@ module tb;
 endmodule
 ```
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f7504bad-4442-4740-93f6-827cc862f157)
+
+## Important rules for SV
+1) Add constructor to transaction in the custom constructor of generator
+   ```
+   class generator;
+     transaction trans;
+
+     function new(mailbox #(transaction) mbx);
+       this.mbx = mbx;
+       trans = new;
+     endfunction
+   endclass
+   ```
+   signle space for variable means correct randc behavior
+2) Send deep copy of transaction object instead of original transaction object
+   - Independent object for each iteration
+   - Object can be used without worrying about path delay
+3) Send deep copy
+   - Errors coule be injected with methods/constraints
+     
+## Injecting error
