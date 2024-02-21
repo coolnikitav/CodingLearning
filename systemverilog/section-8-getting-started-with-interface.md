@@ -168,6 +168,177 @@ endmodule
 ```
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f7504bad-4442-4740-93f6-827cc862f157)
 
+## Adding generator
+```
+class transaction;
+  
+ randc bit [3:0] a;
+ randc bit [3:0] b;
+  
+  function void display();
+    $display("a : %0d \t b: %0d ", a,b);
+  endfunction
+  
+  function transaction copy();
+    copy = new();
+    copy.a = this.a;
+    copy.b = this.b;
+  endfunction
+  
+endclass
+
+class generator;
+  
+  transaction trans;
+  mailbox #(transaction) mbx;
+  int i = 0;
+  
+  function new(mailbox #(transaction) mbx);
+    this.mbx = mbx;
+    trans = new();
+  endfunction 
+  
+  task run();
+    for(i = 0; i<20; i++) begin
+      assert(trans.randomize()) else $display("Randomization Failed");
+      $display("[GEN] : DATA SENT TO DRIVER");
+      trans.display();
+      mbx.put(trans.copy);
+    end
+  endtask
+
+endclass
+
+module tb;
+  
+  generator gen;
+  mailbox #(transaction) mbx;
+ 
+  initial begin
+    mbx = new();
+    gen = new(mbx);
+    gen.run();
+    end
+ 
+endmodule
+```
+```
+////////////////////////Testbench Code
+
+class transaction;
+ randc bit [3:0] a;
+ randc bit [3:0] b;
+  bit [4:0] sum;
+  
+  function void display();
+    $display("a : %0d \t b: %0d \t sum : %0d",a,b,sum);
+  endfunction
+  
+  function transaction copy();
+    copy = new();
+    copy.a = this.a;
+    copy.b = this.b;
+    copy.sum = this.sum;
+  endfunction
+  
+endclass
+ 
+class generator;
+  
+  transaction trans;
+  mailbox #(transaction) mbx;
+  event done;
+  
+  function new(mailbox #(transaction) mbx);
+    this.mbx = mbx;
+    trans = new();
+  endfunction
+
+  task run();
+    for(int i = 0; i<10; i++) begin
+      trans.randomize();
+      mbx.put(trans.copy);
+      $display("[GEN] : DATA SENT TO DRIVER");
+      trans.display();
+      #20;
+    end
+   -> done;
+  endtask
+  
+endclass
+
+interface add_if;
+  logic [3:0] a;
+  logic [3:0] b;
+  logic [4:0] sum;
+  logic clk;
+endinterface
+
+class driver;
+  
+  virtual add_if aif;
+  mailbox #(transaction) mbx;
+  transaction data;
+  event next;
+  
+  function new(mailbox #(transaction) mbx);
+    this.mbx = mbx;
+  endfunction 
+
+ task run();
+    forever begin
+      mbx.get(data);
+      @(posedge aif.clk);  
+      aif.a <= data.a;
+      aif.b <= data.b;
+      $display("[DRV] : Interface Trigger");
+      data.display();
+    end
+  endtask
+
+endclass
+  
+module tb;
+  
+ add_if aif();
+   driver drv;
+   generator gen;
+   event done;
+ 
+   mailbox #(transaction) mbx;
+  
+  add dut (aif.a, aif.b, aif.sum, aif.clk );
+
+  initial begin
+    aif.clk <= 0;
+  end
+  
+  always #10 aif.clk <= ~aif.clk;
+ 
+   initial begin
+     mbx = new();
+     drv = new(mbx);
+     gen = new(mbx);
+     drv.aif = aif;
+     done = gen.done;
+   end
+  
+  initial begin
+  fork
+    gen.run();
+    drv.run();
+  join_none
+    wait(done.triggered);
+    $finish();
+  end
+
+  initial begin
+    $dumpfile("dump.vcd"); 
+    $dumpvars;  
+  end
+  
+endmodule
+```
 ## Important rules for SV
 1) Add constructor to transaction in the custom constructor of generator
    ```
@@ -176,7 +347,7 @@ endmodule
 
      function new(mailbox #(transaction) mbx);
        this.mbx = mbx;
-       trans = new;
+       trans = new();
      endfunction
    endclass
    ```
