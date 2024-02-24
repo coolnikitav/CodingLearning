@@ -80,3 +80,102 @@ interface spi_if;
   logic sclk, cs, mosi;
 endinterface
 ```
+```
+///////////////////////
+
+class transaction;
+  rand bit newd;
+  rand bit [11:0] din;
+  bit cs;
+  bit mosi;
+  
+  function void display(input string tag);
+    $display("[%0s] : DATA_NEW : %0b DIN : %0d CS : %0b MOSI : %0b", tag, newd, din, cs, mosi);
+  endfunction
+  
+  function transaction copy();
+    copy = new();
+    copy.newd = this.newd;
+    copy.din = this.din;
+    copy.cs = this.cs;
+    copy.mosi = this.mosi;
+  endfunction
+endclass
+
+///////////////////////
+
+class generator;
+  transaction trans;
+  mailbox #(transaction) mbx;
+  
+  event done;
+  event drvnext;
+  event sconext;
+  
+  int count = 0;
+  
+  function new(mailbox #(transaction) mbx);
+    this.mbx = mbx;
+    trans = new();
+  endfunction
+  
+  task run();
+    repeat(count) begin
+      assert(trans.randomize) else $error("[GEN] : Randomization failed");
+      mbx.put(trans.copy);
+      trans.display("GEN");
+      @(drvnext);
+      @(sconext);
+    end
+    -> done;
+  endtask
+endclass
+
+///////////////////////
+
+class driver;
+  virtual spi_if sif;
+  transaction trans;
+  
+  mailbox #(transaction) mbx;   // drv -> sco
+  mailbox #(bit [11:0]) mbxds;  // collect bits from MOSI
+  
+  event drvnext;
+  
+  bit [11:0] din;
+  
+  function new(mailbox #(bit [11:0]) mbxds, mailbox #(transaction) mbx);
+    this.mbx = mbx;
+    this.mbxds = mbxds;
+  endfunction
+  
+  task reset();
+    sif.rst <= 1'b1;
+    sif.cs <= 1'b1;
+    sif.newd <= 1'b0;
+    sif.din <= 1'b0;
+    sif.mosi <= 1'b0;
+    repeat(10) @(posedge sif.clk);
+    sif.rst <= 1'b0;
+    repeat(5) @(posedge sif.clk);
+    
+    $display("[DRV] : RESET DONE");
+    $display("-----------------------------");
+  endtask
+  
+  task run();
+    forever begin
+      mbx.get(trans);
+      @(posedge sif.sclk);
+      sif.newd <= 1'b1;
+      sid.din = trans.din;
+      mbxds.put(trans.din);
+      @(posedge sif.sclk);
+      sif.newd <= 1'b0;
+      wait(sif.cs == 1'b1);
+      $display("[DRV] : DATA SENT TO DAC : %0d", trans.din);
+      -> drvnext;
+    end
+  endtask
+endclass
+```
