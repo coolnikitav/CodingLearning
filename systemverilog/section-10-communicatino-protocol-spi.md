@@ -12,7 +12,7 @@ module spi(
   input [11:0] din,
   output reg sclk, cs, mosi
 );
-  typedef enum bit [1:0] {idle = 2'b00, enable = 2'b01, send 2'b10, comp = 2'b11} state_type;
+  typedef enum bit [1:0] {idle = 2'b00, enable = 2'b01, send = 2'b10, comp = 2'b11} state_type;
   state_type state = idle;
   
   int countc = 0;
@@ -137,8 +137,8 @@ class driver;
   virtual spi_if sif;
   transaction trans;
   
-  mailbox #(transaction) mbx;   // drv -> sco
-  mailbox #(bit [11:0]) mbxds;  // collect bits from MOSI
+  mailbox #(transaction) mbx;   // get data from generator
+  mailbox #(bit [11:0]) mbxds;  // drv -> sco
   
   event drvnext;
   
@@ -168,7 +168,7 @@ class driver;
       mbx.get(trans);
       @(posedge sif.sclk);
       sif.newd <= 1'b1;
-      sid.din = trans.din;
+      sif.din = trans.din;
       mbxds.put(trans.din);
       @(posedge sif.sclk);
       sif.newd <= 1'b0;
@@ -178,4 +178,157 @@ class driver;
     end
   endtask
 endclass
+
+///////////////////////
+
+class monitor;
+  transaction trans;
+  mailbox #(bit [11:0]) mbx;  // mon -> sco
+  bit [11:0] srx;  // send
+  
+  virtual spi_if sif;
+  
+  function new(mailbox #(bit [11:0]) mbx);
+  	this.mbx = mbx;             
+  endfunction
+               
+  task run();
+  	forever begin
+      @(posedge sif.sclk);
+      wait (sif.cs == 1'b0);  // start of transaction
+      @(posedge sif.sclk);
+      
+      for (int i = 0; i < 12; i++) begin
+        @(posedge sif.sclk);
+        srx[i] = sif.mosi;
+      end
+      
+      wait(sif.cs == 1'b1);  // end of transaction
+      
+      $display("[MON] : DATA SENT : %0d", srx);
+      mbx.put(srx);
+    end
+  endtask
+endclass
+
+///////////////////////
+
+class scoreboard;
+  mailbox #(bit [11:0]) mbxds, mbxms;
+  bit [11:0] ds;
+  bit [11:0] ms;
+  event sconext;
+  
+  function new(mailbox #(bit [11:0]) mbxds, mailbox #(bit [11:0]) mbxms);
+    this.mbxds = mbxds;
+    this.mbxms = mbxms;
+  endfunction
+  
+  task run();
+    forever begin
+      mbxds.get(ds);
+      mbxms.get(ms);
+      $display("[SCO] : DRV : %0d : MON : %0d", ds, ms);
+      
+      if (ds == ms)
+        $display("[SCO] : DATA MATCH");
+      else
+        $display("[SCO] : DATA MISMATCH");
+      
+      $display("-----------------------------");
+      -> sconext;
+    end
+  endtask
+endclass
+
+///////////////////////
+
+class environment;
+  generator gen;
+  driver drv;
+  monitor mon;
+  scoreboard sco;
+  
+  event nextgd;
+  event nextgs;
+  
+  mailbox #(transaction) mbxgd;
+  mailbox #(bit [11:0]) mbxds;
+  mailbox #(bit [11:0]) mbxms;
+  
+  virtual spi_if sif;
+  
+  function new(virtual spi_if sif);
+    mbxgd = new();
+    mbxms = new();
+    mbxds = new();
+    
+    gen = new(mbxgd);
+    drv = new(mbxds, mbxgd);
+    
+    mon = new(mbxms);
+    sco = new(mbxds, mbxms);
+    
+    this.sif = sif;
+    drv.sif = this.sif;
+    mon.sif = this.sif;
+    
+    gen.sconext = nextgs;
+    sco.sconext = nextgs;
+    
+    gen.drvnext = nextgd;
+    drv.drvnext = nextgd;
+  endfunction
+  
+  task pre_test();
+    drv.reset();
+  endtask
+  
+  task test();
+    fork
+      gen.run();
+      drv.run();
+      mon.run();
+      sco.run();
+    join_any
+  endtask
+  
+  task post_test();
+    wait(gen.done.triggered);
+    $finish();
+  endtask
+  
+  task run();
+    pre_test();
+    test();
+    post_test();
+  endtask
+endclass
+
+///////////////////////
+
+module tb;
+  spi_if sif();
+  
+  spi dut (.clk(sif.clk),.newd(sif.newd),.rst(sif.rst),.din(sif.din),.sclk(sif.sclk),.cs(sif.cs),.mosi(sif.mosi));
+  
+  initial begin
+    sif.clk <= 0;
+  end
+  
+  always #10 sif.clk <= ~sif.clk;
+  
+  environment env;
+  
+  initial begin
+    env = new(sif);
+    env.gen.count = 20;
+    env.run();
+  end
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+  end
+endmodule
 ```
