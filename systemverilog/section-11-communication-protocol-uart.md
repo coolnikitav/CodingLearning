@@ -84,7 +84,6 @@ module uartrx
   )
   (
     input clk, rst,
-    input newd,
     input rx,
     output reg done,
     output reg [7:0] rxdata
@@ -167,6 +166,20 @@ module uart_top
   uarttx #(clk_freq, baud_rate) utx (clk, rst, newd, dintx, tx, donetx);
   uartrx #(clk_freq, baud_rate) rtx (clk, rst, rx, donerx, doutrx);
 endmodule
+
+////////////////////////////////
+
+interface uart_if;
+  logic clk,rst;
+  logic uclktx,uclkrx;
+  logic rx;
+  logic [7:0] dintx;
+  logic newd;
+  logic tx;
+  logic [7:0] doutrx;
+  logic donetx;
+  logic donerx;
+endinterface
 ```
 ```
 class transaction;
@@ -286,7 +299,7 @@ class driver;
         end
         
         mbxds.put(datarx);
-        $display("[DRV] : DATA RCVD : %0d", trans.datarx);
+        $display("[DRV] : DATA RCVD : %0d", datarx);
         wait (uif.donerx == 1'b1);
         uif.rx <= 1'b1;
         -> drvnext;
@@ -294,4 +307,228 @@ class driver;
     end
   endtask
 endclass
+
+////////////////////////////////
+
+class monitor;
+ 
+  transaction tr;
+  
+  mailbox #(bit [7:0]) mbx;
+  
+  bit [7:0] srx; //////send
+  bit [7:0] rrx; ///// recv
+  
+ 
+  
+  virtual uart_if uif;
+  
+  
+  function new(mailbox #(bit [7:0]) mbx);
+    this.mbx = mbx;
+    endfunction
+  
+  task run();
+    
+    forever begin
+     
+      @(posedge uif.uclktx);
+      if ( (uif.newd== 1'b1) && (uif.rx == 1'b1) ) 
+                begin
+                  
+                  @(posedge uif.uclktx); ////start collecting tx data from next clock tick
+                  
+              for(int i = 0; i<= 7; i++) 
+              begin 
+                @(posedge uif.uclktx);
+                srx[i] = uif.tx;
+                    
+              end
+ 
+                  
+                  $display("[MON] : DATA SEND on UART TX %0d", srx);
+                  
+                  //////////wait for done tx before proceeding next transaction                
+                  @(posedge uif.uclktx); //
+                mbx.put(srx);
+                 
+               end
+      
+      else if ((uif.rx == 1'b0) && (uif.newd == 1'b0) ) 
+        begin
+          wait(uif.donerx == 1);
+           rrx = uif.doutrx;     
+           $display("[MON] : DATA RCVD RX %0d", rrx);
+          @(posedge uif.uclktx); 
+           mbx.put(rrx);
+      end
+  end  
+endtask
+
+endclass
+
+////////////////////////////////
+
+class scoreboard;
+  mailbox #(bit [7:0]) mbxds, mbxms;
+  
+  bit [7:0] ds;
+  bit [7:0] ms;
+  
+   event sconext;
+  
+  function new(mailbox #(bit [7:0]) mbxds, mailbox #(bit [7:0]) mbxms);
+    this.mbxds = mbxds;
+    this.mbxms = mbxms;
+  endfunction
+  
+  task run();
+    forever begin
+      
+      mbxds.get(ds);
+      mbxms.get(ms);
+      
+      $display("[SCO] : DRV : %0d MON : %0d", ds, ms);
+      if(ds == ms)
+        $display("DATA MATCHED");
+      else
+        $display("DATA MISMATCHED");
+      
+      $display("----------------------------------------");
+      
+     ->sconext; 
+    end
+  endtask
+  
+  
+endclass
+
+////////////////////////////////
+
+class environment;
+ 
+    generator gen;
+    driver drv;
+    monitor mon;
+    scoreboard sco; 
+  
+    event nextgd; ///gen -> drv
+  
+    event nextgs;  /// gen -> sco
+  
+  mailbox #(transaction) mbxgd; ///gen - drv
+  
+  mailbox #(bit [7:0]) mbxds; /// drv - sco
+    
+     
+  mailbox #(bit [7:0]) mbxms;  /// mon - sco
+  
+    virtual uart_if uif;
+ 
+  
+  function new(virtual uart_if uif);
+       
+    mbxgd = new();
+    mbxms = new();
+    mbxds = new();
+    
+    gen = new(mbxgd);
+    drv = new(mbxds,mbxgd);
+    
+    
+ 
+    mon = new(mbxms);
+    sco = new(mbxds, mbxms);
+    
+    this.uif = uif;
+    drv.uif = this.uif;
+    mon.uif = this.uif;
+    
+    gen.sconext = nextgs;
+    sco.sconext = nextgs;
+    
+    gen.drvnext = nextgd;
+    drv.drvnext = nextgd;
+ 
+  endfunction
+  
+  task pre_test();
+    drv.reset();
+  endtask
+  
+  task test();
+    fork
+      gen.run();
+      drv.run();
+      mon.run();
+      sco.run();
+    join_any
+  endtask
+  
+  task post_test();
+    wait(gen.done.triggered);  
+    $finish();
+  endtask
+  
+  task run();
+    pre_test();
+    test();
+    post_test();
+  endtask
+  
+  
+  
+endclass
+
+////////////////////////////////
+
+module tb;
+  generator gen;
+  driver drv;
+  monitor mon;
+  
+  event sconext;
+  event drvnext;
+  
+  event done;
+  
+  mailbox #(transaction) mbx;
+  mailbox #(bit [7:0]) mbxds;
+  mailbox #(bit [7:0]) mbxms;
+  
+  uart_if uif();
+  
+  uart_top #(1000000, 9600) dut (uif.clk,uif.rst,uif.rx,uif.dintx,uif.newd,uif.tx,uif.doutrx,uif.donetx, uif.donerx);
+  
+  
+  
+    initial begin
+      uif.clk <= 0;
+    end
+    
+    always #10 uif.clk <= ~uif.clk;
+  
+  
+  environment env;
+  
+  initial begin
+    env = new(uif);
+    env.gen.count = 5;
+    env.run();
+  end
+ 
+  
+  initial begin
+  $dumpfile("dump.vcd");
+    $dumpvars;
+  end
+  
+  
+     
+assign uif.uclktx = dut.utx.uclk;
+assign uif.uclkrx = dut.rtx.uclk;
+    
+  
+  
+endmodule
 ```
