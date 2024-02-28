@@ -532,3 +532,37 @@ assign uif.uclkrx = dut.rtx.uclk;
   
 endmodule
 ```
+```
+# KERNEL: [DRV] : RESET DONE
+# KERNEL: --------------------------------
+# KERNEL: [GEN] : oper : read  din : 88
+# KERNEL: [DRV] : DATA RCVD : 98
+# KERNEL: [MON] : DATA RCVD RX 98
+# KERNEL: [SCO] : DRV : 98 MON : 98
+# KERNEL: DATA MATCHED
+# KERNEL: ----------------------------------------
+# KERNEL: [GEN] : oper : write  din : 10
+# KERNEL: [DRV] : DATA SENT : 10
+# KERNEL: [MON] : DATA SEND on UART TX 10
+# KERNEL: [SCO] : DRV : 10 MON : 10
+# KERNEL: DATA MATCHED
+# KERNEL: ----------------------------------------
+# KERNEL: [GEN] : oper : write  din : 39
+# KERNEL: [DRV] : DATA SENT : 39
+# KERNEL: [MON] : DATA SEND on UART TX 39
+# KERNEL: [SCO] : DRV : 39 MON : 39
+# KERNEL: DATA MATCHED
+# KERNEL: ----------------------------------------
+# KERNEL: [GEN] : oper : read  din : 254
+# KERNEL: [DRV] : DATA RCVD : 224
+# KERNEL: [MON] : DATA RCVD RX 224
+# KERNEL: [SCO] : DRV : 224 MON : 224
+# KERNEL: DATA MATCHED
+# KERNEL: ----------------------------------------
+# KERNEL: [GEN] : oper : write  din : 173
+# KERNEL: [DRV] : DATA SENT : 173
+# KERNEL: [MON] : DATA SEND on UART TX 173
+# KERNEL: [SCO] : DRV : 173 MON : 173
+# KERNEL: DATA MATCHED
+# KERNEL: ----------------------------------------
+```
