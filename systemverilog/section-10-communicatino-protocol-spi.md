@@ -853,3 +853,471 @@ endmodule
 # KERNEL: [SCO] : DATA MATCH
 # KERNEL: ----------------------------
 ```
+
+## Self review:
+```
+`timescale 1ns / 1ps
+
+module spi_master 
+  #(
+   parameter DATA_WIDTH = 8
+  )
+  ( 
+    input clk, newd, rst,
+    input [DATA_WIDTH-1:0] din,
+	output reg sclk, cs, mosi
+  );
+  // sclk generation
+  sclk sclk0 (.clk(clk),.rst(rst),.sclk(sclk));
+  
+  // State transition logic
+  localparam IDLE=1'b0,WRITE=1'b1;
+  reg state, next_state;
+  
+  always @ (*) begin
+    case (state)
+      IDLE: next_state = newd == 1'b1 ? WRITE : IDLE;
+      WRITE: next_state = bit_counter == DATA_WIDTH-1 ? IDLE : WRITE;
+    endcase
+  end
+  
+  always @ (posedge sclk) begin
+    if (rst == 1'b1)
+      state <= IDLE;
+    else
+      state <= next_state;
+  end
+  
+  // data control
+  int bit_counter = 0;
+  reg [DATA_WIDTH-1:0] temp;
+  
+  always @ (posedge sclk) begin
+    if (rst == 1'b1) begin
+      mosi <= 1'b0;
+      bit_counter <= 0;
+    end else begin
+      case (state)
+        IDLE: begin
+          mosi <= 1'b0;
+          temp <= din;
+          bit_counter <= 0;
+        end
+        WRITE: begin
+          // writing
+          mosi <= temp[bit_counter];
+          bit_counter <= bit_counter + 1;
+        end
+        default: state <= IDLE;
+      endcase
+    end
+  end
+  
+  // flag control
+  assign cs = state == IDLE;
+endmodule
+
+//////////////////////////
+
+module sclk
+  #(
+   parameter clk_div = 5  // sclk = clk / 10 
+  )
+  (
+    input clk, rst,
+    output reg sclk
+  );
+  int clk_count = 0;
+  always @ (posedge clk) begin
+    if (rst == 1'b1) begin
+      sclk <= 1'b0;
+      clk_count <= 0;
+    end else begin
+      if (clk_count < clk_div)
+        clk_count <= clk_count + 1;
+      else begin
+        clk_count <= 0;
+        sclk <= ~sclk;
+      end
+    end
+  end
+endmodule
+```
+```
+`timescale 1ns / 1ps
+
+interface spi_if
+  #(
+   parameter DATA_WIDTH = 8 
+  );
+  logic clk, newd, rst;
+  logic [DATA_WIDTH-1:0] din;
+  logic sclk, cs, mosi;
+endinterface
+
+//////////////////////////
+
+class transaction;
+  randc bit [7:0] din;
+
+  function transaction copy();
+    copy = new();
+    copy.din = this.din;
+  endfunction
+  /*
+  constraint din_ctrl {
+    din == 200;
+  }*/
+endclass
+
+//////////////////////////
+
+class generator;
+  transaction trans;
+  mailbox #(transaction) gdmbx;
+  
+  event done;
+  event drvnext;
+  event sconext;
+  
+  int count = 0;
+  
+  function new(mailbox #(transaction) gdmbx);
+    trans = new();
+    this.gdmbx = gdmbx;
+  endfunction
+  
+  task run();
+    repeat(count) begin
+      assert(trans.randomize) else $error("RANDOMIZATION FAILED");
+      gdmbx.put(trans.copy());
+      $display("[GEN]: din: %0d", trans.din);
+      @(drvnext);
+      @(sconext);
+    end
+    -> done;
+  endtask
+endclass
+
+//////////////////////////
+
+class driver;
+  transaction trans;
+  mailbox #(transaction) gdmbx;
+  mailbox #(bit [7:0]) dsmbx;
+  virtual spi_if vif;
+  
+  event drvnext;
+  
+  function new(mailbox #(transaction) gdmbx,mailbox #(bit [7:0]) dsmbx);
+    this.gdmbx = gdmbx;
+    this.dsmbx = dsmbx;
+  endfunction
+  
+  task reset();
+    vif.rst <= 1'b1;
+    vif.cs <= 1'b1;
+    vif.newd <= 1'b0;
+    vif.din <= 7'b0;
+    vif.mosi <= 1'b0;
+    repeat(10) @(posedge vif.clk);
+    vif.rst <= 1'b0;
+    repeat(5) @(posedge vif.clk);
+    $display("RESET DONE");
+    $display("--------------------");
+  endtask
+  
+  task run();
+    forever begin
+      gdmbx.get(trans);
+      @(posedge vif.sclk);
+      vif.newd <= 1'b1;  // there is no slave, so we can't verify reading
+      vif.din <= trans.din;
+      dsmbx.put(trans.din);
+      @(posedge vif.sclk);
+      vif.newd <= 1'b0;
+      wait(vif.cs == 1'b1);
+      $display("[DRV]: DATA SENT DIN: %0b", trans.din); 
+      -> drvnext;   
+    end
+  endtask
+endclass
+
+//////////////////////////
+
+class monitor;
+  transaction trans;
+  mailbox #(bit [7:0]) msmbx;
+  virtual spi_if vif;
+  
+  bit [7:0] srx;
+  
+  function new(mailbox #(bit [7:0]) msmbx);
+    this.msmbx = msmbx;
+  endfunction
+  
+  task run();
+    forever begin
+      @(posedge vif.sclk);
+      wait (vif.cs == 1'b0);  // start of transaction
+      @(posedge vif.sclk);
+      for (int i = 0; i < 8; i++) begin 
+        @(posedge vif.sclk);       
+        srx[i] <= vif.mosi;
+      end
+      @(posedge vif.sclk);
+      wait (vif.cs == 1'b1);  // end of transaction
+      $display("[MON]: DATA SENT ON MOSI: %0b", srx);
+      msmbx.put(srx);
+    end
+  endtask
+endclass
+
+//////////////////////////
+
+class scoreboard;
+  bit [7:0] ds;
+  bit [7:0] ms;
+  
+  mailbox #(bit [7:0]) dsmbx;
+  mailbox #(bit [7:0]) msmbx;  
+  
+  event sconext;
+  
+  int errors = 0;
+  
+  function new(mailbox #(bit [7:0]) dsmbx,mailbox #(bit [7:0]) msmbx);
+    this.dsmbx = dsmbx;
+    this.msmbx = msmbx;
+  endfunction
+  
+  task run();
+    forever begin
+      dsmbx.get(ds);
+      msmbx.get(ms);
+      $display("[SCO]: DIN: %0d MOSI: %0d", ds, ms);
+      if (ds == ms)
+        $display("DATA MATCH");
+      else begin
+        $display("DATA MISMATCH");
+        errors++;
+      end
+      $display("--------------------");
+      -> sconext;
+    end
+  endtask
+endclass
+
+//////////////////////////
+
+class environment;
+  generator gen;
+  driver drv;
+  monitor mon;
+  scoreboard sco;
+  
+  mailbox #(transaction) gdmbx;
+  mailbox #(bit [7:0]) dsmbx;
+  mailbox #(bit [7:0]) msmbx;  
+  
+  event drvnext;
+  event sconext;
+  
+  virtual spi_if vif;
+  
+  function new(virtual spi_if vif);
+    gdmbx = new();
+    dsmbx = new();
+    msmbx = new();
+    
+    gen = new(gdmbx);
+    drv = new(gdmbx,dsmbx);
+    mon = new(msmbx);
+    sco = new(dsmbx,msmbx);
+    
+    this.vif = vif;
+    drv.vif = this.vif;
+    mon.vif = this.vif;
+    
+    gen.drvnext = drvnext;
+    drv.drvnext = drvnext;
+    
+    gen.sconext = sconext;
+    sco.sconext = sconext;
+  endfunction
+  
+  task pre_test();
+    drv.reset();
+  endtask
+  
+  task test();
+    fork
+      gen.run();
+      drv.run();
+      mon.run();
+      sco.run();
+    join_any
+  endtask
+  
+  task post_test();
+    wait(gen.done.triggered);
+    if (sco.errors > 0)
+        $error("NUMBER OF ERRORS: %0d", sco.errors);
+    $finish();
+  endtask
+  
+  task run();
+    pre_test();
+    test();
+    post_test();
+  endtask
+endclass
+
+//////////////////////////
+
+module spi_master_tb;
+  spi_if vif();
+  environment env;
+  
+  spi_master dut (.clk(vif.clk),.newd(vif.newd),.rst(vif.rst),.din(vif.din),.sclk(vif.sclk),.cs(vif.cs),.mosi(vif.mosi));
+  
+  initial begin
+    vif.clk <= 0;
+  end
+  
+  always #5 vif.clk <= ~ vif.clk;
+  
+  initial begin
+    env = new(vif);
+    env.gen.count = 20;
+    env.run();
+  end
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+  end
+endmodule
+```
+```
+[GEN]: din: 26
+[DRV]: DATA SENT DIN: 11010
+[MON]: DATA SENT ON MOSI: 11010
+[SCO]: DIN: 26 MOSI: 26
+DATA MATCH
+--------------------
+[GEN]: din: 14
+[DRV]: DATA SENT DIN: 1110
+[MON]: DATA SENT ON MOSI: 1110
+[SCO]: DIN: 14 MOSI: 14
+DATA MATCH
+--------------------
+[GEN]: din: 249
+[DRV]: DATA SENT DIN: 11111001
+[MON]: DATA SENT ON MOSI: 11111001
+[SCO]: DIN: 249 MOSI: 249
+DATA MATCH
+--------------------
+[GEN]: din: 79
+[DRV]: DATA SENT DIN: 1001111
+[MON]: DATA SENT ON MOSI: 1001111
+[SCO]: DIN: 79 MOSI: 79
+DATA MATCH
+--------------------
+[GEN]: din: 91
+[DRV]: DATA SENT DIN: 1011011
+[MON]: DATA SENT ON MOSI: 1011011
+[SCO]: DIN: 91 MOSI: 91
+DATA MATCH
+--------------------
+[GEN]: din: 234
+[DRV]: DATA SENT DIN: 11101010
+[MON]: DATA SENT ON MOSI: 11101010
+[SCO]: DIN: 234 MOSI: 234
+DATA MATCH
+--------------------
+[GEN]: din: 88
+[DRV]: DATA SENT DIN: 1011000
+[MON]: DATA SENT ON MOSI: 1011000
+[SCO]: DIN: 88 MOSI: 88
+DATA MATCH
+--------------------
+[GEN]: din: 198
+[DRV]: DATA SENT DIN: 11000110
+[MON]: DATA SENT ON MOSI: 11000110
+[SCO]: DIN: 198 MOSI: 198
+DATA MATCH
+--------------------
+[GEN]: din: 23
+[DRV]: DATA SENT DIN: 10111
+[MON]: DATA SENT ON MOSI: 10111
+[SCO]: DIN: 23 MOSI: 23
+DATA MATCH
+--------------------
+[GEN]: din: 170
+[DRV]: DATA SENT DIN: 10101010
+[MON]: DATA SENT ON MOSI: 10101010
+[SCO]: DIN: 170 MOSI: 170
+DATA MATCH
+--------------------
+[GEN]: din: 241
+[DRV]: DATA SENT DIN: 11110001
+[MON]: DATA SENT ON MOSI: 11110001
+[SCO]: DIN: 241 MOSI: 241
+DATA MATCH
+--------------------
+[GEN]: din: 93
+[DRV]: DATA SENT DIN: 1011101
+[MON]: DATA SENT ON MOSI: 1011101
+[SCO]: DIN: 93 MOSI: 93
+DATA MATCH
+--------------------
+[GEN]: din: 98
+[DRV]: DATA SENT DIN: 1100010
+[MON]: DATA SENT ON MOSI: 1100010
+[SCO]: DIN: 98 MOSI: 98
+DATA MATCH
+--------------------
+[GEN]: din: 183
+[DRV]: DATA SENT DIN: 10110111
+[MON]: DATA SENT ON MOSI: 10110111
+[SCO]: DIN: 183 MOSI: 183
+DATA MATCH
+--------------------
+[GEN]: din: 232
+[DRV]: DATA SENT DIN: 11101000
+[MON]: DATA SENT ON MOSI: 11101000
+[SCO]: DIN: 232 MOSI: 232
+DATA MATCH
+--------------------
+[GEN]: din: 38
+[DRV]: DATA SENT DIN: 100110
+[MON]: DATA SENT ON MOSI: 100110
+[SCO]: DIN: 38 MOSI: 38
+DATA MATCH
+--------------------
+[GEN]: din: 116
+[DRV]: DATA SENT DIN: 1110100
+[MON]: DATA SENT ON MOSI: 1110100
+[SCO]: DIN: 116 MOSI: 116
+DATA MATCH
+--------------------
+[GEN]: din: 107
+[DRV]: DATA SENT DIN: 1101011
+[MON]: DATA SENT ON MOSI: 1101011
+[SCO]: DIN: 107 MOSI: 107
+DATA MATCH
+--------------------
+[GEN]: din: 120
+[DRV]: DATA SENT DIN: 1111000
+[MON]: DATA SENT ON MOSI: 1111000
+[SCO]: DIN: 120 MOSI: 120
+DATA MATCH
+--------------------
+[GEN]: din: 179
+[DRV]: DATA SENT DIN: 10110011
+[MON]: DATA SENT ON MOSI: 10110011
+[SCO]: DIN: 179 MOSI: 179
+DATA MATCH
+--------------------
+```
