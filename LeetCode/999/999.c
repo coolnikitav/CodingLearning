@@ -1,13 +1,13 @@
-void findRook(char** board, int boardSize, int boardColSize, int* rook_x, int* rook_y) {
-    int x,y;
+#include <stdio.h>
 
-    for (int i = 0; i < boardSize; i++) {
-        x = i/(boardColSize);
-        y = i%(boardColSize);
-        if (board[x][y] == 'R') {
-            *rook_x = x;
-            *rook_y = y;
-            break;
+void findRook(char** board, int boardSize, int boardColSize, int* rook_x, int* rook_y) {
+    for (int i = 0; i < boardSize; i++) { // Iterates over rows
+        for (int j = 0; j < boardColSize; j++) { // Iterates over columns
+            if (board[i][j] == 'R') {
+                *rook_x = i;
+                *rook_y = j;
+                return; // Exit once the rook is found
+            }
         }
     }
 }
