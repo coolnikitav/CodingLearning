@@ -7,7 +7,7 @@ using namespace std;
 class Solution {
 public:
     int bagOfTokensScore(vector<int>& tokens, int power) {
-        // Approach: imagine and equation: power + n tokens = m tokens
+        // Approach: imagine an equation: power + n tokens = m tokens
         // We want to maximize m and minimize n to get the max score
         // Thus, we need to sort tokens and then keep inserting them into the equation
         sort(tokens.begin(), tokens.end());
