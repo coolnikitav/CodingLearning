@@ -82,3 +82,28 @@ wstrb has 1 bit for each byte in the wdata
 ### AXI
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0208627f-0ec9-4cfd-9e0b-b33cd1ea3439)
+
+### Burst
+Fixed
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/33240be8-4aa7-4e26-8152-20003c9b178f)
+
+Increment
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/760c59fe-cae9-40d2-bb54-fac34cd48051)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/854fcba8-e238-4d31-92f2-7a85b8012dc4)
+
+Wrap
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7238367b-fe20-4ff1-ac73-747b18e61a79)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/691d435c-1186-4a12-8fdb-66459e47675d)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/69ca2cb7-040e-41ba-a43a-67fc3f45dace)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/200faa0a-2118-47be-93c7-92c58a2710b1)
+
+Summary
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/fe4ae607-9591-416e-858e-b265fe16d315)
