@@ -1,4 +1,4 @@
-### Multicycle Operations
+# Multicycle Operations
 - Certain instructions (e.g., mul, div, FP operations) do not execute in 1 cycle
   
   ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/47a3ee0d-28d0-4d61-aacb-f663d5fc8e7c)
