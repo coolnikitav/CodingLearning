@@ -79,6 +79,6 @@ wstrb has 1 bit for each byte in the wdata
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/da596a31-f2cb-4bd7-b039-106cec9af111)
 
-//////////////////////////////
+### AXI
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0208627f-0ec9-4cfd-9e0b-b33cd1ea3439)
