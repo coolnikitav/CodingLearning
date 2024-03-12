@@ -71,3 +71,82 @@ Why compilers or assembler programmers produce instructions with WAW hazards? Ca
 - Check if dest reg in EX/MEM (?), A4/MEM, M7/MEM, DIV/MEM, or MEM/WB pipeline regs is src reg of FP instr
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/713f2edd-3b7f-40e2-bb55-7e8a66f12a09)
+
+# MIPS R4000 Pipeline
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/cff8420c-0dbd-4e2f-8a9c-7c8a8f94fbc7)
+
+- IF: 1st half of instruction fetch
+- IS: 2nd hald of instruction fetch
+- RF: instruction decode, register fetch, instr cache hit detection
+- EX: execute, add. calculation, branch target and condifiotn calculation
+- DF: 1st half of data fetch
+- DS: 2nd half of data fetch
+- TC: tag check, 3rd half of data fetch
+- WB: write back
+
+# Code Examples and Pipeline Assumptions
+### Basic Pipeline Scheduling: Example
+```C
+double x[1000], s;
+for (i = 0; i < 1000; i++)
+  x[i] = x[i] + s;
+```
+```
+; R1 = x = &x[0]
+; R2 = &x[1000]
+; F2 = s
+for: L.D   F0,0(R1)  ; F0 = x[i]
+     ADD.D F4,F0,F2  ; F4 = x[i]+s
+     S.D   F4,0(R1)  ; x[i] = F4
+     DADDI R1,R1,8   ; R1 += 8 = &x[i+1]
+     BNE   R1,R2,for ; if (R1 != &x[1000]) goto for
+     NOP             ; branch delay slot
+```
+
+### Pipeline Assumptions
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/2421a048-dfbd-4c5f-9871-12d5ed17e29f)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d800eb70-7fda-4bc6-8a2d-354ee3aba176)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/33558849-1681-4fc8-877d-8fb933963348)
+
+(Assume that multiple instr can be in MEM or WB stage during the same cycle. Previously we assumed that they couldn't)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/8563a328-33c9-4b8b-8db8-b04c882dc12d)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/10dd7c2f-f42f-4e74-aa05-87c33ddf3196)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/b263c961-f872-4300-b524-d7fd2901caa1)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c2fc65ce-cb23-4e32-af82-340074fea740)
+
+# Scheduling to Reduce Stalls
+### How the Loop Will Be Executed
+```
+for: L.D   F0,0(R1)  
+     ADD.D F4,F0,F2  
+     S.D   F4,0(R1)
+     DADDI R1,R1,8  
+     BNE   R1,R2,for 
+     NOP            
+```
+Will be executed as:
+```
+for: L.D   F0,0(R1)
+     stall  ; Load to Any
+     ADD.D F4,F0,F2
+     stall  ; FP ALU to Store
+     stall
+     S.D   F4,0(R1)
+     DADDI R1,R1,8
+     stall  ; Integer to Branch
+     BNE   R1,R2,for 
+     NOP            
+```
+10 cc per iteration
+- 4 stall cycles + branch delay slot
+
+### Schedule Loop to Eliminate Stalls
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/efdcbe66-0fef-4245-b381-57733d29c21d)
+
+6 cc per iteration but only 3 instrs do actual work
