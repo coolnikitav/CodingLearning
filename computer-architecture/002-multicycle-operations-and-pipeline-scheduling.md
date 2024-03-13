@@ -159,4 +159,179 @@ for: L.D   F0,0(R1)
 
   ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/23cab0ed-e626-4c01-a77d-8a6e5cb39ef2)
 
-- Loop count n can be unknown or no multiple of loop unrolling fac
+- Loop count n can be unknown or no multiple of loop unrolling factor k
+- Then need 2 loops:
+  - One unrolled that iterates n div k times (e.g. 7 div 3 = 2)
+  - Copy of original that iterates n mod k times (e.g. 7 mod 3 = 1)
+  - Unfortunately, div and mod operations are very expensive and should be avoided if possible
+
+  ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d3bf01f1-1c76-462e-9cc2-6c36fcce946b)
+
+### Unrolled Example Loop
+```
+for: L.D   F0,0(R1)
+     ADD.D F4,F0,F2
+     S.D   0(R1),F4
+     DADDI R1,R1,8
+     BNE   R1,R2,for
+     NOP
+```
+Unrolled by a factor of 4:
+```
+for: L.D   F0,0(R1)
+     ADD.D F4,F0,F2   ; 1 cycle stall
+     S.D   0(R1),F4   ; 2 cycles stall
+
+     L.D   F0,8(R1)
+     ADD.D F4,F0,F2   ; 1 cycle stall
+     S.D   8(R1),F4   ; 2 cycles stall
+
+     L.D   F0,16(R1)
+     ADD.D F4,F0,F2   ; 1 cycle stall
+     S.D   16(R1),F4  ; 2 cycles stall
+
+     L.D   F0,24(R1)
+     ADD.D F4,F0,F2   ; 1 cycle stall
+     S.D   24(R1),F4  ; 2 cycles stall
+
+     DADDI R1,R1,#32
+     BNE   R1,R2,for  ; 1 cycle stall
+     NOP
+```
+We cannot move the second load right after the first because they are using the same registers. Thus, we need to use register renaming.
+
+After register renaming:
+```
+for: L.D   F0,0(R1)
+     ADD.D F4,F0,F2   ; 1 cycle stall
+     S.D   0(R1),F4   ; 2 cycles stall
+
+     L.D   F6,8(R1)
+     ADD.D F8,F6,F2   ; 1 cycle stall
+     S.D   8(R1),F8   ; 2 cycles stall
+
+     L.D   F10,16(R1)
+     ADD.D F12,F10,F2   ; 1 cycle stall
+     S.D   16(R1),F12  ; 2 cycles stall
+
+     L.D   F14,24(R1)
+     ADD.D F16,F14,F2   ; 1 cycle stall
+     S.D   24(R1),F16  ; 2 cycles stall
+
+     DADDI R1,R1,#32
+     BNE   R1,R2,for  ; 1 cycle stall
+     NOP
+```
+Now we can reorder
+
+Schedule unrolled loop to avoid stalls
+```
+for: L.D   F0,0(R1)
+     L.D   F6,8(R1)
+     L.D   F10,16(R1)
+     L.D   F14,24(R1)
+     ADD.D F4,F0,F2
+     ADD.D F8,F6,F2
+     ADD.D F12,F10,F2
+     ADD.D F16,F14,F2
+     S.D   0(R1),F4
+     S.D   8(R1),F8     ; we cleared store stall, so can move onto DADDI
+     DADDI R1,R1,#32
+     S.D   -16(R1),F12  ; eliminate stall between DADDI and BNE
+     BNE   R1,R2,for
+     S.D   -8(R1),F16
+```
+- Runs in 14 cc (no stalls) per iteration
+  - 14/4 = 3.5 cc per element
+- Made possible by:
+  - Movig all loads before all ADD.D
+  - Moving 1 S.D between DADDI and BNE
+  - Moving 1 S.D in branch delay slot
+  - Using different registers
+- When is it safe for compiler to do such changes?
+
+### Compiler Steps
+- Steps compilers perform to reschedule loop:
+  - Determine that loop unrolling would be useful by finding that loop iterations were independent
+  - Use different registers to avoid name dependencies
+  - Eliminate extra test & branch instrs and adjust loop termination and iteration code
+  - Determine that it is possible to move S.D after DADDI and BNE, and find amount to adjust S.D offset
+  - Determine that loads and stores in unrolled loop can be interchanged by observing that loads and stores from different iterations are independent
+    - Requires analyzing memory addresses to find that they do not refer to the same address
+  - Schedule the code, preserving any dependencies needed to yield same result as original code
+### Pros and Cons of Loop Unrolling
+- Advantages:
+  - Reduces loop overhead
+  - Improves potential for instruction scheduling
+- Disadvantages:
+  - Increases code size
+    - Concern in embedded domain
+    - May increase istructon cache miss rate
+  - Shortfall in registers
+    - Register pressure
+      
+### Personal Exercise
+Unrolling loop by factor of 3
+```
+; original loop
+for: L.D   F0,0(R1)
+     ADD.D F4,F0,F2
+     S.D   0(R1),F4
+     DADDI R1,R1,8
+     BNE   R1,R2,for
+     NOP
+```
+```
+; unrolled 3 times
+for: L.D   F0,0(R1)
+     ADD.D F4,F0,F2
+     S.D   0(R1),F4
+
+     L.D   F0,8(R1)
+     ADD.D F4,F0,F2
+     S.D   8(R1),F4
+
+     L.D   F0,16(R1)
+     ADD.D F4,F0,F2
+     S.D   16(R1),F4
+
+     DADDI R1,R1,#24
+     BNE   R1,R2,for
+     NOP
+```
+```
+; register renaming
+for: L.D   F0,0(R1)
+     ADD.D F4,F0,F2
+     S.D   0(R1),F4
+
+     L.D   F6,8(R1)
+     ADD.D F8,F6,F2
+     S.D   8(R1),F8
+
+     L.D   F10,16(R1)
+     ADD.D F12,F10,F2
+     S.D   16(R1),F12
+
+     DADDI R1,R1,#24
+     BNE   R1,R2,for
+     NOP
+```
+```
+; avoid stalls
+for: L.D   F0,0(R1)
+     L.D   F6,8(R1)
+     L.D   F10,16(R1)
+
+     ADD.D F4,F0,F2
+     ADD.D F8,F6,F2
+     ADD.D F12,F10,F2
+
+     S.D   0(R1),F4
+     S.D   8(R1),F8
+
+     DADDI R1,R1,#24
+     S.D   -8(R1),F12
+     BNE   R1,R2,for
+     NOP
+```
