@@ -150,3 +150,13 @@ for: L.D   F0,0(R1)
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/efdcbe66-0fef-4245-b381-57733d29c21d)
 
 6 cc per iteration but only 3 instrs do actual work
+
+# Loop Unrolling
+### Loop Unrolling
+- Replicate loop body multiple times, adjusting loop termination code
+  
+  Unrolling 4 times:
+
+  ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/23cab0ed-e626-4c01-a77d-8a6e5cb39ef2)
+
+- Loop count n can be unknown or no multiple of loop unrolling fac
