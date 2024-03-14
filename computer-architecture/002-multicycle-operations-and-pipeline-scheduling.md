@@ -335,3 +335,62 @@ for: L.D   F0,0(R1)
      BNE   R1,R2,for
      NOP
 ```
+# Summary
+### Exercise
+```C
+double x[1024], y[1024];
+double dotp = 0.0;
+for (i = 0; i < 1024; i++)
+  dotp += x[i]*y[i];
+```
+Compiler generated:
+```
+for: L.D   F1,0(R1)
+     L.D   F2,0(R2)
+     MUL.D F1,F1,F2
+     ADD.D F0,F0,F1
+     DADDI R1,R1,8
+     DADDI R2,R2,8
+     BNE   R1,R9,loop
+     NOP
+```
+Unrolled by a factor of 2 (don't know if this is correct):
+```
+for: L.D   F1,0(R1)
+     L.D   F2,0(R2)
+     MUL.D F1,F1,F2
+     ADD.D F0,F0,F1
+
+     L.D   F3,8(R1)
+     L.D   F4,8(R2)
+     MUL.D F3,F3,F4
+     DADDI R1,R1,16
+     DADDI R2,R2,16
+     ADD.D F0,F0,F3
+
+     BNE   R1,R9,loop
+     NOP
+```
+
+# Review Quiz
+1. Which of the following operations typically do not perform on a single cycle?
+   - DIV, MUL,FP op
+2. What is the latency of an instruction?
+   - Number of cycles that must elapse between the instruction that produces the result and instruction that uses the result
+3. What are the challenges of longer pipelines?
+   - Structural hazards, instructions can complete out of order
+4. In current pipeline, WAW hazards only occurs when uselss instruction is executed. Should we detect them? Why?
+   - Yes, because of branch delay slot, we may have an instruction that is useless for some branch paths.
+5. In longer pipelines
+   - RAW hazards are more frequent
+6. How many stages are there in the MIPS R4000 pipeline?
+   - 8 stages
+7. We want to optimize the following code in order to remove the first stall. Which instruction can we move between the L.D and ADD.D to avoid such stall?
+   
+   ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/eb1b5c65-1975-4a33-9828-af8942a29a76)
+
+   - DADDI R1,R1,8
+8. Loop unrolling disadvantages are
+   - Increases the code size
+   - Shortfall in registers
+   - 
