@@ -37,8 +37,8 @@ Advantages compares to superscalar
 
 Disadvantages compared to superscalar
 - Binary incompatibility (in principle) -> programs must be recompiled when
-  - # slots per VLIW changes
-  - # of parallel FUs changes
+  - #of slots per VLIW changes
+  - #of of parallel FUs changes
   - perhaps even when op latency changes
 - Very good compiler support needed
 
