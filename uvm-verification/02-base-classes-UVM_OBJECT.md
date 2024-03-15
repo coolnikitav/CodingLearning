@@ -42,3 +42,30 @@ User defined do_methods
 
 When you specify implementation for any core method then Field Macros are not required.
 
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;  // object class is used to implement all dynamic components of testbench
+  `uvm_object_utils(obj);  // macro to register class to factory derived from UVM_OBJECT
+  
+  function new(string path = "OBJ");
+    super.new(path);
+  endfunction
+  
+  rand bit [3:0] a;
+  
+endclass
+
+module tb;
+  
+  obj o;
+  
+  initial begin
+    o = new("obj");
+    o.randomize();
+    `uvm_info("TB_TOP", $sformatf("value of a: %0d", o.a), UVM_NONE);
+  end
+  
+endmodule
+```
