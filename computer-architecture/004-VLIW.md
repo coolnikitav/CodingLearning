@@ -66,7 +66,7 @@ Unit Assumed Latency (UAL)
 - Equals to conventional sequential model
 
 Non-unit assumed latency (NUAL):
-- >1 operation has non-unit latency L > 1
+- more than 1 operation has non-unit latency L > 1
 - Program semantics: exactly the next L-1 instrs are understood to have issued before this op completes
 - Result observation delayed by L cycles
 
