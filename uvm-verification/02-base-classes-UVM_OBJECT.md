@@ -400,3 +400,107 @@ endmodule
 # KERNEL:     [3]  integral      32    'h4  
 # KERNEL:     [4]  integral      32    'h4  
 ```
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////
+
+class first extends uvm_object;
+  
+  rand bit [3:0] data;
+  
+  function new (string path = "first");
+    super.new(path);
+  endfunction
+  
+  `uvm_object_utils_begin(first)
+  `uvm_field_int(data, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+////////////////////////////
+
+module tb;
+  
+  first f;
+  first s;
+  
+  initial begin
+    f = new("first");
+    s = new("second");
+    f.randomize();
+    s.copy(f);
+    f.print();
+    s.print();
+  end
+  
+endmodule
+
+# KERNEL: -----------------------------
+# KERNEL: Name    Type      Size  Value
+# KERNEL: -----------------------------
+# KERNEL: first   first     -     @335 
+# KERNEL:   data  integral  4     'h6  
+# KERNEL: -----------------------------
+# KERNEL: -----------------------------
+# KERNEL: Name    Type      Size  Value
+# KERNEL: -----------------------------
+# KERNEL: second  first     -     @336 
+# KERNEL:   data  integral  4     'h6  
+# KERNEL: -----------------------------
+```
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////
+
+class first extends uvm_object;
+  
+  rand bit [3:0] data;
+  
+  function new (string path = "first");
+    super.new(path);
+  endfunction
+  
+  `uvm_object_utils_begin(first)
+  	`uvm_field_int(data, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+////////////////////////////
+
+module tb;
+  
+  first f;
+  first s;
+  
+  initial begin
+    f = new("first");
+    f.randomize();
+    $cast(s, f.clone());  // f.clone() return a parent class (uvm_object)
+    
+    f.print();
+    s.print();
+  end
+  
+endmodule
+
+# KERNEL: -----------------------------
+# KERNEL: Name    Type      Size  Value
+# KERNEL: -----------------------------
+# KERNEL: first   first     -     @335 
+# KERNEL:   data  integral  4     'h6  
+# KERNEL: -----------------------------
+# KERNEL: -----------------------------
+# KERNEL: Name    Type      Size  Value
+# KERNEL: -----------------------------
+# KERNEL: first   first     -     @336 
+# KERNEL:   data  integral  4     'h6  
+# KERNEL: -----------------------------
+```
