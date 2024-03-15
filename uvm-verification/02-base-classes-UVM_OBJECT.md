@@ -69,3 +69,254 @@ module tb;
   
 endmodule
 ```
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;  // object class is used to implement all dynamic components of testbench
+  
+  function new(string path = "OBJ");
+    super.new(path);
+  endfunction
+  
+  rand bit [3:0] a;
+  
+  `uvm_object_utils_begin(obj)
+  `uvm_field_int(a, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+module tb;
+  
+  obj o;
+  
+  initial begin
+    o = new("obj");
+    o.randomize();
+    o.print();
+  end
+  
+endmodule
+```
+```
+# KERNEL: ---------------------------
+# KERNEL: Name  Type      Size  Value
+# KERNEL: ---------------------------
+# KERNEL: obj   obj       -     @335 
+# KERNEL:   a   integral  4     'h6  
+# KERNEL: ---------------------------
+```
+
+Field macros are not as run-time efficient nor as flexible as direct implementations of the do_* methods
+
+Examples:
+- Automation: print
+- do_ method: do_print
+- User method: display
+
+```
+o.print(uvm_default_tree_printer);
+
+# KERNEL: obj: (obj@335) {
+# KERNEL:   a: 'h6 
+# KERNEL: }
+```
+```
+o.print(uvm_default_line_printer);
+
+# KERNEL: obj: (obj@335) { a: 'h6  }
+```
+```
+`uvm_field_int(a, UVM_DEFAULT | UVM_BIN)
+
+# KERNEL: obj: (obj@335) { a: 'b110  } 
+```
+
+If you don't register the variable to a factory, its name and value will not be printed:
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;  // object class is used to implement all dynamic components of testbench
+  
+  `uvm_object_utils(obj)
+  
+  function new(string path = "OBJ");
+    super.new(path);
+  endfunction
+  
+  rand bit [3:0] a;
+  
+  /*
+  `uvm_object_utils_begin(obj)
+  	`uvm_field_int(a, UVM_DEFAULT | UVM_BIN)
+  `uvm_object_utils_end
+  */
+endclass
+
+module tb;
+  
+  obj o;
+  
+  initial begin
+    o = new("obj");
+    o.randomize();
+    o.print(uvm_default_table_printer);
+  end
+  
+endmodule
+
+# KERNEL: -----------------------
+# KERNEL: Name  Type  Size  Value
+# KERNEL: -----------------------
+# KERNEL: obj   obj   -     @335 
+# KERNEL: -----------------------
+```
+
+Variable a has a UVM_NOPRINT flag
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;  // object class is used to implement all dynamic components of testbench
+    
+  function new(string path = "OBJ");
+    super.new(path);
+  endfunction
+  
+  rand bit [3:0] a;
+  rand bit [7:0] b;
+  
+  `uvm_object_utils_begin(obj)
+  	`uvm_field_int(a, UVM_NOPRINT | UVM_BIN)
+  	`uvm_field_int(b, UVM_DEFAULT | UVM_BIN)
+  `uvm_object_utils_end
+  
+endclass
+
+module tb;
+  
+  obj o;
+  
+  initial begin
+    o = new("obj");
+    o.randomize();
+    o.print(uvm_default_table_printer);
+  end
+  
+endmodule
+
+# KERNEL: --------------------------------
+# KERNEL: Name  Type      Size  Value     
+# KERNEL: --------------------------------
+# KERNEL: obj   obj       -     @335      
+# KERNEL:   b   integral  8     'b10100101
+# KERNEL: --------------------------------
+```
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;  // object class is used to implement all dynamic components of testbench
+   
+  typedef enum bit [1:0] {s0,s1,s2,s3} state_type;
+  rand state_type state;
+  
+  real temp = 12.34;
+  string str = "UVM";
+  
+  function new(string path = "OBJ");
+    super.new(path);
+  endfunction
+  
+  `uvm_object_utils_begin(obj)
+  	`uvm_field_enum(state_type, state, UVM_DEFAULT)
+  	`uvm_field_string(str, UVM_DEFAULT)
+  	`uvm_field_real(temp, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+module tb;
+  
+  obj o;
+  
+  initial begin
+    o = new("obj");
+    o.print(uvm_default_table_printer);
+  end
+  
+endmodule
+
+# KERNEL: ------------------------------------
+# KERNEL: Name     Type        Size  Value    
+# KERNEL: ------------------------------------
+# KERNEL: obj      obj         -     @335     
+# KERNEL:   state  state_type  2     s0       
+# KERNEL:   str    string      3     UVM      
+# KERNEL:   temp   real        64    12.340000
+# KERNEL: ------------------------------------
+```
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////
+
+class parent extends uvm_object;
+  
+  function new (string path = "parent");
+    super.new(path);
+  endfunction
+  
+  rand bit [3:0] data;
+  
+  `uvm_object_utils_begin(parent)
+  	`uvm_field_int(data, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+////////////////////////////
+
+class child extends uvm_object;
+  
+  parent p;
+  
+  function new (string path = "child");
+    super.new(path);
+    p = new("parent");  // build_phase + create
+  endfunction
+  
+  `uvm_object_utils_begin(child)
+  	`uvm_field_object(p, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+////////////////////////////
+
+module tb;
+  
+  child c;
+  
+  initial begin
+    c = new("child");
+    c.p.randomize();
+    c.print();
+  end
+  
+endmodule
+
+# KERNEL: -------------------------------
+# KERNEL: Name      Type      Size  Value
+# KERNEL: -------------------------------
+# KERNEL: child     child     -     @335 
+# KERNEL:   p       parent    -     @336 
+# KERNEL:     data  integral  4     'h2  
+# KERNEL: -------------------------------
+```
