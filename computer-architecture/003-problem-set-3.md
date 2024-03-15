@@ -63,3 +63,58 @@ ADDI	R2,	R2,	4
 BNEZ	R3,	loop
 ```
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/20a4bd4d-e943-40e1-86dc-570cb27ab2ea)
+
+### Problem #2
+For	this	problem,	assume	a	VLIW	processor	with	three	integer	units	(X,	Y,	Z),	one	
+multiply	unit	(M),	and	two	load-store	units	(LS0,	LS1).		ALU	instructions	have	a	latency of	1,	multiply	
+instructions	have	a	latency	of	5,	and	loads	have	a	latency	of	2.		One	branch	can	execute	per	cycle	and	
+executes	in	the	Z	pipeline.		The	following	code	has	been	bundled	assuming	the	EQ	scheduling	model.		
+What	is	the	value	of	R12,	R13,	and	R14 after	this	code	executes?		Not	changing	register	names,	
+reschedule	this	code	assuming	the	LEQ	model.		Why	is	the	LEQ	model	more	flexible?
+
+```
+{ADDI	R9,	R0,	9;	ADDI	R10,	R0,	10;}
+{ADDI	R6,	R0,	6;	ADDI	R8,	R0,	8; ADDI	R5,	R0,	5;}
+{LW	R6,	0(R7);	LW	R8,	4(R7);}
+{ADDI	R12,	R6,	1;	ADDI	R13,	R8,	2;}
+{MUL	R7,	R6,	R9;}
+{MUL	R5,	R8,	R10;}
+{LW	R14,	8(R7);} //	Assume	that	8(R7)	contains	the	value	0x1
+{ADD	R15,	R16,	R17;}
+{ADD	R14,	R14,	R5;}
+{SUB	R19,	R18,	R22;}
+{ADD	R5,	R7,	R5;}
+```
+EQ:
+```
+|       X         |       Y         |       Z      |        M       |        LS0        |      LS1    |   
+| ADDI R9,R0,9    | ADDI R10,R0,10  | ADDI R6,R0,6 |                |                   |             |      
+| ADDI R8,R0,8    | ADDI R5,R0,5    |              |                | LW R6,0(R7)       |             |   R9 = 9, R10 = 10, R6 = 6
+|                 |                 |              |                | LW R8,4(R7)       |             |   R8 = 8, R5 = 5
+| ADDI R12,R6,1   |                 |              | MUL R7,R6,R9   |                   |             |   R6 = 0
+| ADDI R13,R8,2   |                 |              | MUL R5,R8,R10  |                   |             |   R8 = 0, R12 = 1
+|                 |                 |              |                |                   |             |   R13 = 2
+|                 |                 |              |                |                   |             |
+|                 |                 |              |                |                   |             |
+| ADD R15,R16,R17 |                 |              |                |  LW R14,8(R7)     |             |   R7 = 0
+|                 |                 |              |                |                   |             |   R5 = 0, R15 = 0
+| ADD R14,R14,R5  | SUB R19,R18,R22 | ADD R5,R7,R5 |                |                   |             |   R14 = 0
+|                 |                 |              |                |                   |             |   R14 = 5, R19 = 0, R5 = 5
+|                 |                 |              |                |                   |             |
+```           
+After the code executes: R12 = 1, R13 = 2, R14 = 5
+
+LEQ:
+```
+{ADDI R6, R0, 6; ADDI R8, R0, 8; ADDI R5, R0, 5; LW R14, 8(R7);}  
+{LW R6, 0(R7); LW R8, 4(R7); ADDI R12, R6, 1; ADDI R13, R8, 2;}
+{ADD R14, R14, R5; ADDI R9, R0, 9; ADDI R10, R0, 10;}
+{MUL R5, R8, R10;}
+{MUL R7, R6, R9;}
+{ADD R15, R16, R17;}
+{SUB R19, R18, R22;}
+{NOP}
+{NOP}
+{ADD R5, R7, R5;}
+```
+LEQ model is more flexible because it is easier to implement prices interrupts.
