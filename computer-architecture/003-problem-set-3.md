@@ -118,3 +118,54 @@ LEQ:
 {ADD R5, R7, R5;}
 ```
 LEQ model is more flexible because it is easier to implement prices interrupts.
+
+### Problem #3
+Rewrite	the	following	code	assuming	the	instruction	set	has	been	augmented	
+with	conditional	move	instructions,	movz	and	movn.		Assume	that	the	branch	misprediction	penalty	is	
+10	cycles	and	that	the	branch	to	“forward”	is	random	and	data-dependent.		Does	it	make	sense	to	
+predicate?	 Movz	and	movn	have	the	following	semantics:
+
+movz	rd,	rs,	rt						 if	(	R[rt]	==	0	)	then	R[rd]	<- R[rs]
+
+movn	rd,	rs,	rt						 if	(	R[rt]	!=	0	)	then	R[rd]	<- R[rs]
+
+Code	Sequence	for	problem	3:
+ADDI	R6,	R0,	1
+ADDI	R3,	R0,	50
+loop:
+LW	R8,	0(R9)
+BEQZ	R8,	forward
+ADD	R12,	R15,	R8
+SUB	R24,	R24,	R12
+J	done
+forward:
+ADDI	R24,	R24,	10
+done:
+SUBI	R3,	R3,	1
+BNEZ	R3,	loop
+
+```
+            ADDI R6,R0,1
+            ADDI R3,R0,50
+            loop:
+            LW R8, 0(R9)
+            BEQZ R8, forward
+ADDI R24,R24,10          ADD R12, R15, R8
+SUBI R3,R3,1             SUB R24, R24, R12
+BNEZ R3, loop            SUBI R3, R3, 1
+                         BNEZ R3, loop
+```
+Rewrite:
+```
+ADDI R6,R0,1
+ADDI R3,R0,50
+loop:
+LW R8, 0(R9)
+ADDI R27, R24, 10
+ADDI R12, R15, R8
+SUB  R26, R24, R12
+MOVZ R24, R27, R8
+MOVN R24, R26, R8
+SUBI R3,R3,1
+BNEZ R3, loop    
+```
