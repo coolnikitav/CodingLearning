@@ -882,5 +882,556 @@ Factory override: new vs create method
 Let's say you completed a testbench and used it. In the next version, you want to add a control signal to the transaction class. Instead of changing the transaction class, you can extend the class and add the new signal.
 Override method needs to have a UVM component.
 ```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
 
+////////////////////////////
+
+class first extends uvm_object;
+  
+  rand bit [3:0] data;
+  
+  function new (string path = "first");
+    super.new(path);
+  endfunction
+  
+  `uvm_object_utils_begin(first)
+  	`uvm_field_int(data, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+////////////////////////////
+
+class first_mod extends first;
+  rand bit ack;
+  
+  function new (string path = "first_mod");
+    super.new(path);
+  endfunction
+  
+  `uvm_object_utils_begin(first_mod)
+  	`uvm_field_int(ack, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+////////////////////////////
+
+class comp extends uvm_component;
+  `uvm_component_utils(comp)
+  
+  first f;
+  
+  function new (string path = "second", uvm_component parent = null);
+    super.new(path,parent);
+    f = first::type_id::create("f");
+    f.randomize();
+    f.print();
+  endfunction
+endclass
+////////////////////////////
+
+module tb;
+  
+  comp c;
+  
+  initial begin
+    c = comp::type_id::create("c", null);
+  end
+  
+endmodule
+
+# KERNEL: -----------------------------
+# KERNEL: Name    Type      Size  Value
+# KERNEL: -----------------------------
+# KERNEL: f       first     -     @344 
+# KERNEL:   data  integral  4     'h3  
+# KERNEL: -----------------------------
+```
+```
+module tb;
+  
+  comp c;
+  
+  initial begin
+    c.set_type_override_by_type(first::get_type, first_mod::get_type);  // replace first with first_mod
+    c = comp::type_id::create("c", null);
+  end
+  
+endmodule
+
+# KERNEL: ------------------------------
+# KERNEL: Name    Type       Size  Value
+# KERNEL: ------------------------------
+# KERNEL: f       first_mod  -     @344 
+# KERNEL:   data  integral   4     'hc  
+# KERNEL:   ack   integral   1     'h1  
+# KERNEL: ------------------------------
+```
+Class not registered to a factory:
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////
+
+class first extends uvm_object;
+  
+  rand bit [3:0] data;
+  
+  function new (string path = "first");
+    super.new(path);
+  endfunction
+  
+  `uvm_object_utils_begin(first)
+  	`uvm_field_int(data, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+////////////////////////////
+
+class first_mod extends first;
+  rand bit ack;
+  
+  function new (string path = "first_mod");
+    super.new(path);
+  endfunction
+  
+  `uvm_object_utils_begin(first_mod)
+  	`uvm_field_int(ack, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+endclass
+
+////////////////////////////
+
+class comp extends uvm_component;
+  `uvm_component_utils(comp)
+  
+  first f;
+  
+  function new (string path = "second", uvm_component parent = null);
+    super.new(path,parent);
+    f = new("f");
+    f.randomize();
+    f.print();
+  endfunction
+endclass
+////////////////////////////
+
+module tb;
+  
+  comp c;
+  
+  initial begin
+    c.set_type_override_by_type(first::get_type, first_mod::get_type);  // replace first with first_mod
+    c = new("c", null);
+  end
+  
+endmodule
+
+# KERNEL: -----------------------------
+# KERNEL: Name    Type      Size  Value
+# KERNEL: -----------------------------
+# KERNEL: f       first     -     @344 
+# KERNEL:   data  integral  4     'hc  
+# KERNEL: -----------------------------
+```
+do_print method
+
+1) If we plan to use do methods, Field Macros are not required but registering class to factory is mandatory to get capabilities of Factory Override.
+
+2) If we plan to use inbuilt implementation of the code methods then registering class tofactory as well as adding field macros to the data memebers is mandatory.
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;
+  `uvm_object_utils(obj)
+  
+  function new (string path = "obj");
+    super.new(path);
+  endfunction
+  
+  bit [3:0] a = 4;
+  string b = "UVM";
+  real c = 12.34;
+  
+  virtual function void do_print(uvm_printer printer);
+    super.do_print(printer);
+    
+    printer.print_field_int("a", a, $bits(a), UVM_HEX);
+    printer.print_string("b", b);
+    printer.print_real("c", c);
+  endfunction  
+endclass
+
+module tb;
+  obj o;
+  
+  initial begin
+    o = obj::type_id::create("o");
+    o.print();
+  end
+endmodule
+
+# KERNEL: -------------------------------
+# KERNEL: Name  Type      Size  Value    
+# KERNEL: -------------------------------
+# KERNEL: o     obj       -     @335     
+# KERNEL:   a   integral  4     'h4      
+# KERNEL:   b   string    3     UVM      
+# KERNEL:   c   real      64    12.340000
+# KERNEL: -------------------------------
+```
+
+Convert2string method
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;
+  `uvm_object_utils(obj)
+  
+  function new (string path = "obj");
+    super.new(path);
+  endfunction
+  
+  bit [3:0] a = 4;
+  string b = "UVM";
+  real c = 12.34;
+  
+  virtual function string convert2string();
+    string s = super.convert2string();
+    
+    s = {s, $sformatf("a: %0d; ", a)};
+    s = {s, $sformatf("b: %0s; ", b)};
+    s = {s, $sformatf("c: %0f", c)};
+    
+    return s;   
+  endfunction
+endclass
+
+module tb;
+  obj o;
+  
+  initial begin
+    o = obj::type_id::create("o");
+    $display("%0s", o.convert2string());
+  end
+endmodule
+
+# KERNEL: a: 4; b: UVM; c: 12.340000
+```
+```
+module tb;
+  obj o;
+  
+  initial begin
+    o = obj::type_id::create("o");
+    //$display("%0s", o.convert2string());
+    `uvm_info("TB_TOP", $sformatf("%0s", o.convert2string()), UVM_NONE);
+  end
+endmodule
+
+# KERNEL: UVM_INFO /home/runner/testbench.sv(32) @ 0: reporter [TB_TOP] a: 4; b: UVM; c: 12.340000
+```
+
+do_copy method
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;
+  `uvm_object_utils(obj)
+  
+  function new (string path = "obj");
+    super.new(path);
+  endfunction
+  
+  rand bit [3:0] a;
+  rand bit [4:0] b;
+  
+  virtual function void do_print(uvm_printer printer);
+    super.do_print(printer);
+    printer.print_field_int("a: ", a, $bits(a), UVM_DEC);
+    printer.print_field_int("b: ", b, $bits(b), UVM_DEC);
+  endfunction
+  
+  virtual function void do_copy(uvm_object rhs);
+    obj temp;
+    $cast(temp, rhs);
+    super.do_copy(rhs);
+    this.a = temp.a;
+    this.b = temp.b;
+  endfunction
+endclass
+
+module tb;
+  obj o1,o2;
+  
+  initial begin
+    o1 = obj::type_id::create("o1");
+    o2 = obj::type_id::create("o2");
+    
+    o1.randomize();
+    o1.print();
+    o2.copy(o1);
+    o2.print();
+  end
+endmodule
+
+# KERNEL: ----------------------------
+# KERNEL: Name   Type      Size  Value
+# KERNEL: ----------------------------
+# KERNEL: o1     obj       -     @335 
+# KERNEL:   a:   integral  4     'd6  
+# KERNEL:   b:   integral  5     'd5  
+# KERNEL: ----------------------------
+# KERNEL: ----------------------------
+# KERNEL: Name   Type      Size  Value
+# KERNEL: ----------------------------
+# KERNEL: o2     obj       -     @336 
+# KERNEL:   a:   integral  4     'd6  
+# KERNEL:   b:   integral  5     'd5  
+# KERNEL: ----------------------------
+```
+
+do_compare
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;
+  `uvm_object_utils(obj)
+  
+  function new (string path = "obj");
+    super.new(path);
+  endfunction
+  
+  rand bit [3:0] a;
+  rand bit [4:0] b;
+  
+  virtual function void do_print(uvm_printer printer);
+    super.do_print(printer);
+    printer.print_field_int("a: ", a, $bits(a), UVM_DEC);
+    printer.print_field_int("b: ", b, $bits(b), UVM_DEC);
+  endfunction
+  
+  virtual function void do_copy(uvm_object rhs);
+    obj temp;
+    $cast(temp, rhs);
+    super.do_copy(rhs);
+    this.a = temp.a;
+    this.b = temp.b;
+  endfunction
+  
+  virtual function bit do_compare(uvm_object rhs, uvm_comparer comparer);
+    obj temp;
+    int status;
+    $cast(temp,rhs);
+    status = super.do_compare(rhs, comparer) && (a == temp.a) && (b == temp.b);
+    return status;
+  endfunction
+endclass
+
+module tb;
+  obj o1,o2;
+  int status;
+  
+  initial begin
+    o1 = obj::type_id::create("o1");
+    o2 = obj::type_id::create("o2");
+    
+    o1.randomize();
+    o1.print();
+    
+    status = o2.compare(o1);
+    $display("status: %0d", status);
+  end
+endmodule
+```
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class obj extends uvm_object;
+  `uvm_object_utils(obj)
+  
+  function new (string path = "obj");
+    super.new(path);
+  endfunction
+  
+  rand bit [3:0] a;
+  rand bit [4:0] b;
+  
+  virtual function void do_print(uvm_printer printer);
+    super.do_print(printer);
+    printer.print_field_int("a: ", a, $bits(a), UVM_DEC);
+    printer.print_field_int("b: ", b, $bits(b), UVM_DEC);
+  endfunction
+  
+  virtual function void do_copy(uvm_object rhs);
+    obj temp;
+    $cast(temp, rhs);
+    super.do_copy(rhs);
+    this.a = temp.a;
+    this.b = temp.b;
+  endfunction
+  
+  virtual function bit do_compare(uvm_object rhs, uvm_comparer comparer);
+    obj temp;
+    int status;
+    $cast(temp,rhs);
+    status = super.do_compare(rhs, comparer) && (a == temp.a) && (b == temp.b);
+    return status;
+  endfunction
+endclass
+
+module tb;
+  obj o1,o2;
+  int status;
+  
+  initial begin
+    o1 = obj::type_id::create("o1");
+    o2 = obj::type_id::create("o2");
+    
+    o1.randomize();
+    o1.print();
+    o2.print();
+    
+    o2.copy(o1);
+    status = o2.compare(o1);
+    $display("status: %0d", status);
+  end
+endmodule
+
+# KERNEL: ----------------------------
+# KERNEL: Name   Type      Size  Value
+# KERNEL: ----------------------------
+# KERNEL: o1     obj       -     @335 
+# KERNEL:   a:   integral  4     'd6  
+# KERNEL:   b:   integral  5     'd5  
+# KERNEL: ----------------------------
+# KERNEL: ----------------------------
+# KERNEL: Name   Type      Size  Value
+# KERNEL: ----------------------------
+# KERNEL: o2     obj       -     @336 
+# KERNEL:   a:   integral  4     'd0  
+# KERNEL:   b:   integral  5     'd0  
+# KERNEL: ----------------------------
+# KERNEL: status: 1
+```
+
+Assignment 6:
+```
+`include "uvm_macros.svh";
+import uvm_pkg::*;
+
+class obj extends uvm_object;
+  function new (string path = "obj"); 
+    super.new(path);
+  endfunction
+  
+  rand logic [1:0] a;
+  rand logic [3:0] b;
+  rand logic [7:0] c;
+  
+  `uvm_object_utils_begin(obj)
+  	`uvm_field_int(a, UVM_BIN);
+    `uvm_field_int(b, UVM_BIN);
+    `uvm_field_int(c, UVM_BIN);
+  `uvm_object_utils_end
+endclass
+
+module tb;
+  obj o;
+  
+  initial begin
+    o = new("obj");
+    o.randomize();
+    o.print();
+  end
+endmodule
+
+# KERNEL: ------------------------------
+# KERNEL: Name  Type      Size  Value   
+# KERNEL: ------------------------------
+# KERNEL: obj   obj       -     @335    
+# KERNEL:   a   integral  2     'b10    
+# KERNEL:   b   integral  4     'b101   
+# KERNEL:   c   integral  8     'b100011
+# KERNEL: ------------------------------
+```
+
+Assignment 7:
+```
+`include "uvm_macros.svh";
+import uvm_pkg::*;
+
+class my_object extends uvm_object; 
+  rand logic [1:0] a;
+  rand logic [3:0] b;
+  rand logic [7:0] c;
+  
+  `uvm_object_utils_begin(my_object)
+    `uvm_field_int(a, UVM_DEFAULT)
+    `uvm_field_int(b, UVM_DEFAULT)
+    `uvm_field_int(c, UVM_DEFAULT)
+  `uvm_object_utils_end
+  
+  function new (string path = "my_object");
+    super.new(path);
+  endfunction
+  
+  virtual function void do_copy(uvm_object rhs);
+    my_object temp;
+    $cast(temp, rhs);
+    super.do_copy(rhs);
+    this.a = temp.a;
+    this.b = temp.b;
+    this.c = temp.c;
+  endfunction
+endclass
+
+module tb;
+  my_object o1,o2;
+  int status;
+  
+  initial begin
+    o1 = my_object::type_id::create("o1");
+    o2 = my_object::type_id::create("o2");
+    
+    o1.randomize();
+    //$cast(o2,o1.clone());
+    o2.copy(o1);
+    
+    o1.print();
+    o2.print();
+    
+    status = o1.compare(o2);
+    $display("status: %0d", status);
+  end
+endmodule
+
+# KERNEL: ----------------------------
+# KERNEL: Name  Type       Size  Value
+# KERNEL: ----------------------------
+# KERNEL: o1    my_object  -     @335 
+# KERNEL:   a   integral   2     'h2  
+# KERNEL:   b   integral   4     'h5  
+# KERNEL:   c   integral   8     'h23 
+# KERNEL: ----------------------------
+# KERNEL: ----------------------------
+# KERNEL: Name  Type       Size  Value
+# KERNEL: ----------------------------
+# KERNEL: o2    my_object  -     @336 
+# KERNEL:   a   integral   2     'h2  
+# KERNEL:   b   integral   4     'h5  
+# KERNEL:   c   integral   8     'h23 
+# KERNEL: ----------------------------
+# KERNEL: status: 1
 ```
