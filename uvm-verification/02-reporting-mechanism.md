@@ -114,3 +114,122 @@ endmodule
 # KERNEL: UVM_INFO /home/runner/testbench.sv(10) @ 10: reporter [TB_TOP] High
 # KERNEL: UVM_INFO /home/runner/testbench.sv(11) @ 10: reporter [TB_TOP] Low
 ```
+
+## Working with verbosity level and ID
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class driver extends uvm_driver;
+  `uvm_component_utils(driver)
+  
+  function new (string path, uvm_component parent);
+    super.new(path, parent);
+  endfunction
+  
+  task run();
+    `uvm_info("DRV1", "Executed Driver1 Code", UVM_HIGH);
+    `uvm_info("DRV2", "Executed Driver2 Code", UVM_HIGH);
+  endtask
+endclass
+
+module tb;
+  driver drv;
+  
+  initial begin
+    drv = new("DRV", null);
+    
+    drv.set_report_id_verbosity("DRV1", UVM_HIGH);
+    drv.run();
+  end
+endmodule
+
+# KERNEL: UVM_INFO /home/runner/testbench.sv(12) @ 0: DRV [DRV1] Executed Driver1 Code
+```
+
+## Working with individual component
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////////
+
+class driver extends uvm_driver;
+  `uvm_component_utils(driver)
+  
+  function new (string path, uvm_component parent);
+    super.new(path, parent);
+  endfunction
+  
+  task run();
+    `uvm_info("DRV1", "Executed Driver1 Code", UVM_HIGH);
+    `uvm_info("DRV2", "Executed Driver2 Code", UVM_HIGH);
+  endtask
+endclass
+
+////////////////////////////////
+
+class env extends uvm_env;
+  `uvm_component_utils(env)
+  
+  function new (string path, uvm_component parent);
+    super.new(path, parent);
+  endfunction
+  
+  task run();
+    `uvm_info("ENV1", "Executed ENV1 Code", UVM_HIGH);
+    `uvm_info("ENV2", "Executed ENV2 Code", UVM_HIGH);
+  endtask
+endclass
+
+////////////////////////////////
+module tb;
+  driver drv;
+  env e;
+  
+  initial begin
+    drv = new("DRV", null);
+    e = new("ENV", null);
+    
+    e.set_report_verbosity_level(UVM_HIGH);
+	drv.set_report_id_verbosity("DRV1", UVM_HIGH);
+    
+    drv.run();
+    e.run();
+  end
+endmodule
+
+# KERNEL: UVM_INFO /home/runner/testbench.sv(14) @ 0: DRV [DRV1] Executed Driver1 Code
+# KERNEL: UVM_INFO /home/runner/testbench.sv(29) @ 0: ENV [ENV1] Executed ENV1 Code
+# KERNEL: UVM_INFO /home/runner/testbench.sv(30) @ 0: ENV [ENV2] Executed ENV2 Code
+```
+
+You can also modify Run Options:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/74f0faf0-4c9b-4d84-ac4b-9bac7ef21435)
+
+```
+module tb;
+  driver drv;
+  env e;
+  
+  initial begin
+    drv = new("DRV", null);
+    e = new("ENV", null);
+    
+    // e.set_report_verbosity_level(UVM_HIGH);
+	// drv.set_report_id_verbosity("DRV1", UVM_HIGH);
+    
+    drv.run();
+    e.run();
+  end
+endmodule
+
+# KERNEL: UVM_INFO /home/runner/testbench.sv(14) @ 0: DRV [DRV1] Executed Driver1 Code
+# KERNEL: UVM_INFO /home/runner/testbench.sv(15) @ 0: DRV [DRV2] Executed Driver2 Code
+# KERNEL: UVM_INFO /home/runner/testbench.sv(29) @ 0: ENV [ENV1] Executed ENV1 Code
+# KERNEL: UVM_INFO /home/runner/testbench.sv(30) @ 0: ENV [ENV2] Executed ENV2 Code
+```
+
+## Working with Hierarchy
+```
