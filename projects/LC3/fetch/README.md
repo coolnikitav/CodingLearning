@@ -21,4 +21,4 @@
 - If enable_fetch = 1, then set Imem_rd = 1 asynchronously else Imem_rd = Z (High impedance)
 
 ### Wiring diagram:
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7009913a-58ec-4242-8ea4-00645b7a1725)
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/db861a19-5a0b-416b-8353-7dfb2a9304eb)
