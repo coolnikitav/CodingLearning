@@ -126,7 +126,7 @@ Cache Optimizations | Miss Rate | Miss Penalty | Hit Time | Bandwidth
   
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/34b161fe-e0c6-4c07-ab19-5d7c2fba50c4)
 
-### Victim Cache Efficacy L1, L2, L3
+### Victim Cache Efficacy
 Cache Optimizations | Miss Rate | Miss Penalty | Hit Time | Bandwidth
       ---           |    ---    |     ---      |   ---    |   ---
  Victim Cache       |     +     |      +       |          |
@@ -160,3 +160,26 @@ Instruction prefetch in Alpha AXP 21064
 ### Hardware Data Prefetching
 - Prefetch-on-miss:
   - Prefetch b+1 upon miss on b
+- One Block Lookahead (OBL) scheme
+  - Initiate prefetch for block b+1 when block b is accessed
+- Strided prefetch
+  - If observe sequence of accesses to block b, b+N, b+2N, then prefetch b+3N etc.
+ 
+### Software Prefetching
+```C
+for (i = 0; i < N; i++) {
+ prefetch(&a[i+1]);
+ prefetch(&b[i+1]);
+ SUM = SUM + a[i] * b[i];
+}
+```
+
+### Software Prefetching Issues
+- Timing is the biggest issue, not predictability
+  - If you prefetch very close to when the data is required, you might be too late
+  - Prefetch too early, cause pollution
+ 
+### Prefetching Efficacy
+Cache Optimizations | Miss Rate | Miss Penalty | Hit Time | Bandwidth
+      ---           |    ---    |     ---      |   ---    |   ---
+ Prefetching        |     +     |      +       |          |
