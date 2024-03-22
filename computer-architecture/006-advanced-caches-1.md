@@ -113,3 +113,50 @@ CPU <-> L1$ <-> L2$ <-> DRAM
 Cache Optimizations | Miss Rate | Miss Penalty | Hit Time | Bandwidth
       ---           |    ---    |     ---      |   ---    |   ---
  Multilevel Cache   |     +     |      +       |          |
+
+## Victim Caches
+### Victim Cache
+- Small Fully Associative cache for recently evicted lines
+  - Usually small (4-16 blocks)
+- Reduced conflict misses
+  - More associativity for small number of lines
+- Can be checked in parallel or series with main cache
+- On Miss in L1, Hit in VC: VC->L1,L1->VC
+- On Miss in L1, Miss in VC: L1->VC, VC->? (Can always be clean)
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/34b161fe-e0c6-4c07-ab19-5d7c2fba50c4)
+
+### Victim Cache Efficacy L1, L2, L3
+Cache Optimizations | Miss Rate | Miss Penalty | Hit Time | Bandwidth
+      ---           |    ---    |     ---      |   ---    |   ---
+ Victim Cache       |     +     |      +       |          |
+
+ ### Prefetching
+ - Speculate on future instruction and data accesses and fetch them into cache(s)
+   - Instruction accesses easier to predict than data accesses
+ - Varieties of prefetching
+   - Hardware prefetching
+   - Software prefetching
+   - Mixed schemes
+ - What types of misses does prefetching affect?
+   - Capacity and conflict miss in a negative way because you reduced your capacity by prefetching.
+   - Helps compulsory miss by bringing in data preemptively.
+  
+### Issues in Prefetching
+- Usefulness - should produce hits
+- Timeliness - not late and not too early
+- Cache and bandwidth pollution
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/38b33aab-a910-40ca-8017-c9f5008babad)
+
+### Hardware Instruction Prefetching
+Instruction prefetch in Alpha AXP 21064
+- Fetch two blocks on a miss; the requested block (i) and the next consecutive block (i+1)
+- Requested block placed in cache, and next block in instruction stream buffer
+- If miss in cache but hit in stream buffer, move stream buffer block into cache and prefetch next block (i+2)
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/1d78b22c-d965-4e85-9b6e-5bb4118eddcf)
+
+### Hardware Data Prefetching
+- Prefetch-on-miss:
+  - Prefetch b+1 upon miss on b
