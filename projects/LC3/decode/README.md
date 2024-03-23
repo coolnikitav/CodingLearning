@@ -6,8 +6,7 @@
 - reset
 - npc_in
 - enable_decode
-- Instr_dout
-- psr
+- IMem_dout
 
 ### Outputs
 - IR
