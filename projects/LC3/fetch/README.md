@@ -1,7 +1,7 @@
 # LC3 Fetch
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/82175d80-1c0a-4173-820a-db14d753a0e8)
 
-### Inputs:
+### Inputs
 - clock
 - reset
 - enable_updatePC
@@ -9,7 +9,7 @@
 - taddr
 - br_taken
 
-### Outputs:
+### Outputs
 - npc
 - pc
 - Imem_rd
