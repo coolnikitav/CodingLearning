@@ -14,7 +14,7 @@
 - pc
 - Imem_rd
 
-### LC3 Behavior:
+### LC3 Fetch Behavior:
 - On reset: pc = 3000, npc = 3001
 - If br_taken = 1, PC = taddr, else PC = PC+1
 - PC, npc, update only when enable_updatePC = 1
