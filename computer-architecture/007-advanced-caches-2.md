@@ -28,3 +28,15 @@ Challenges:
 Cache Optimizations | Miss Rate | Miss Penalty | Hit Time | Bandwidth
  --- | --- | --- | --- | ---
  Cache Banking |  |  |  | +
+
+## Software Memory Optimizations
+### Compiler Optimizations
+- Restructuring code affects the data block access sequence
+  - Group data accesses together to improve spatial locality
+  - Re-order data accesses to improve temporal locality
+- Prevent data from entering the cache
+  - Useful for variables that will only be accessed once before being replaced
+  - Needs mechanism for software to tell hardware not to cache data ("no-allocate" instruction hints or page table bits)
+- Kill data that will never be used again
+  - Streaming data exploits spatial locality but not temporal locality
+  - Replace into dead cache locations
