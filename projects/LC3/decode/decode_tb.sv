@@ -1,13 +1,8 @@
 `timescale 1ns / 1ps
 
-/////////////////////////////////
+`include "e_w_control_pkg.sv"
 
-import "DPI-C" function void DecodeIR(
-    input  logic [15:0] instruction,
-    output byte         W_Control,
-    output byte         E_Control,
-    output byte         E_Control_Valid
-);
+import e_w_control_pkg::*;
 
 /////////////////////////////////
 
@@ -26,27 +21,37 @@ endinterface
 /////////////////////////////////
 
 package decode_op_pkg;
-    typedef enum { reset, decode, no_update} op_t;
+    typedef enum { reset, decode, no_update} decode_op_t;
 endpackage
 
 import decode_op_pkg::*;
 
 /////////////////////////////////
 
+package opcode_pkg;
+    typedef enum { add_op, and_op, not_op, lea_op } opcode_t;
+endpackage
+
+import opcode_pkg::*;
+
+/////////////////////////////////
+
 class transaction;
-    rand op_t        op;
-    rand bit  [15:0] npc_in;
-         bit         enable_decode;
-    rand bit  [15:0] Imem_dout;
+    rand decode_op_t        op;
+    rand opcode_t           opcode;
+    rand bit         [15:0] npc_in;
+         bit                enable_decode;
+    rand bit         [15:0] Imem_dout;
      
-         bit  [15:0] IR;
-         bit  [15:0] npc_out;
-         bit  [1:0]  W_Control;
-         bit  [5:0]  E_Control;
+         bit         [15:0] IR;
+         bit         [15:0] npc_out;
+         logic       [1:0]  W_Control;
+         logic       [5:0]  E_Control;
     
     function transaction copy();
         copy = new();
         copy.op            = this.op;
+        copy.opcode        = this.opcode;
         copy.npc_in        = this.npc_in;
         copy.enable_decode = this.enable_decode;
         copy.Imem_dout     = this.Imem_dout;
@@ -63,6 +68,15 @@ class transaction;
                   decode_op_pkg::no_update := 10 
                 };
     }
+    
+    constraint opcode_cntrl {
+        opcode dist {
+                      opcode_pkg::add_op := 25, 
+                      opcode_pkg::and_op := 25,
+                      opcode_pkg::not_op := 25,
+                      opcode_pkg::lea_op := 25
+                    };
+    }
 endclass
 
 /////////////////////////////////
@@ -70,7 +84,7 @@ endclass
 class generator;
     transaction trans;
     mailbox #(transaction) gdmbx;  // gen -> drv
-    
+
     event drvnext;
     event sconext;
     event done;
@@ -85,7 +99,7 @@ class generator;
         repeat (count) begin
             trans = new();
             assert(trans.randomize()) else $error("RANDOMIZATION FAILED");
-            $display("[GEN]: op: %0s | npc_in: %0h | Imem_dout: %0b", trans.op, trans.npc_in, trans.Imem_dout);
+            $display("[GEN]:     op: %0p | opcode: %0p | npc_in: %04h ", trans.op, trans.opcode, trans.npc_in);
             
             gdmbx.put(trans.copy());
             
@@ -135,15 +149,30 @@ class driver;
         
         @(posedge vif.clk);
         vif.rst           <= 1'b0;
+        dstrans.op        <= decode_op_pkg::reset;
         dstrans.IR        <= 16'b0;
         dstrans.npc_out   <= 16'b0;
         dstrans.W_Control <= 2'b0;
         dstrans.E_Control <= 6'b0;
-        
+        $display("[DRV]: RESET DONE");
         @(posedge vif.clk);
         dsmbx.put(dstrans.copy());
-        
-        $display("[DRV]: RESET DONE");
+    endtask
+    
+    task add_op();
+        vif.Imem_dout[15:12] <= 4'b0001;
+    endtask
+    
+    task and_op();
+        vif.Imem_dout[15:12] <= 4'b0101;
+    endtask
+    
+    task not_op();
+        vif.Imem_dout[15:12] <= 4'b1001;
+    endtask
+    
+    task lea_op();
+        vif.Imem_dout[15:12] <= 4'b1110;
     endtask
     
     task decode();
@@ -151,34 +180,37 @@ class driver;
         vif.npc_in        <= gdtrans.npc_in;
         vif.enable_decode <= 1'b1;
         vif.Imem_dout     <= gdtrans.Imem_dout;
-        
-        @(posedge vif.clk);        
-        dstrans.IR        <= vif.Imem_dout;
-        dstrans.npc_out   <= vif.npc_in;
-        // Expected W_Control and E_Control will be determined in the scoreboard
+        case (gdtrans.opcode)
+            opcode_pkg::add_op: add_op();
+            opcode_pkg::and_op: and_op();
+            opcode_pkg::not_op: not_op();
+            opcode_pkg::lea_op: lea_op();
+        endcase                      
         
         @(posedge vif.clk);
-        dsmbx.put(dstrans.copy());
-        
-        $display("[DRV]: op: decode | npc_in: %0h | enable_decode: %0b | Imem_dout: %0b", vif.npc_in, vif.enable_decode, vif.Imem_dout);
-        //@(posedge vif.clk);
+        dstrans.op        <= decode_op_pkg::decode;
+        dstrans.IR        <= vif.Imem_dout;
+        dstrans.npc_out   <= vif.npc_in;  
+        // Expected W_Control and E_Control will be determined in the scoreboard          
+        $display("[DRV]:     op: decode | opcode: %0p | npc_in: %04h  | enable_decode: %0b | Imem_dout: %04h", gdtrans.opcode, vif.npc_in, vif.enable_decode, vif.Imem_dout);    
+        @(posedge vif.clk);
+        dsmbx.put(dstrans.copy());      
     endtask
     
     task no_update();  
         vif.rst           <= 1'b0;
         vif.npc_in        <= gdtrans.npc_in;
         vif.enable_decode <= 1'b0;
-        vif.Imem_dout     <= gdtrans.Imem_dout;
+        vif.Imem_dout     <= gdtrans.Imem_dout;        
         
-        @(posedge vif.clk);        
+        @(posedge vif.clk);  
+        dstrans.op        <= decode_op_pkg::no_update;
         dstrans.IR        <= gdtrans.Imem_dout;
         dstrans.npc_out   <= gdtrans.npc_in;
-        // Expected W_Control and E_Control will be determined in the scoreboard
-        
-        @(posedge vif.clk);
-        dsmbx.put(dstrans.copy());
-        
-        $display("[DRV]: op: no_update | npc_in: %0h | enable_decode: %0b | Imem_dout: %0b", vif.npc_in, vif.enable_decode, vif.Imem_dout);
+        // Expected W_Control and E_Control will be determined in the scoreboard              
+        $display("[DRV]:     op: no_update | npc_in: %04h | enable_decode: %0b | Imem_dout: %04h", vif.npc_in, vif.enable_decode, vif.Imem_dout);
+        @(posedge vif.clk); 
+        dsmbx.put(dstrans.copy());                       
     endtask
     
     task run();
@@ -218,7 +250,7 @@ class monitor;
             
             @(posedge vif.clk);
             msmbx.put(trans.copy());
-            $display("[MON]: IR: %0b | npc_out: %0h | W_Control: %0b | E_Control: %0b", trans.IR, trans.npc_out, trans.W_Control, trans.E_Control);           
+            $display("[MON]:     IR: %04h   | npc_out: %04h  | W_Control: %02b | E_Control: %06b", trans.IR, trans.npc_out, trans.W_Control, trans.E_Control);           
         end
     endtask
 endclass
@@ -231,7 +263,8 @@ class scoreboard;
     mailbox #(transaction) dsmbx;
     mailbox #(transaction) msmbx;
     
-    byte E_Control_Valid;
+    logic [1:0] dstrans_w_control;
+    logic [5:0] dstrans_e_control;
     
     event sconext;
     
@@ -245,15 +278,17 @@ class scoreboard;
             dsmbx.get(dstrans);
             msmbx.get(mstrans); 
             
-            DecodeIR(dstrans.IR, dstrans.W_Control, dstrans.E_Control, E_Control_Valid);
+            dstrans_w_control = w_control(dstrans.IR);
+            dstrans_e_control = e_control(dstrans.IR);
             
-            $display("[SCO-DRV]: IR: %0b | npc_out: %0h | W_Control: %0b | E_Control: %0b", dstrans.IR, dstrans.npc_out, dstrans.W_Control, dstrans.E_Control);
-            $display("[SCO-MON]: IR: %0b | npc_out: %0h | W_Control: %0b | E_Control: %0b", mstrans.IR, mstrans.npc_out, mstrans.W_Control, mstrans.E_Control);
+            $display("[SCO-DRV]: IR: %04h   | npc_out: %04h  | W_Control: %02b | E_Control: %06b", dstrans.IR, dstrans.npc_out, dstrans_w_control, dstrans_e_control);
+            $display("[SCO-MON]: IR: %04h   | npc_out: %04h  | W_Control: %02b | E_Control: %06b", mstrans.IR, mstrans.npc_out, mstrans.W_Control, mstrans.E_Control);                      
             
-            if ( ( dstrans.W_Control == mstrans.W_Control ) && ( dstrans.E_Control & E_Control_Valid == mstrans.E_Control & E_Control_Valid ) )
-                $display("DATA MATCH");
-            else
-                $display("DATA MISMATCH");
+            if ( dstrans.op == decode_op_pkg::decode) 
+                if ( ( dstrans_w_control === mstrans.W_Control ) && ( dstrans_e_control === mstrans.E_Control ) )
+                    $display("DATA MATCH");
+                else
+                    $display("DATA MISMATCH");
             $display("--------------------------");
             -> sconext;
         end
@@ -349,7 +384,7 @@ module decode_tb;
     
     initial begin
         env = new(decode_vif);
-        env.gen.count = 10;
+        env.gen.count = 20;
         env.run();
     end
     
