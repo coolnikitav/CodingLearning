@@ -9,18 +9,18 @@ package e_w_control_pkg;
     function automatic logic [5:0] e_control (input bit [15:0] IR);
         if (IR[15:12] == 4'b0001) begin
             if (IR[5] == 1'b0)
-                return 6'b00xxx1;
+                return 6'b000001;
             else if (IR[5] == 1'b1)
-                return 6'b00xxx0;
+                return 6'b000000;
         end else if (IR[15:12] == 4'b0101) begin
             if (IR[5] == 1'b0)
-                return 6'b01xxx1;   
+                return 6'b010001;   
             else if (IR[5] == 1'b1)
-                return 6'b01xxx0;    
+                return 6'b010000;    
         end else if (IR[15:12] == 4'b1001) begin
-            return 6'b10xxxx;
+            return 6'b100000;
         end else if (IR[15:12] == 4'b1110) begin
-            return 6'bxx011x;
+            return 6'b000110;
         end
     endfunction
 endpackage
