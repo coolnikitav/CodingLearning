@@ -60,3 +60,12 @@ Each program has one base and one bound register. It is possible to have two pro
 
 ### Base and Bound Machine
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/de402581-2129-44ca-b998-a4a25b28084c)
+
+### Memory Fragmentation
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d0207bdf-97a2-443b-a2cb-07a2efbe0886)
+
+## Page Based Memory Systems
+### Page Memory Systems
+- Processor-generated address can be interpreted as a pair <page number, offset>
+- A page table contains the physical address of the base of each page:
+  ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7c58ffaf-45cb-4fe9-a9eb-18ce935a55c8)
