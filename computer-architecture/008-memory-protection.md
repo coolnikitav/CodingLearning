@@ -69,3 +69,26 @@ Each program has one base and one bound register. It is possible to have two pro
 - Processor-generated address can be interpreted as a pair <page number, offset>
 - A page table contains the physical address of the base of each page:
   ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7c58ffaf-45cb-4fe9-a9eb-18ce935a55c8)
+
+### Private Address Space per User
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/4d52d9e7-f235-4a7a-b211-264f08741384)
+
+OS can go touch memory without going through a mapping layer
+
+### Where Should Page Tables Reside?
+- Space required by the page tables (PT) is proportional to the address space, number of users,
+  (inverse to) size of each page, ...
+  - Space requirement is large
+  - Too expensive to keep in registers
+- Idea: keep PTs in the main memory
+  - Needs one reference to retrieve the page base address and another to access the data word
+    - doubles the number of memory references!
+  - Storage space to store PT grows with size of memory
+ 
+### Page Tables in Physical Memory
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d5628184-2667-4280-945d-02a826f20aeb)
+
+Note: the page tables themselves still need to be contiguous, which could lead to fragmentation
+
+### Linear Page Table
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/60eb0e35-b772-45f3-a134-0e35546019d1)
