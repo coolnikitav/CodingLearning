@@ -42,5 +42,5 @@ For example, if IR[15:12] decodes to ADD and IR[5] = 0, then E_Control = 6'b00xx
 
 
 
-### Wiring Diagram
+### LC3 Decode Internals
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/3fb97ea6-a669-485c-819b-0f3335a9b292)
