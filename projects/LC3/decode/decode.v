@@ -31,18 +31,18 @@ module decode(
                 case (Imem_dout[15:12])
                     4'b0001: begin
                         case(Imem_dout[5])
-                            0: E_Control <= 6'b00xxx1;
-                            1: E_Control <= 6'b00xxx0;
+                            0: E_Control <= 6'b000001;
+                            1: E_Control <= 6'b000000;
                         endcase
                     end
                     4'b0101: begin
                         case(Imem_dout[5])
-                            0: E_Control <= 6'b01xxx1;
-                            1: E_Control <= 6'b01xxx0;
+                            0: E_Control <= 6'b010001;
+                            1: E_Control <= 6'b010000;
                         endcase
                     end
-                    4'b1001:   E_Control <= 6'b10xxxx;
-                    4'b1110:   E_Control <= 6'bxx011x;
+                    4'b1001:   E_Control <= 6'b100000;
+                    4'b1110:   E_Control <= 6'b000110;
                 endcase
             end
         end
