@@ -92,3 +92,15 @@ Note: the page tables themselves still need to be contiguous, which could lead t
 
 ### Linear Page Table
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/60eb0e35-b772-45f3-a134-0e35546019d1)
+
+### Size of Linear Page Table
+- With 32-bit addresses, 4-KB pages and 4B PTEs:
+  - 2^20 PTEs, i.e, 4 MB page table per user per procedd
+  - 4 GB of swap needed to back up full virtual address space
+- Larger pages?
+  - Internal fragmentation (Not all memory in page is used)
+  - Larger page fault penalty (more time to read from disk)
+- What about 64-bit virtual address space???
+  - Even 1 MB pages would require 2^44 8B PTEs (35TB!)
+- What is the "saving grace"?
+  - Go to a different arrangement of page tables. Some locations of page tables don't get used
