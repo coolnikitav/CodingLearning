@@ -154,7 +154,7 @@ class driver;
         dstrans.npc_out   <= 16'b0;
         dstrans.W_Control <= 2'b0;
         dstrans.E_Control <= 6'b0;
-        $display("[DRV]: RESET DONE");
+        $display("[DRV]:     RESET DONE");
         @(posedge vif.clk);
         dsmbx.put(dstrans.copy());
     endtask
@@ -206,8 +206,7 @@ class driver;
         @(posedge vif.clk);  
         dstrans.op        <= decode_op_pkg::no_update;
         dstrans.IR        <= gdtrans.Imem_dout;
-        dstrans.npc_out   <= gdtrans.npc_in;
-        // Expected W_Control and E_Control will be determined in the scoreboard              
+        dstrans.npc_out   <= gdtrans.npc_in;                     
         $display("[DRV]:     op: no_update | npc_in: %04h | enable_decode: %0b | Imem_dout: %04h", vif.npc_in, vif.enable_decode, vif.Imem_dout);
         @(posedge vif.clk); 
         dsmbx.put(dstrans.copy());                       
@@ -281,7 +280,8 @@ class scoreboard;
             dstrans_w_control = w_control(dstrans.IR);
             dstrans_e_control = e_control(dstrans.IR);
             
-            $display("[SCO-DRV]: IR: %04h   | npc_out: %04h  | W_Control: %02b | E_Control: %06b", dstrans.IR, dstrans.npc_out, dstrans_w_control, dstrans_e_control);
+            if ( dstrans.op == decode_op_pkg::decode)
+                $display("[SCO-DRV]: IR: %04h   | npc_out: %04h  | W_Control: %02b | E_Control: %06b", dstrans.IR, dstrans.npc_out, dstrans_w_control, dstrans_e_control);
             $display("[SCO-MON]: IR: %04h   | npc_out: %04h  | W_Control: %02b | E_Control: %06b", mstrans.IR, mstrans.npc_out, mstrans.W_Control, mstrans.E_Control);                      
             
             if ( dstrans.op == decode_op_pkg::decode) 
