@@ -109,3 +109,88 @@ Note: the page tables themselves still need to be contiguous, which could lead t
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/abcf38d4-21c6-4029-abf8-0853ee2957f2)
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/fb40f400-0a38-4f95-8d55-f699de353ef7)
+
+## Translation and Protection
+### Address Translation & Protection
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/dc849318-fa57-41db-9c6a-5df47bdedf55)
+- Every instruction and data access needs address translation and protection checks
+
+A good Virtual Memory (VM) design needs to be fast (~one cycle) and space efficient
+
+### Translation Lookaside Buffers (TLB)
+- Problem: Address translation is very expensive!
+  - In a two-level page table, each reference becomes several memory accesses
+ 
+- Solution: Cache translations in TLB
+  - TLB hit -> Single-Cycle Translation
+  - TLB miss -> Page-Table Walk to refill
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c01fad18-5736-494e-8d18-332ac7dacd01)
+
+Valid, Read, Write, Dirty
+
+Dirty bit shows whether the page has been accessed
+
+### TLB Designs
+- Q: Why is it likely that two entries conflict?
+  
+- Typically 16-128 entries, usually fully associative
+  - Each entry maps a large page, hence less spatial locality across pages -> more likely that two entries conflict
+  - Sometimes larger TLBs (256-512) entries are 4-8 way set-associative
+  - Larger systems sometimes have multi-level (L1 and L2) TLBs
+- Random (Clock Algorithm) or FIFO replacement policy
+- No process information in TLB
+  - Flush TLB on Process Context Switch
+- TLB Reach: Size of largest virtual address space that can be simultaneously mapped by TLB
+  - Example: 64 TLB entries, 4KB pages, one page per entry. TLB reach = 256 KB
+ 
+### TLB Extensions
+- Q: Why would we use the ASID and G TLB Extensions?
+  
+When you change between processes, you would change the base pointer. TLB is the cache of the page table. So when you change the base pointer, you would have to invalidate the entire TLB.
+
+- Address Space Identifies (ASID)
+  - Allow TLB Entries from multiple processes to be in TLB at same time. ID of address space (Process) is matched on.
+  - Global Bit (G) can match on all ASIDs
+- Variable Page Size (PS)
+  - Can increase reach on a per page basis
+ 
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/1e3f86d3-4618-45d0-abad-e0bd38c6570c)
+
+## TLB Processing
+### Handling a TLB Miss
+- Q: How does hardware handle a TLB Miss?
+  
+- Software (MIPS, Alpha)
+  - TLB miss causes an exception and the operating systme walks the page tables and reloads TLB. A priveleged "untranslated" addressing mode used for walk
+- Hardware (SPARC v8, x86, PowerPC)
+  - A memory management unit (MMU) walks the page tables and reloads the TLB
+  - If a missing (data or PT) page is encountered during the TLB reloading, MMU gives up and signals a Page-Fault exception for the original instruction
+ 
+### Hierarchical Page Table Walk: SPARC v8
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/8e249dd3-ec7a-4d78-9101-c67a257ce0b4)
+
+### Page-Based Virtual-Memory Machine (Hardware Page-Table Walk)
+- Q: What happens when there is a TLB miss?
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/19668d19-f74e-4f8b-b8cf-78a129836e3a)
+
+If there is a miss, the walker stalls the whole processor and uses the base register to walk around in main memory and figure everything out.
+
+### Address Translation: putting it all together
+- Q: Describe what happens during TLB lookup hit and miss.
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d356160a-41cd-4415-bd94-829d8840d38f)
+
+### Modern Virtual Memory Systems (Illusion of a large, private, uniform store)
+- Q: Explain demand paging. How could it cause the system to run out of memory?
+  
+- Protection & Privacy
+  - several users, each with their private address space and one or more shared address spaces. page tables = name space
+- Demand Paging
+  - Provides the ability to run programs larger than the primary memory. Loads the furst page of the program. Then when second page is looked at, there is a page fault, so goes and loads it and continues executing.
+  - Hides differences in machine configurations
+ 
+The price is address translation on each memory reference
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/38015c74-9101-4dd3-a06f-e010fc75f36a)
