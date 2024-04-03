@@ -104,3 +104,8 @@ Note: the page tables themselves still need to be contiguous, which could lead t
   - Even 1 MB pages would require 2^44 8B PTEs (35TB!)
 - What is the "saving grace"?
   - Go to a different arrangement of page tables. Some locations of page tables don't get used
+
+### Hierarchical Page Table
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/abcf38d4-21c6-4029-abf8-0853ee2957f2)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/fb40f400-0a38-4f95-8d55-f699de353ef7)
