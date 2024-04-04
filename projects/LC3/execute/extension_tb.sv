@@ -60,7 +60,7 @@ class generator;
             trans = new();
             assert (trans.randomize()) else $error("RANDOMIZATION FAILED");
             gdmbx.put(trans.copy());
-            $display("[GEN]:       IR: %016b |      IR: %016b |       IR: %016b |      IR: %016b", trans.IR, trans.IR, trans.IR, trans.IR);
+            $display("[GEN]:       IR: %016b |      IR: %016b |      IR: %016b |       IR: %016b", trans.IR, trans.IR, trans.IR, trans.IR);
             @(drvnext);
             @(sconext);
         end
