@@ -14,6 +14,10 @@ endinterface
  */
 interface clk_if;
     logic clk;    
+    
+    initial clk <= 0;
+    
+    always #5 clk = ~clk;
 endinterface
 
 /////////////////////////////////
@@ -56,7 +60,7 @@ class generator;
             trans = new();
             assert (trans.randomize()) else $error("RANDOMIZATION FAILED");
             gdmbx.put(trans.copy());
-            $display("[GEN]: IR: %016b", trans.IR);
+            $display("[GEN]:       IR: %016b |      IR: %016b |       IR: %016b |      IR: %016b", trans.IR, trans.IR, trans.IR, trans.IR);
             @(drvnext);
             @(sconext);
         end
@@ -88,8 +92,7 @@ class driver;
             @(posedge tb_clk.clk);
             gdmbx.get(gdtrans);
             vif.IR = gdtrans.IR;
-            
-            @(posedge tb_clk.clk);
+
             dstrans.IR       = gdtrans.IR;
             dstrans.imm5     = { {11{gdtrans.IR[4]}},  gdtrans.IR[4:0]  };
             dstrans.offset6  = { {10{gdtrans.IR[5]}},  gdtrans.IR[5:0]  };
@@ -118,15 +121,13 @@ class monitor;
     
     task run();
         forever begin
-            @(posedge tb_clk.clk);
+            repeat(2) @(posedge tb_clk.clk);
             trans.imm5     = vif.imm5;
             trans.offset6  = vif.offset6;
             trans.offset9  = vif.offset9;
             trans.offset11 = vif.offset11;
-            
-            @(posedge tb_clk.clk);
-            msmbx.put(trans.copy());
-            $display("[MON]: imm5: %016b | offset6: %016b | offset9: %016b | offset11: %016b", vif.imm5, vif.offset6, vif.offset9, vif.offset11);            
+            msmbx.put(trans.copy());          
+            $display("[MON]:     imm5: %016b | offset6: %016b | offset9: %016b | offset11: %016b", vif.imm5, vif.offset6, vif.offset9, vif.offset11);            
         end
     endtask
 endclass
@@ -155,10 +156,10 @@ class scoreboard;
             $display("[SCO-MON]: imm5: %016b | offset6: %016b | offset9: %016b | offset11: %016b", mstrans.imm5, mstrans.offset6, mstrans.offset9, mstrans.offset11);
         
             if (dstrans.imm5 == mstrans.imm5 && dstrans.offset6 == mstrans.offset6 && dstrans.offset9 == mstrans.offset9 &&  dstrans.offset11 == mstrans.offset11)
-                $display("[SCO]: DATA MATCH");
+                $display("[SCO]:                                              DATA MATCH");
             else
-                $display("[SCO]: DATA MISMATCH");
-            
+                $display("[SCO]:                                             DATA MISMATCH");           
+            $display("----------------------------------------------------------------------------------------------------------------------");
             -> sconext;
         end
     endtask
@@ -207,10 +208,12 @@ class environment;
     endfunction
     
     task test();
-        gen.run();
-        drv.run();
-        mon.run();
-        sco.run();
+        fork
+            gen.run();
+            drv.run();
+            mon.run();
+            sco.run();
+        join_any
     endtask
     
     task post_test();
@@ -227,12 +230,7 @@ endclass
 /////////////////////////////////
 
 module extension_tb;
-    clk_if tb_clk();
-    
-    initial tb_clk.clk <= 0;
-    
-    always #5 tb_clk.clk <= ~tb_clk.clk;
-    
+    clk_if tb_clk();   
     
     extension_if extension_vif();
     
