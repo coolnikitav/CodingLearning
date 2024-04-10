@@ -37,13 +37,15 @@ power = 0.6*4 + 0.4*7.9 = 2.4 + 3.16 = 5.56
 
 c.
 
-If read time for 5400rpm disk is 1, then for 7200rpm disk it is 0.75.
+seek7200 = 0.75 * seek5400
 
-7 * 1 + 2.9 * x = 7.9 * 0.75 + 4 * y
+seek7200 + idle7200 = 100
 
-1.075 + 2.9x = 4y
+seek5400 + idle5400 = 100
 
-y = (2.9x - 1.075)/4
+seek7200 * 7.9 + idle7200 * 4 = seek5400 * 7 + idle5400 * 2.9
+
+idle5400 = 29.8%
 
 ## 1-H&P Ch 1.9
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/240a927a-acc1-4307-a87e-8188a0dffcc5)
