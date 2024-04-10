@@ -27,9 +27,9 @@ CPI = 1.0 * 0.4815 + 1.4 * 0.3755 + 2.0 * 0.6 * 0.107 + 1.5 * 0.4 * 0.107 + 1.2 
 
 a.
 
-Power needed = 66 + 2*2.3 + 7.9 = 88.5 W
+Power needed = 66 + 2*2.3 + 7.9 = 78.5 W
 
-Power supply is 80% efficient, so it should be 88.5/0.8 = 110.625 W
+Power supply is 80% efficient, so it should be 78.5/0.8 = 99 W
 
 b.
 
