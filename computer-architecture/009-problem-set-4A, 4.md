@@ -27,10 +27,22 @@ two	software	reserved	bits.		Assuming	that	the	OS	dedicates 10	pages	to	page	tab
 a	particular	process,	what	is	the	maximum	amount	of	physical	memory	that	can	be	addressed	by	that	
 process?		What	is	the	minimum?
 
-Page size is 8KB, thus need 13 bits for offset in virtual address. 1 bit is reserved. So 50 bits for page tables.
+Assuming byte addressable memory:
 
-Number of pages = 2^63/2^13 = 2^50
+Page size = 8KB = 2^13 B
 
-Number of page frames = 2^64/2^13 = 2^51
+Virtual address space = 2^63 B
 
-Physical address (64) = page frames (51) + offset (13)
+Number of entries in a page table if there was 1: 2^63/2^13 = 2^50
+
+Number of frames = 2^64/2^13 = 2^51, so we need 51 bits to address all frames + 5 required bits = 56 bits ~64bits = 8B
+
+Size of that page table = 2^50 * 2^3 = 2^53 B > page size, so num of page tables in last level is 2^53/2^13 = 2^40.
+
+2^40 * 2^3 > 2^13, so second last level will have 2^43/2^13 = 2^30 page tables.
+
+2^30 * 2^3 > 2^13, so third last level will have 2^33/2^13 = 2^20 page tables.
+
+2^20 * 2^3 > 2^13, so fourth last level will have 2^23/2^13 = 2^10 page tables.
+
+2^10 * 2^3 = 2^13, so fifth last level will have 1 table
