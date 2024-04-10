@@ -1,3 +1,11 @@
+## 4 - 3.1
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/ebc33478-ee37-4e16-bfdd-004f5ba9bfd6)
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7e911438-e85d-4224-a0dd-23b5986f4120)
+
+If you cannot issue an instruction until the previous one is completed, there is no pipelining.
+
+4+12+5+4+1+1+0+0+1+0+1+1(delay slot) = 30 cycles
+
 ## 3 - A.1
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/79e01d59-65c1-412b-9c83-fcbeca14995f)
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/6698e028-bcd0-4bbc-a915-4832f2dab383)
