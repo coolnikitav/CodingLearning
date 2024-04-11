@@ -1,3 +1,5 @@
+## 5 - https://www.cs.utexas.edu/~lorenzo/corsi/cs372/06F/hw/3sol.html
+
 ## 4 - 3.1
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/ebc33478-ee37-4e16-bfdd-004f5ba9bfd6)
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7e911438-e85d-4224-a0dd-23b5986f4120)
