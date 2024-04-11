@@ -31,18 +31,40 @@ Assuming byte addressable memory:
 
 Page size = 8KB = 2^13 B
 
-Virtual address space = 2^63 B
+V.A. (63 bits) = | 50 idx bit | 13-bit offset |
 
-Number of entries in a page table if there was 1: 2^63/2^13 = 2^50
+PTE bits = 2^64 (P.A.S) / 2^13 (page size) + 5 required bits = 56 bits, rounding to 64 bits, or 8B
 
-Number of frames = 2^64/2^13 = 2^51, so we need 51 bits to address all frames + 5 required bits = 56 bits ~64bits = 8B
+1-level:
 
-Size of that page table = 2^50 * 2^3 = 2^53 B > page size, so num of page tables in last level is 2^53/2^13 = 2^40.
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7be1c1bf-0861-47bb-a29f-cb3d4d681c1a)
 
-2^40 * 2^3 > 2^13, so second last level will have 2^43/2^13 = 2^30 page tables.
+2-level:
 
-2^30 * 2^3 > 2^13, so third last level will have 2^33/2^13 = 2^20 page tables.
+V.A. (63 bits) = | 25 L1 idx bit | 25 L2 idx bit | 13-bit offset |
 
-2^20 * 2^3 > 2^13, so fourth last level will have 2^23/2^13 = 2^10 page tables.
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/1eed9873-865c-4e15-9563-0c12e6bf20cb)
 
-2^10 * 2^3 = 2^13, so fifth last level will have 1 table
+1 * 2^25 * 8 + 2^25*2^25*8 = 
+
+## Problem 5
+On a	machine	with	a	software-managed	memory	management	unit	(MMU)	
+when	a	TLB	miss	occurs,	what	are	the	possible	reasons?		Does	this	always	result	in	a	buserror/segmentation	fault?		On	a	machine	with	a	hardware	managed	MMU	with	hardware	page-table	
+walker,	does	a	page	fault	always	result	in	a	bus-error/segmentation	fault?
+
+- Entry not in TLB.
+- This results in a page fault if the data is not found in main memory. If data is found in main memory, TLB is reloaded.
+- A page fault is a page fault. What does seg fault have to do with this?
+
+## Problem 6
+You	are	executing	on	a	VMIPS	(as	described	on	p.	266	of	H&P5)	architecture	the	
+code	below.		Assume	that	the	maximum	vector	length	of	the	architecture	is	128.		Draw	the	pipeline	
+diagram	of	this	code	executing	on	a	single-lane	architecture	which	has	an	independent	load	unit,	store	
+unit,	multiply	unit,	and	ALU	unit.		Loads	have	a	latency	of	three	cycles	(L0,	L1,	L2),	stores	take	two	cycles	
+to	occur	(S0,	S1),	multiplies	take	5	cycles	(Y0,	Y1,	Y2,	Y3,	Y4),	and	ALU	operations	take	two	cycles	(X0,	
+X1).		Assume	full	pipelining	of	the	functional	units.		Assume	that	the	pipeline	has	a	dedicated	register	
+read	stage	and	a	single	write-stage.		For	the	first	part	of	this	problem,	assume	that	the	architecture	
+support	chaining	through	the	register	file,	but	only	has	two read	ports and	one	write	port	on	the	register	
+file
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7965852d-cf3f-49e3-9734-8bd17279924d)
