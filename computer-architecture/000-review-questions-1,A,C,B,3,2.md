@@ -1,3 +1,12 @@
+## 6 - 2.13
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/8fcbb4f4-0c9f-4a67-93a0-1bc519b5d56b)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/b83a711c-da84-41b5-835c-b1837fd88f35)
+
+- a: There are 2 DRAM chips on the DIMM. Each DRAM chip has 36 I/Os.
+- b: If there are 8B for data, we need burst length of 32B/8B = 4
+- c: DDR2-667 is 5336 MB/sec and DDR2-533 is 4264 MB/sec
+
 ## 5 - https://www.cs.utexas.edu/~lorenzo/corsi/cs372/06F/hw/3sol.html
 
 ## 4 - 3.1
