@@ -79,3 +79,20 @@ This has a 6 stage multiply pipeline:
 - Q: What is bank busy time?
   
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/b1dffd60-abf0-4d36-9fe9-aa446f3204e6)
+
+## Vector Parallelism
+### Example Vector Microarchitecture
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0f2e5643-ab47-43a9-b5e8-5e08e140f2cc)
+
+### Basic Vector Execution
+- Q: What is a chime?
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/b7b2e4da-8032-4e9c-87e9-74ba60a470de)
+
+Chime - how long it takes to execute a vector instruction on an architecture.
+
+### Vector Instruction Parallelism
+- Can overlap execution of multiple vector instructions
+  - Example machine has 32 elements per vector register and 8 lanes
+ 
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/229bed20-6b1d-4cfb-9af9-39e3347bfec4)
