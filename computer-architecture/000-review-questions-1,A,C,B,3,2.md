@@ -11,9 +11,69 @@ bypassed.
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/457862ff-e313-4c3d-af89-5c29c96a4d4f)
 
+a.
+
 Unscheduled:
+- L.D    F2,0(R1)
+- Stall
+- Stall
+- MUL.D  F4,F2,F0
+- Stall
+- Stall
+- Stall
+- Stall
+- Stall
+- Stall
+- L.D    F6,0(R2)
+- Stall
+- Stall
+- ADD.D  F6,F4,F6
+- Stall
+- Stall
+- Stall
+- Stall
+- S.D    F6,0(R2)
+- Stall
+- Stall
+- DADDIU R1,R1,#8
+- Stall
+- Stall
+- DADDIU R2,R2,#8
+- Stall
+- Stall
+- DSLTU  R3,R1,R4
+- Stall
+- Stall
+- BNEZ R3,foo
+- Stall
 
+Scheduled:
+- L.D    F2,0(R1)
+- L.D    F6,0(R2)
+- Stall
+- MUL.D  F4,F2,F0
+- DADDIU R1,R1,#8
+- DADDIU R2,R2,#8
+- DSLTU  R3,R1,R4
+- Stall
+- Stall
+- Stall
+- ADD.D  F6,F4,F6
+- Stall
+- Stall
+- Stall
+- Stall
+- S.D    F6,0(R2)
+- Stall
+- Stall
+- BNEZ R3,foo
+- Stall
 
+Execution time:
+- Unscheduled: 32 cycles
+- Scheduled: 20 cycles
+
+The clock would have to be 32/20 = 1.6, or 60% faster to match the performance improvement achieved by scheduling.
 ## 6 - 2.13
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/8fcbb4f4-0c9f-4a67-93a0-1bc519b5d56b)
 
