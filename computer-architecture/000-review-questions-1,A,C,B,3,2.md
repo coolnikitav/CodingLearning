@@ -1,3 +1,19 @@
+## 7 - 3.14
+In this exercise, we look at how software techniques
+can extract instruction-level parallelism (ILP) in a common vector loop. The following loop is the so-called DAXPY loop (double-precision aX plus Y) and
+is the central operation in Gaussian elimination. The following code implements the DAXPY operation, Y = aX + Y, for a vector length 100. Initially, R1 is
+set to the base address of array X and R2 is set to the base address of Y:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/11fa04f4-161c-49bf-88a1-1191587983f8)
+
+Assume the functional unit latencies as shown in the table below. Assume a onecycle delayed branch that resolves in the ID stage. Assume that results are fully
+bypassed. 
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/457862ff-e313-4c3d-af89-5c29c96a4d4f)
+
+Unscheduled:
+
+
 ## 6 - 2.13
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/8fcbb4f4-0c9f-4a67-93a0-1bc519b5d56b)
 
