@@ -50,5 +50,32 @@
  
 ## Vector Processor Introduction
 ### Vector Programming Model
+- Q: Explain what ADDVS V3,V1,#1 does.
+  
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/e55e6831-fe7b-4160-a634-6d0d79b1b84f)
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/a3be3bcd-dcea-407c-b782-559626685c75)
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/5310042b-937a-4773-9b35-c3fa3ff27fa4)
+
+### Vector Code Element-by-Element Multiplication
+- Q: show what this C code would look like in Scalar assembly code and Vector assembly code:
+
+  ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/049060a8-1570-403d-b199-355df278aec0)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/557ec859-1cf0-48e5-8865-6b53bb44b8af)
+
+### Vector Arithmetic Execution
+- Q: Why does vector execution not need bypassing?
+  
+- Use deep pipeline (=> fast clock) to execute element operations
+- Simplifies control of deep pipeline because elements in vector are independent
+  - No data hazards!
+  - No bypassing needed
+
+This has a 6 stage multiply pipeline:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/56547519-3510-46d3-9014-73daa2402ea1)
+
+### Interleaved Vector Memory System
+- Q: What is bank busy time?
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/b1dffd60-abf0-4d36-9fe9-aa446f3204e6)
