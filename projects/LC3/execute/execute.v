@@ -6,7 +6,7 @@ module execute(
     input      [15:0] IR,
     input      [15:0] npc_in,
     input      [1:0]  W_control_in,
-    output  [15:0] aluout,
+    output     [15:0] aluout,
     output reg [1:0]  W_control_out,
     input      [15:0] VSR1,
     input      [15:0] VSR2,
@@ -43,7 +43,7 @@ module execute(
      */
     reg [15:0] pcout1, pcout2;
         
-    always @ (pcselect1) begin
+    always @ (*) begin
         case (pcselect1)
             2'h0: pcout1 = offset11;
             2'h1: pcout1 = offset9;
@@ -52,14 +52,14 @@ module execute(
         endcase
     end
     
-    always @ (pcselect2) begin
+    always @ (*) begin
         case (pcselect2)
             2'h0: pcout2 = VSR1;
             2'h1: pcout2 = npc_in;
         endcase
     end
     
-    always @ (pcselect1 or pcselect2) begin
+    always @ (*) begin
         pcout = pcout1 + pcout2;
     end
     
@@ -68,7 +68,7 @@ module execute(
      */
     reg [15:0] aluin2;  // aluin1 is always VSR1, aluin2 could be VSR2 or an imm
     
-    always @ (op2select) begin
+    always @ (*) begin
         case (op2select)
             1'h0: aluin2 = imm5;
             1'h1: aluin2 = VSR2;
@@ -95,9 +95,9 @@ module execute(
             pcout         <= 16'h0;
         end else if (enable_execute == 1'b1) begin
             W_control_out <= W_control_in;
-            dr <= IR[11:9];
-            sr1 <= IR[8:6];
-            sr2 <= IR[2:0];
+            dr            <= IR[11:9];
+            sr1           <= IR[8:6];
+            sr2           <= IR[2:0];
         end
     end
 endmodule
