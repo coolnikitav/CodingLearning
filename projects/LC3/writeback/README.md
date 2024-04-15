@@ -1,5 +1,5 @@
 # LC3 Writeback
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/3ff5ab48-8817-4c42-844c-0297b95b4aa3)
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/9249223f-aa46-4c46-b533-e8c089403ab3)
 
 ## LC3 Writeback Behavior
 - Writes either aluout, pcout or memout based on W_Control value. This project only addresses aluout and pcout operations
