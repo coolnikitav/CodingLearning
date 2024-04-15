@@ -73,6 +73,9 @@ Execution time:
 - Unscheduled: 32 cycles
 - Scheduled: 20 cycles
 
+b.
+
+The loop must be unrolled 7 times because there are 6 stall slots after MUL.D
 The clock would have to be 32/20 = 1.6, or 60% faster to match the performance improvement achieved by scheduling.
 ## 6 - 2.13
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/8fcbb4f4-0c9f-4a67-93a0-1bc519b5d56b)
