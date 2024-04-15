@@ -320,10 +320,10 @@ class scoreboard_exe;
                 $display("[SCO-MON]: [%0g]:                W_control_out: %02h | dr: %03b | sr1: %03b | sr2: %03b | pcout: %04h", $time, mstrans.W_control_out, mstrans.dr, mstrans.sr1, mstrans.sr2, mstrans.pcout);
             
                 if (dstrans.W_control_out == mstrans.W_control_out &&
-                    dstrans.dr == mstrans.dr &&
-                    dstrans.sr1 == mstrans.sr1 &&
-                    dstrans.sr2 == mstrans.sr2 &&
-                    dstrans.pcout == mstrans.pcout)
+                    dstrans.dr            == mstrans.dr &&
+                    dstrans.sr1           == mstrans.sr1 &&
+                    dstrans.sr2           == mstrans.sr2 &&
+                    dstrans.pcout         == mstrans.pcout)
                     $display("           [%0g]: DATA MATCH", $time);
                 else
                     $display("           [%0g]: DATA MISMATCH", $time);
@@ -331,12 +331,12 @@ class scoreboard_exe;
                 $display("[SCO-DRV]: [%0g]: aluout: %04h | W_control_out: %02h | dr: %03b | sr1: %03b | sr2: %03b | pcout: %04h", $time, dstrans.aluout, dstrans.W_control_out, dstrans.dr, dstrans.sr1, dstrans.sr2, dstrans.pcout);
                 $display("[SCO-MON]: [%0g]: aluout: %04h | W_control_out: %02h | dr: %03b | sr1: %03b | sr2: %03b | pcout: %04h", $time, mstrans.aluout, mstrans.W_control_out, mstrans.dr, mstrans.sr1, mstrans.sr2, mstrans.pcout);
            
-                if (dstrans.aluout == mstrans.aluout &&
+                if (dstrans.aluout        == mstrans.aluout &&
                     dstrans.W_control_out == mstrans.W_control_out &&
-                    dstrans.dr == mstrans.dr &&
-                    dstrans.sr1 == mstrans.sr1 &&
-                    dstrans.sr2 == mstrans.sr2 &&
-                    dstrans.pcout == mstrans.pcout)
+                    dstrans.dr            == mstrans.dr &&
+                    dstrans.sr1           == mstrans.sr1 &&
+                    dstrans.sr2           == mstrans.sr2 &&
+                    dstrans.pcout         == mstrans.pcout)
                     $display("           [%0g]: DATA MATCH", $time);
                 else
                     $display("           [%0g]: DATA MISMATCH", $time);
