@@ -61,10 +61,6 @@ class transaction_exe;
         copy.sr2            = this.sr2;
         copy.pcout          = this.pcout;
     endfunction
-    /*
-    constraint op_cntrl {
-        op == op_pkg::and_imm_op;
-    }*/
 endclass
 
 /////////////////////////////////
@@ -85,21 +81,15 @@ class generator_exe;
     
     task run();
         repeat(count) begin
-            //$display("[GEN]: [%0g]: Entered GEN cycle", $time);
             gdtrans = new();   
-            //$display("[GEN]: [%0g]: Created gdtrans", $time);                   
             assert(gdtrans.randomize()) else $error("RANDOMIZATION FAILED");
-            //$display("[GEN]: [%0g]: Randomized gdtrans", $time);
             gdmbx.put(gdtrans.copy());
             $display("[GEN]:     [%0g]: op: %0p | IR: %016b | npc_in: %04h", $time, gdtrans.op, gdtrans.IR, gdtrans.npc_in);
                         
             @(drvnext);
-            //$display("[GEN]: [%0g]: DRV finished", $time);
             @(sconext);            
-            //$display("[GEN]: [%0g]: SCO finished", $time);
         end
         -> done;
-        //$display("[GEN]: [%0g]: GEN finished", $time);
     endtask
 endclass
 
@@ -122,8 +112,6 @@ class driver_exe;
     endfunction
     
     task rst_op();
-        //$display("[DRV]: Entered rst_op");
-        //@(posedge vif.clk);
         vif.rst               <= 1'b1;
         @(posedge vif.clk);
         vif.rst               <= 1'b0;
@@ -135,8 +123,6 @@ class driver_exe;
     endtask
     
     task add_reg_op();
-        //$display("[DRV]: Entered add_reg_op");
-        //@(posedge vif.clk);
         vif.rst               <= 1'b0;
         vif.enable_execute    <= 1'b1;
         vif.E_control         <= 6'b000001;
@@ -156,8 +142,6 @@ class driver_exe;
     endtask
     
     task add_imm_op();
-        //$display("[DRV]: Entered add_imm_op");
-        //@(posedge vif.clk);
         vif.rst               <= 1'b0;
         vif.enable_execute    <= 1'b1;
         vif.E_control         <= 6'b000000;
@@ -176,8 +160,6 @@ class driver_exe;
     endtask
     
     task and_reg_op();
-        //$display("[DRV]: Entered and_reg_op");
-        //@(posedge vif.clk);
         vif.rst               <= 1'b0;
         vif.enable_execute    <= 1'b1;
         vif.E_control         <= 6'b010001;
@@ -197,8 +179,6 @@ class driver_exe;
     endtask
     
     task and_imm_op();
-        //$display("[DRV]: [%0g]: Entered and_imm_op", $time);
-        //@(posedge vif.clk);    
         vif.rst               <= 1'b0;
         vif.enable_execute    <= 1'b1;
         vif.E_control         <= 6'b010000;
@@ -206,7 +186,6 @@ class driver_exe;
         vif.npc_in            <= gdtrans.npc_in;
         vif.W_control_in      <= 2'h0;
         vif.VSR1               = gdtrans.IR[8:6];
-        //$display("[DRV]: [%0g]: Set all the inputs of the vif", $time);
         @(posedge vif.clk);
         dstrans.op             = gdtrans.op;
         dstrans.aluout         = vif.VSR1 & { {11{vif.IR[4]}}, vif.IR[4:0] };        
@@ -215,12 +194,9 @@ class driver_exe;
         dstrans.sr1            = vif.IR[8:6];
         dstrans.sr2            = vif.IR[2:0];
         dstrans.pcout          = { {5{vif.IR[10]}}, vif.IR[10:0] } + vif.VSR1;  // pcselect1 = 0, pcselect2 = 0
-        //$display("[DRV]: [%0g]: Set all outputs of dstrans", $time);
     endtask
     
     task not_op();
-        //$display("[DRV]: Entered not_op");
-        //@(posedge vif.clk);
         vif.rst               <= 1'b0;
         vif.enable_execute    <= 1'b1;
         vif.E_control         <= 6'b100000;
@@ -239,8 +215,6 @@ class driver_exe;
     endtask
     
     task lea_op();
-        //$display("[DRV]: Entered lea_op");
-        //@(posedge vif.clk);
         vif.rst               <= 1'b0;
         vif.enable_execute    <= 1'b1;
         vif.E_control         <= 6'b000110;
@@ -257,8 +231,6 @@ class driver_exe;
     endtask
     
     task ne_op();
-        //$display("[DRV]: Entered ne_op");
-        //@(posedge vif.clk);
         vif.rst               <= 1'b0;
         vif.enable_execute    <= 1'b0;
         vif.npc_in            <= gdtrans.npc_in;
@@ -274,9 +246,7 @@ class driver_exe;
     
     task run();
         forever begin
-            //$display("[DRV]: [%0g]: Entered DRV cycle", $time);
             gdmbx.get(gdtrans);
-            //$display("[DRV]: [%0g]: Got gdtrans from gdmbx", $time);
             
             case(gdtrans.op)
                 op_pkg::rst_op:     rst_op();
@@ -288,12 +258,9 @@ class driver_exe;
                 op_pkg::lea_op:     lea_op();
                 op_pkg::ne_op:      ne_op();
             endcase
-            //$display("[DRV]: [%0g]: Completed op", $time);
                         
             dsmbx.put(dstrans.copy());
-            //$display("[DRV]: [%0g]: Put dstrans into dsmbx", $time);
             $display("[DRV]:     [%0g]: op: %p | rst: %0b | enable_execute: %0b | E_control: %06b | IR: %016b | VSR1: %03b | VSR2: %03b | imm5: %016b | W_control_in: %02b", $time, gdtrans.op, vif.rst, vif.enable_execute, vif.E_control, vif.IR, gdtrans.IR[8:6], gdtrans.IR[2:0], { {11{gdtrans.IR[4]}}, gdtrans.IR[4:0] }, vif.W_control_in);
-            //@(posedge vif.clk);
             
             -> drvnext;
         end
@@ -314,9 +281,7 @@ class monitor_exe;
     
     task run();
         forever begin
-            //$display("[MON]: [%0g]: Entered MON cycle", $time);
             mstrans = new();
-            //$display("[MON]: [%0g]: Created mstrans", $time);
             repeat(2) @(posedge vif.clk);
             mstrans.aluout        = vif.aluout;        
             mstrans.W_control_out = vif.W_control_out;
@@ -324,10 +289,7 @@ class monitor_exe;
             mstrans.sr1           = vif.sr1;
             mstrans.sr2           = vif.sr2;
             mstrans.pcout         = vif.pcout; 
-            //$display("[MON]: [%0g]: Got all the outputs from vif and put them into mstrans", $time);
-            //@(posedge vif.clk);
             msmbx.put(mstrans);
-            //$display("[MON]: [%0g]: Put mstrans into msmbx", $time);
             $display("[MON]:     [%0g]: aluout: %04h | W_control_out: %02h | dr: %03b | sr1: %03b | sr2: %03b | pcout: %04h", $time, mstrans.aluout, mstrans.W_control_out, mstrans.dr, mstrans.sr1, mstrans.sr2, mstrans.pcout);
         end        
     endtask
@@ -351,9 +313,7 @@ class scoreboard_exe;
     task run();       
         forever begin            
             dsmbx.get(dstrans);
-            //$display("[SCO]: [%0g]: Got dstrans from dsmbx", $time);
             msmbx.get(mstrans);
-            //$display("[SCO]: [%0g]: Got mstrans from msmbx", $time);
             
             if (dstrans.op == op_pkg::lea_op) begin
                 $display("[SCO-DRV]: [%0g]:                W_control_out: %02h | dr: %03b | sr1: %03b | sr2: %03b | pcout: %04h", $time, dstrans.W_control_out, dstrans.dr, dstrans.sr1, dstrans.sr2, dstrans.pcout);
@@ -426,10 +386,6 @@ class environment_exe;
         sco.sconext = sconext;
     endfunction
     
-    task pre_test();
-        drv.rst_op();
-    endtask
-    
     task test();
         fork
             gen.run();
@@ -445,7 +401,6 @@ class environment_exe;
     endtask
     
     task run();
-        //pre_test();
         test();
         post_test();
     endtask           
