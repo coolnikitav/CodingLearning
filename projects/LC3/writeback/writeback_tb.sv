@@ -2,6 +2,7 @@
 
 interface writeback_if;
     logic        clk;
+    logic        rst;
     logic        enable_writeback;
     logic [15:0] aluout;
     logic [2:0]  W_Control;
@@ -17,16 +18,16 @@ endinterface
 /////////////////////////////////
 
 class transaction_wb;
-    rand bit enable_writeback;
+    rand bit        enable_writeback;
     rand bit [15:0] aluout;
     rand bit [15:0] pcout;
     rand bit [15:0] memout;
     rand bit [2:0]  W_Control;
          bit [15:0] VSR1;
          bit [15:0] VSR2;
-    rand bit [2:0] dr;
-    rand bit [2:0] sr1;
-    rand bit [2:0] sr2;
+    rand bit [2:0]  dr;
+    rand bit [2:0]  sr1;
+    rand bit [2:0]  sr2;
          
     function transaction_wb copy();
         copy                  = new();
@@ -106,17 +107,12 @@ class driver_wb;
     endfunction
     
     task reset();
-        vif.enable_writeback <= 1'b1;
+        vif.rst              <= 1'b1;
         for (int i = 0; i < 8; i++) begin
-            vif.dr        <= i;
-            /*
-             *  Can also set W_Control to 2 and pcout to 0
-             */
-            vif.W_Control    <= 2'h0;
-            vif.aluout       <= 16'h0;
-            register_files[i] = 16'h0;
-            @(posedge vif.clk);            
+            register_files[i] = 16'h0;          
         end
+        @(posedge vif.clk);
+        vif.rst              <= 1'b0;
         $display("[DRV]: RESET DONE");
         $display("--------------------------------");
     endtask    
@@ -125,6 +121,7 @@ class driver_wb;
         forever begin
             gdmbx.get(gdtrans);
             
+            vif.rst              <= 1'b0;
             vif.enable_writeback <= gdtrans.enable_writeback;
             vif.aluout           <= gdtrans.aluout;
             vif.pcout            <= gdtrans.pcout;
@@ -277,6 +274,7 @@ module writeback_tb;
     
     writeback dut(
         .clk(vif.clk),
+        .rst(vif.rst),
         .enable_writeback(vif.enable_writeback),
         .aluout(vif.aluout),
         .W_Control(vif.W_Control),

@@ -1,5 +1,6 @@
 module writeback(
     input         clk,
+    input         rst,
     input         enable_writeback,
     input  [15:0] aluout,
     input  [2:0]  W_Control,
@@ -14,6 +15,7 @@ module writeback(
     
     reg_file RF(
         .clk(clk),
+        .rst(rst),
         .en(enable_writeback),
         .dr(dr),
         .sr1(sr1),
