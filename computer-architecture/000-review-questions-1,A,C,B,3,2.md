@@ -73,10 +73,55 @@ Execution time:
 - Unscheduled: 32 cycles
 - Scheduled: 20 cycles
 
+The clock would have to be 32/20 = 1.6, or 60% faster to match the performance improvement achieved by scheduling.
+
 b.
 
 The loop must be unrolled 7 times because there are 6 stall slots after MUL.D
-The clock would have to be 32/20 = 1.6, or 60% faster to match the performance improvement achieved by scheduling.
+
+Instruction schedule:
+- L.D    F2,0(R1)
+- L.D    F8,8(R1)
+- L.D    F14,16(R1)
+- L.D    F20,24(R1)
+- L.D    F26,32(R1)
+- L.D    F32,40(R1)
+- L.D    F38,48(R1)
+- MUL.D  F4,F2,F0
+- MUL.D  F10,F8,F0
+- MUL.D  F16,F14,F0
+- MUL.D  F22,F20,F0
+- MUL.D  F28,F26,F0
+- MUL.D  F34,F32,F0
+- MUL.D  F40,F38,F0
+- L.D    F1,0(R2)
+- L.D    F7,8(R2)
+- L.D    F13,16(R2)
+- L.D    F19,24(R2)
+- L.D    F25,32(R2)
+- L.D    F31,40(R2)
+- L.D    F37,48(R2)
+- ADD.D  F1,F4,F1
+- ADD.D  F7,F10,F7
+- ADD.D  F13,F16,F13
+- ADD.D  F19,F22,F19
+- ADD.D  F25,F28,F25
+- ADD.D  F31,F34,F31
+- ADD.D  F37,F40,F37
+- S.D    F1,0(R2)
+- S.D    F7,8(R2)
+- DADDIU R1,R1,#56
+- S.D    F13,16(R2)
+- S.D    F19,24(R2)
+- DADDIU R2,R2,#56
+- S.D    F25,32(R2)
+- S.D    F31,40(R2)
+- DSLTU  R3,R1,R4
+- S.D    F37,48(R2)
+- BNEZ R3,foo
+
+39 cycles for 7 elements, so 5.57 cycles per element
+
 ## 6 - 2.13
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/8fcbb4f4-0c9f-4a67-93a0-1bc519b5d56b)
 
