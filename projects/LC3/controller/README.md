@@ -5,6 +5,7 @@
 - This project addresses ALU (ADD, NOT, AND) and Memory (LEA) operations. All of these instructions take 5 clock cycles
 - LC3 is unpipelined. Each instruction goes through 5 cycles: Fetch -> Decode -> Execute -> Writeback -> UpdatePC
 - This project does not address typical pipeline issues like control and data dependence
+- The purpose of this controller is to correctly fill the 8 registers in the writeback module. They will be checked during verification.
 
 ## Instruction Memory
 - The instructions are stored, starting at address 3000
