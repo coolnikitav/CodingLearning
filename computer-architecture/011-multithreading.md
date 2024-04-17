@@ -51,4 +51,28 @@ Cray-1:
  
 ## GPUs
 ### Graphics Processing Units (GPUs)
--
+- Q: Give a brief history of GPUs.
+  
+- Original GPUs were dedicated fixed-function devices for generating 3D graphics (mid-late 1990s) including high-performance floating-point units
+  - Provide workstation-like graphics for PCs
+  - User could configure graphics pipeline, but not really program it
+- Over time, more programmability added (2001-2005)
+  - E.g., New language Cg for writing small programs run on each vertex or each pixel, also Windows DirectX variants
+  - Massively parallel (millions of vertices or pixels per frame) but very constrained programming model
+- Some users noticed they could do general-purpose computation by mapping input and output data to images, and computation to vertex and pixel shading computations
+  - Incredibly difficult programming model as had to use graphics pipeline model for general computation
+
+### General Purpose GPUs (GPGPUs)
+- In 2006, Nvidia introduced GeForce 8800 GPU supporting a new programming language: CUDa
+  - "Compute Unified Device Architecture"
+  - Subsequently, broader industry pushing for OpenCL, a vendor-neutral version of same ideas
+- Idea: Take advantage of GPU computational performance and memory bandwidth to accelerate some kernels for general-purpose computing
+- Attached processor model: Host CPU issues data-parallel kernels to GP-GPU for execution
+- This lecture has a simplified version of Nvidia CUDA-style model and only considers GPU execution for computational kernels, not graphics
+
+### Simplified CUDA Programming Model
+- Q: Explain the general idea of the CUDA programming model.
+  
+- Computation performed by a very large number of independent small scalar threads (CUDA threads or microthreads) grouped into thread blocks
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/32d2f900-809f-41dd-b304-cf4266a65532)
