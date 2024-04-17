@@ -122,6 +122,24 @@ Instruction schedule:
 
 39 cycles for 7 elements, so 5.57 cycles per element
 
+c.
+
+Mem ref 1 | Mem ref 2 | FP op 1 | FP op 2 | Integer op/branch
+ --- | --- | --- | --- | ---
+ L.D    F2,0(R1)   | L.D    F20,24(R1) |                    |                    |
+ L.D    F8,8(R1)   | L.D    F26,32(R1) |                    |                    |
+ L.D    F14,16(R1) | L.D    F32,40(R1) | MUL.D  F4,F2,F0    | MUL.D  F22,F20,F0  |
+ L.D    F1,0(R2)   | L.D    F19,24(R2) | MUL.D  F10,F8,F0   | MUL.D  F28,F26,F0  |
+ L.D    F7,8(R2)   | L.D    F25,32(R2) | MUL.D  F16,F14,F0  | MUL.D  F34,F32,F0  |
+ L.D    F13,16(R2) | L.D    F31,40(R2) | ADD.D  F1,F4,F1    | ADD.D  F19,F22,F19 |
+   .               |  .                | ADD.D  F7,F10,F7   | ADD.D  F25,F28,F25 |
+   .               |  .                | ADD.D  F13,F16,F13 | ADD.D  F31,F34,F31 | DADDIU R1,R1,#48
+ S.D    F1,0(R2)   | S.D    F19,24(R2) |                    |                    | DADDIU R2,R2,#48
+ S.D    F7,8(R2)   | S.D    F25,32(R2) |                    |                    | DSLTU  R3,R1,R4
+ S.D    F13,16(R2) | S.D    F31,40(R2) |                    |                    | BNEZ R3,foo
+
+ Does 6 elements in 11 cycles, so execution time per element is 1.83 cycles per element. 34 out of 55 cycles are used. It uses 19 registers.
+
 ## 6 - 2.13
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/8fcbb4f4-0c9f-4a67-93a0-1bc519b5d56b)
 
