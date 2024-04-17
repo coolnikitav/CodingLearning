@@ -15,4 +15,4 @@
   - @3001: 1422 (ADD R2 R0 #2)
   - @3002: 1820 (ADD R1 R2 R0)
   - @3003: EC03 (LEA R6 #-2)
-- The 4 example instructions will be follow be 21 randomized instructions.
+- Instructions 3004-4095 will be filled up with randomized AND, ADD, NOT, LEA operations.
