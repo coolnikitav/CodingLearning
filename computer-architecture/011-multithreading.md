@@ -221,3 +221,53 @@ Each processor had 120 threads and memory latency was not more than 120 cycles. 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/93968630-bafd-4d38-b2e0-40a9811bd7b4)
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/9e3a4826-f3fa-40ff-889f-b6870aeea054)
+
+## Simulatenous Multithreading
+### Simultaneous Multithreading (SMT) for OOO Superscalars
+- Techniques presented so far have all been "vertical" multithreading where each pipeline stage works on one thread at a time
+- SMT uses fine-grain control already present inside an OOO superscalar to allow instructions from multiple threads to enter execution on same clock cycle. Gives better utilization of machine resources.
+
+### Ideal Superscalar Multithreading
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/65641c3c-1733-4dcd-a7ea-c13490ddb6be)
+
+- Interleave multiple threads to multiple issue slots with no restrictions
+
+### For most apps, most execution units lie idle in an OOO superscalar
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/a7358392-32e1-405a-9ae7-1f5f88bda9ee)
+
+### Superscalar Machine Efficiency
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/97c8df11-5863-4bfa-bcd2-dc53fc93235d)
+
+### Vertical Multithreading
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/e30ce95f-85b6-412f-b650-aa99e10b3544)
+
+- What is the effect of cycle-by-cycle interleaving?
+  - Removes vertical waste, but leaves some horizontal waste
+
+### Chip Multiprocessing (CMP)
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/955b1697-ed7d-4560-a448-0a16ae32e04a)
+
+- What is the effect of splitting into multiple processors?
+  - Reduces horizontal waste
+  - Leaves some vertical waste, and
+  - Puts upper limit on peak throughput of each thread
+
+### Ideal Superscalar Multithreading
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/10545dd3-6763-4684-8160-3d00d99575a2)
+
+- Interleave multiple threads to multiple issue slots with no restrictions
+
+### OOO Simulatenous Multithreading
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/edd2804e-94d7-4ff1-be10-fcf4e916f315)
+
+### SMT adaptation to parallelism type
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/015d1487-760a-460e-b51a-b93457e1782d)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7d4f45c3-278e-4d2b-8966-04fc0de712eb)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/14a70cea-c437-49c3-90ec-3aaa9b725ff0)
+
+### Summary: Multithreaded Categories
+- Q: What are the 5 multithreaded categories and how are they different?
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/ffc619d5-2718-481a-99bc-cdaa4868680f)
