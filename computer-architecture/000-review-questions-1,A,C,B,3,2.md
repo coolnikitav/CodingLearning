@@ -1,3 +1,21 @@
+## 8 - 1.9
+You are designing a system for a real-time application in which
+specific deadlines must be met. Finishing the computation faster gains nothing.
+You find that your system can execute the necessary code, in the worst case,
+twice as fast as necessary.
+- a: How much energy do you save if you execute at the current speed
+and turn off the system when the computation is complete?
+
+Energy is proportional to voltage squared. Also, if you want to execute at current speed, it is 50% less than twice as fast, requiring 50% less voltage.
+
+Energy_new/Energy_old = (voltage*0.5)^2/(voltage)  = 0.25
+
+Since the process is running 2 times longer, multiply the ratio by 2. So you save 50% energy.
+
+- b: How much energy do you save if you set the voltage and frequency to be half as much?
+
+Same as a?
+
 ## 7 - 3.14
 In this exercise, we look at how software techniques
 can extract instruction-level parallelism (ILP) in a common vector loop. The following loop is the so-called DAXPY loop (double-precision aX plus Y) and
@@ -158,6 +176,12 @@ Mem ref 1 | Mem ref 2 | FP op 1 | FP op 2 | Integer op/branch
 If you cannot issue an instruction until the previous one is completed, there is no pipelining.
 
 4+12+5+4+1+1+0+0+1+0+1+1(delay slot) = 30 cycles
+
+Solution:
+
+Each instruction takes 1 cycles to execute + extra latency cycles.
+
+(1+4)+(1+12)+(1+5)+(1+4)+(1+1)+(1+1)+(1+0)+(1+0)+(1+1)+(1+0)+(1+1) = 40 cycles
 
 ## 3 - A.1
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/79e01d59-65c1-412b-9c83-fcbeca14995f)
