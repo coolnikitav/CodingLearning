@@ -76,3 +76,48 @@ Cray-1:
 - Computation performed by a very large number of independent small scalar threads (CUDA threads or microthreads) grouped into thread blocks
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/32d2f900-809f-41dd-b304-cf4266a65532)
+
+### "Single Instruction, Multiple Thread"
+- Q: What does Nvidia group 32 CUDA threads into?
+  
+- GPUs use a SIMT model, where individual scalar instruction streams for each CUDA thread are grouped together for SIMD execution on hardware (Nvidia groups 32 CUDA threads into a warp)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/01e2fd0b-8312-4018-ae3b-eee7297209c2)
+
+### Implications of SIMT Model
+- Q: Explain the SIMT model.
+
+  
+- All "vector" loads and stores are scatter-gather as individual microthreads perform scalar loads and stores
+  - GPU adds hardware to dynamically coalesce individual microthread loads and stores to mimic vector loads and stores
+- Every microthread has to perform stripmining calculations redundantly ("am I active?") as there is no scalar processor equivalent
+- If divergent control flow, need predicates
+
+### GPGPUs are Multithreaded SIMD
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d564abac-eb2d-43ff-ac51-be30940e2827)
+
+### Nvidia Fermi GF100 GPU
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/84185c06-9d6b-47c0-886f-0f5417d2b1d9)
+
+### Fermi "Streaming Multiprocessor" Core
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f1fe334b-203e-4316-b661-8733818c07e1)
+
+## Multithreading Motivation
+### Multithreading
+- Q: Why is multithreading used?
+  
+- Difficult to continue to extract instruction-level parallelism (ILP) or data level parallelism (DLP) from a single sequential thread of control
+- Many workloads can make use of thread-level parallelism (TLP)
+  - TLP from multiprogramming (run independent sequential jobs)
+  - TLP from multithreaded applications (run one job faster using parallel threads)
+- Multithreading uses TLP to improve utilization of a single processor
+
+### Pipeline Hazards
+- Q: Think about all of potential solutions to this and why they dont work.
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d2cf6279-615a-4fa6-93a9-cccdaa675e0f)
+- Answer: out of order superscalar, VLIW, going wide...
+- Each instruction may depend on the next
+
+What is usually done to cope with this?
+- interlocks (slow)
+- or bypassing (needs hardware, doesn't help all hazards)
