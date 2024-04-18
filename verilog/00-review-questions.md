@@ -1,3 +1,12 @@
+## Set 2
+1 - What are HDL simulators?
+
+Hardware description language simulators compile our HDL code into a physical RTL layout and allow us to run a simulation to verify it.
+
+2 - What do you understand by continuous assignment?
+
+I imagine a wire connected between 2 signals. The value of the output constantly reflects the value of the input.
+
 ## Set 1
 1 - Write Verilog code to swap contents of two registers with and without a temporary register
 
@@ -49,3 +58,28 @@ So the output changes wheneve any of the inputs change.
 
 8 - What are the main differences between VHDL and verilog?
 VHDL is not case sensitive. It has 2 parts: architecture and entity. Verilog is made of modules. VHDL signals have 9 values, the same signals in Verilog have 4.
+
+9 - Give some examples of commonly used Verilog system tasks and their purposes.
+$display - print to the console during simulation
+
+$random - generate a random 32 bit int
+
+$finish - simulation termination
+
+$fopen, $fclose - open and close a file
+
+10 - Write a Verilog code for synchronous and asynchronous reset.
+
+Synch:
+```
+always @ (posedge clk)
+  if (reset)
+    do reset;
+```
+
+Asynch:
+```
+always @ (posedge clk or posedge reset)
+  if (reset)
+    do reset;
+```
