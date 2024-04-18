@@ -1,3 +1,5 @@
+## 9 - 
+
 ## 8 - 1.9
 You are designing a system for a real-time application in which
 specific deadlines must be met. Finishing the computation faster gains nothing.
@@ -168,6 +170,76 @@ Mem ref 1 | Mem ref 2 | FP op 1 | FP op 2 | Integer op/branch
 - c: DDR2-667 is 5336 MB/sec and DDR2-533 is 4264 MB/sec
 
 ## 5 - https://www.cs.utexas.edu/~lorenzo/corsi/cs372/06F/hw/3sol.html
+
+1 - ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/b6f3dd23-de2d-490b-b1ab-bdb4b4d9bc1b)
+
+1.1 - What is the page size in such a system?
+
+There are 8 bits for offset, so page size is 2^8B.
+
+1.2 - What is the size of a page table for a process that has 256K of memory starting at address 0?
+
+256KB = 2^18B, or 2^10 pages
+
+Each L3 table address 2^6 pages, so we need 2^4 L3 tables.
+
+Each L2 table addresses 2^8 L3 tables, so we only need 2^4 entries in 1 L2 table.
+
+Since we only need 1 L2 table, we need 1 entry in the L1 table.
+
+Assuming 2B per entry, we need 1 * 2^10 * 2 + 1 * 2^8 * 2 + 2^4 * 2^6* 2 = 4608B.
+
+2 - A computer system has a 36-bit virtual address space with a page size of 8K, and 4 bytes per page table entry.
+
+2.1 - How many pages are in the virtual address space?
+
+2^36 / 2^13 = 2^23 pages
+
+2.2 - What is the maximum size of addressable physical memory in this system?
+
+We can reference 2^32 pages with 36 bit virtual address and 4B per PTE. Thus, max size of physical addressable memory is 2^32 * 2^13 = 2^45
+
+2.3 - If the average process size is 8GB, would you use a one-level, two-level, or three-level page table? Why?
+
+8GB = 2^33B, Page size = 2^13B
+
+One-level:
+
+If we have one table, it would have 2^23 PTE. If each of them is 4B, we would need 2^25, or 32MB of memory.
+
+Two-level:
+
+V.A is 36 bits, offset is 13 bits. Thus, 23 bits remaining: 11 for L2 tables, 12 for L1 table.
+
+We need 2^33/2^13 = 2^20 pages => 2^20/2^11 = 2^9 L2 tables
+
+1 * 2^12 * 4 + 2^9 * 2^11 * 4 = 2^13 + 2^22 = ~4MB
+
+Three-level:
+
+V.A split: 8,8,7,13
+
+We need 2^20 pages => 2^20 / 2^7 = 2^13 L3 tables => 2^13/2^8 = 2^5 L2 tables => 2^5 entries in 1 L1 table
+
+1 * 2^8 * 4 + 2^5 * 2^8 * 4 + 2^13 * 2^7 * 4 = ~4MB
+
+It is better to pick level 2 because it has less overhead than leve 3, while using the same amount of memory.
+
+3 - In a 32-bit machine we subdivide the virtual address into 4 pieces as follows:
+8-bit    4-bit    8-bit    12-bit
+We use a 3-level page table, such that the first 8 bits are for the first level and so on. Physical addresses are 44 bits and there are 4 protection bits per page.
+
+3.1 - What is the page size in such a system?
+
+Page size = 2^12B
+
+3.2 - How much memory is consumed by the page table and wasted by internal fragmentation for a process that has 64K of memory starting at address 0?
+
+64KB = 2^16B or 2^4 pages. Thus, we need 2^4 entries in 1 L3 table, 1 entry in 1 L2 table, 1 entry in 1 L1 table.
+
+Page frame number = 2^44 / 2^12 = 2^32, adding 4 protection bits, each entry of level 3 would need to be 36 bits. Rounding to 64 bits, or 8B.
+
+Memory consumed: 1 * 2^8 * 8 + 1 * 2^4 * 8 + 1 * 2^8 * 8 = 2048B
 
 ## 4 - 3.1
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/ebc33478-ee37-4e16-bfdd-004f5ba9bfd6)
