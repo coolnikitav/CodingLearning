@@ -33,15 +33,7 @@ end
 I haven't specifically studied file operation in Verilog. However, I would assume you can read file, write to them.
 
 3 - Difference between inter statement and intra statement delay?
-No difference. Example:
-```
-a = b; #5;
-b=c;
-
-a=b;
-#5;
-b=c;
-```
+Inter statement delay is the delay between statemenets. Intra statement delay is delay within a statement between its operations.
 
 4 - What is delta simulation time?
 Size of the simulation step. For example, if timescale is 1ns/1ps, then delta is 1ns because that is the simulation step.
