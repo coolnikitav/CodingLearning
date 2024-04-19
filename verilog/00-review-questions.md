@@ -36,14 +36,13 @@ I haven't specifically studied file operation in Verilog. However, I would assum
 Inter statement delay is the delay between statemenets. Intra statement delay is delay within a statement between its operations.
 
 4 - What is delta simulation time?
-Size of the simulation step. For example, if timescale is 1ns/1ps, then delta is 1ns because that is the simulation step.
+It is used to model zero delay. It is the smallest delay that can be specified. It represents one step in the simulation. Usually used for combinatorial logic.
 
 5 - What is meant by inferring latches and how can you avoid it?
 A latch is inferred when not all logical posibilies are covered. You can avoid it by adding a default case that covers everything not explicitely stated.
 
 6 - Which will be updated first - variables or signals?
-Variables are usually used in blocking statements, meaning they would update immediately.
-Signals are usually used in non-blockings statements, meaning they would get updated on the next event.
+Signals are updated first. They are wires and registers. Then variables are updated based on values of signals.
 
 7 - Why is it necessary to list all inputs in the sensitivity ist of a combinational circuit?
 So the output changes wheneve any of the inputs change.
