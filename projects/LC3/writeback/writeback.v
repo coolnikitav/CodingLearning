@@ -3,7 +3,7 @@ module writeback(
     input         rst,
     input         enable_writeback,
     input  [15:0] aluout,
-    input  [2:0]  W_Control,
+    input  [1:0]  W_Control,
     input  [15:0] pcout,
     input  [15:0] memout,
     output [15:0] VSR1,
@@ -29,9 +29,9 @@ module writeback(
     
     always @ (*) begin
         case (W_Control)
-            3'h0: DR_in = aluout;           
-            3'h1: DR_in = memout;            
-            3'h2: DR_in = pcout;
+            2'h0: DR_in = aluout;           
+            2'h1: DR_in = memout;            
+            2'h2: DR_in = pcout;
         endcase
     end
 endmodule
