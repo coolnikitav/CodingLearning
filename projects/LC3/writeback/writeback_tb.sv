@@ -22,7 +22,7 @@ class transaction_wb;
     rand bit [15:0] aluout;
     rand bit [15:0] pcout;
     rand bit [15:0] memout;
-    rand bit [2:0]  W_Control;
+    rand bit [1:0]  W_Control;
          bit [15:0] VSR1;
          bit [15:0] VSR2;
     rand bit [2:0]  dr;
