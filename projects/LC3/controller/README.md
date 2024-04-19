@@ -9,10 +9,10 @@
 
 ## Instruction Memory
 - The instructions are stored, starting at address 3000
-- After conducting additional research, I implemented instruction memory to store upto 4096 instructions
+- Address 16'h3000 is 16'b0011_0000_0000_0000. Thus, 16 bits will be used for instruction memory.
 - The first 4 instructions are taken from the project example
   - @3000: 5020 (AND R0 R0 #0)
   - @3001: 1422 (ADD R2 R0 #2)
   - @3002: 1820 (ADD R1 R2 R0)
   - @3003: EC03 (LEA R6 #-2)
-- Instructions 3004-4095 will be filled up with randomized AND, ADD, NOT, LEA operations.
+- Instructions 16'h3004-16'h4095 will be filled up with randomized AND, ADD, NOT, LEA operations.
