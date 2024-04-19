@@ -1,11 +1,27 @@
 ## Set 2
-1 - What are HDL simulators?
+6 - What do you understand by casex and casez statements in Verilog?
 
-Hardware description language simulators compile our HDL code into a physical RTL layout and allow us to run a simulation to verify it.
+casex and casez are case statements or structures. In regular case the operand needs to match completely. In casex and casez, the digits of the operand that do not need to match completely are replaced by x and z, respectively. For example: if case is 4'b01x0, the 2nd MSB doesnt need to match.
+
+5 - How can you generate a sine wave using the verilog coding style?
+
+By using $sin(x) function.
+
+4 - What is the difference between $setup and $hold?
+
+They are constraints in the simulation. Setup time is the time signal has to be stable before it is read and hold time is time that signal has to be stable after it is read.
+
+3 - Can 'define be used for text substitution through variable instead of literal substitution?
+
+Yes, 'define can have a function defined in it.
 
 2 - What do you understand by continuous assignment?
 
 I imagine a wire connected between 2 signals. The value of the output constantly reflects the value of the input.
+
+1 - What are HDL simulators?
+
+Hardware description language simulators compile our HDL code into a physical RTL layout and allow us to run a simulation to verify it.
 
 ## Set 1
 1 - Write Verilog code to swap contents of two registers with and without a temporary register
