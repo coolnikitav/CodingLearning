@@ -53,3 +53,44 @@ You want to fill holes in one thread with work from another thread.
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/68378dcc-cd9e-4a30-ac26-9af86a29b06e)
 
 - A: Loads and stores can have some dependencies. However, an OOO processor can reorder stores and loads however it needs.
+
+## Sequential Consistency
+
+### Sequential Consistency - A Memory Model
+- Q: Explain sequential consistency
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/163380d3-fcdc-49ed-984a-4bda6175c256)
+
+### Blackboard Example: Sequential Consistency
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f79a7103-5e7f-4b63-bc07-b9a36164e506)
+
+- Q: Why is sequential consistency almost never implemented in real processors?
+- A: Reordering Loads and Stores is good for performance because it can hide latency
+
+### Sequential Consistency
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/b5e304a4-73d1-4690-96e7-51bf449e6806)
+
+The only way to get {0,11} is to execute non-sequentially: swap the stores in T1.
+
+### Sequential Consistency
+- Q: Does (can) a system with caches or out-of-order execution capability provide a sequentially consistent view of the memory?
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d1e6353e-cf43-466f-bc59-0b07310d4929)
+
+- A: Probably not.
+
+## Introduction to Locks
+
+### Multiple Consumer Example
+- Q: What is the issue with the code?
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c3c5a532-1b9d-455d-8c63-fd03a9c086e4)
+
+- A: Both consumers will read the same value from the queue.
+
+### Locks or Semaphores
+- Q: Explain what a lock and semaphore is.
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/6845d0e1-dc42-4a2a-a22b-0c7f24097894)
+
+Semaphore helps when you want for example 2 out of the 3 processing using a resource. A single user lock would not work in this situation.
