@@ -99,6 +99,8 @@ The clock would have to be 32/20 = 1.6, or 60% faster to match the performance i
 
 b.
 
+Solution doesn't make sense.
+
 The loop must be unrolled 7 times because there are 6 stall slots after MUL.D
 
 Instruction schedule:
@@ -145,6 +147,8 @@ Instruction schedule:
 39 cycles for 7 elements, so 5.57 cycles per element
 
 c.
+
+Solution doesn't make sense.
 
 Mem ref 1 | Mem ref 2 | FP op 1 | FP op 2 | Integer op/branch
  --- | --- | --- | --- | ---
