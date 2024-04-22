@@ -34,6 +34,13 @@ DSUBIU R1,R1,#64
 BGT R1, R2, loop
 ; last couple cases handle with scalar instructions
 
+c) Assuming chaining and a single memory pipeline, how many chimes are required? How many clock cycles are required per complex result value, including start-up overhead?
+
+A chime is completing a vector operation. There are 8 loads, 4 muls, 1 sub, 1 add, 2 stores. So 16 chimes.
+
+All of the units need to start up, so 15+8+5 startup cycles. Chaining allows operations to start before previous one is finished. If we say that a new operation is 5 cycles, and each additional one is 1 more cycle,
+we will get 5 + 7*1 + 4+1+1+2 = 20 cycles + 28 startup cycles, or 48 total.
+
 ## 8 - 1.9
 You are designing a system for a real-time application in which
 specific deadlines must be met. Finishing the computation faster gains nothing.
