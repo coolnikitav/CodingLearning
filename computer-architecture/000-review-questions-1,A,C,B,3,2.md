@@ -165,9 +165,9 @@ Mem ref 1 | Mem ref 2 | FP op 1 | FP op 2 | Integer op/branch
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/b83a711c-da84-41b5-835c-b1837fd88f35)
 
-- a: There are 2 DRAM chips on the DIMM. Each DRAM chip has 36 I/Os.
+- a: A 2GB DRAM with parity or ECC effectively has 9 bit bytes. This would require 18 1Gb DRAMs. To create 72 output bits, each one would need to output 72/18 = 4 bits.
 - b: If there are 8B for data, we need burst length of 32B/8B = 4
-- c: DDR2-667 is 5336 MB/sec and DDR2-533 is 4264 MB/sec
+- c: DDR2-667 is 667 * 8 = 5336 MB/sec and DDR2-533 is 533 * 8 = 4264 MB/sec
 
 ## 5 - https://www.cs.utexas.edu/~lorenzo/corsi/cs372/06F/hw/3sol.html
 
