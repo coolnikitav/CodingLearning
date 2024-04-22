@@ -18,7 +18,9 @@
 ## Cache and Memory Protection Interaction
 
 ### Virtual-Address Caches
-- Q: what are pros and cons of rearranging the cache and TLB?
+- Q1: what are pros and cons of rearranging the cache and TLB?
+  
+- Q2: what is cache aliasing?
   
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/6b10bcd9-35ac-4ab7-8337-44dc2fa1b92c)
 
@@ -27,6 +29,7 @@
 - Aliasing problems due to the sharing of pages (-)
 - Maintaining cache coherence (-)
 
+- A2: 2 different memory addresses map to the same cache address.
 ### Virtually Addressed Cache (Virtual Index/Virtual Tag)
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/448d12a6-7d4e-482f-8a1b-9f0ba4e7e07f)
