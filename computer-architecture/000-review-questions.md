@@ -1,4 +1,38 @@
-## 9 - 
+## 9 - 4.9
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f32c40f0-1a12-4fa1-bf69-bce238d5d79d)
+
+a) What is the arithmetic intensity of this kernel? Justify your answer.
+  
+Arithmetic intensity is the ratio of floating-point operations to memory bytes accessed. In this example, there are 6 FP ops per loop (4 mul, 1 add, 1 sub) and 10 bytes of memory accessed. 
+This makes it O(N) arithmetic intensity.
+
+b) Convert this loop into VMIPS assembly code using strip mining.
+
+LD R1, #300
+LD R2, #64
+loop:
+LV V2, 0(Rare)
+LV V3, 0(Rbre)
+LV V4, 0(Raim)
+LV V5, 0(Rbim)
+MULVV V6, V2, V3
+MULVV V7, V4, V5
+MULVV V8, V2, V5
+MULVV V9, V4, V3
+SUBVV V10, V6, V7
+ADDVV V11, V8, V9
+SV V10, 0(Rcre)
+SV V11, 0(Rcim)
+DADDIU Rare, Rare, #64
+DADDIU Rbre, Rbre, #64
+DADDIU Raim, Raim, #64
+DADDIU Rbim, Rbim, #64
+DADDIU Rcre, Rcre, #64
+DADDIU Rcim, Rcim, #64
+DSUBIU R1,R1,#64
+BGT R1, R2, loop
+; last couple cases handle with scalar instructions
 
 ## 8 - 1.9
 You are designing a system for a real-time application in which
