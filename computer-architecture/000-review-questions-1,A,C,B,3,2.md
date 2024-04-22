@@ -33,6 +33,8 @@ bypassed.
 
 a.
 
+Solution doesn't make sense.
+
 Unscheduled:
 - L.D    F2,0(R1)
 - Stall
