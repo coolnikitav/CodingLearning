@@ -1,3 +1,140 @@
+## 11 - 1.10
+Server farms such as Google and Yahoo! provide enough
+compute capacity for the highest request rate of the day. Imagine that most of the
+time these servers operate at only 60% capacity. Assume further that the power
+does not scale linearly with the load; that is, when the servers are operating at
+60% capacity, they consume 90% of maximum power. The servers could be
+turned off, but they would take too long to restart in response to more load.
+A new system has been proposed that allows for a quick restart but requires 20%
+of the maximum power while in this “barely alive” state.
+
+a) How much power savings would be achieved by turning off 60% of the servers?
+
+If we turn off 60% of the servers, 60% of power will be saved.
+
+b) How much power savings would be achieved by placing 60% of the servers in the “barely alive” state?
+
+Pnew/Pold = (60*20 + 40*90)/(100*90) = (1200+3600)/(9000) = 4800/9000 = 53.3%, so 46.7% savings
+
+c) How much power savings would be achieved by reducing the voltage by 20% and frequency by 40%?
+
+Power is proportional to voltage squared and frequency
+
+So Pnew/Pold = (0.8)^2*0.6/1 = 0.64*0.6 = 0.384, or 61.6% savings
+
+d)  How much power savings would be achieved by placing 30% of the servers in the “barely alive” state and 30% off?
+
+Pnew/Pold = (30*20 + 30*0 + 40*90) / (100*90) = (4200)/(9000) = 0.467, or 53.3% savings
+
+## 10 - 3.13
+In this exercise, you will explore performance trade-offs between
+three processors that each employ different types of multithreading. Each of
+these processors is superscalar, uses in-order pipelines, requires a fixed threecycle stall following all loads and branches, and has identical L1 caches. Instructions from the same thread issued in the same cycle are read in program order and must not contain any data or control dependences.
+- Processor A is a superscalar SMT architecture, capable of issuing up to two instructions per cycle from two threads.
+- Processor B is a fine MT architecture, capable of issuing up to four instructions per cycle from a single thread and switches threads on any pipeline stall.
+- Processor C is a coarse MT architecture, capable of issuing up to eight instructions per cycle from a single thread and switches threads on an L1 cache miss.
+
+Our application is a list searcher, which scans a region of memory for a specific
+value stored in R9 between the address range specified in R16 and R17. It is parallelized by evenly dividing the search space into four equal-sized contiguous
+blocks and assigning one search thread to each block (yielding four threads).
+Most of each thread’s runtime is spent in the following unrolled loop body:
+```
+loop: LD R1,0(R16)
+      LD R2,8(R16)
+      LD R3,16(R16)
+      LD R4,24(R16)
+      LD R5,32(R16)
+      LD R6,40(R16)
+      LD R7,48(R16)
+      LD R8,56(R16)
+      BEQAL R9,R1,match0
+      BEQAL R9,R2,match1
+      BEQAL R9,R3,match2
+      BEQAL R9,R4,match3
+      BEQAL R9,R5,match4
+      BEQAL R9,R6,match5
+      BEQAL R9,R7,match6
+      BEQAL R9,R8,match7
+      DADDIU R16,R16,#64
+      BLT R16,R17,loop
+```
+Assume the following:
+- A barrier is used to ensure that all threads begin simultaneously.
+- The first L1 cache miss occurs after two iterations of the loop.
+- None of the BEQAL branches is taken.
+- The BLT is always taken.
+- All three processors schedule threads in a round-robin fashion.
+  
+Determine how many cycles are required for each processor to complete the first
+two iterations of the loop.
+
+- Answer:
+
+Superscalar:
+```
+LD R1,0(R16), LD R2,8(R16)
+stall
+stall
+LD R3,16(R16), LD R4,24(R16)
+stall
+stall
+LD R5,32(R16), LD R6,40(R16)
+stall
+stall
+LD R7,48(R16), LD R8,56(R16)
+stall
+stall
+BEQAL R9,R1,match0, BEQAL R9,R2,match1
+stall
+stall
+BEQAL R9,R3,match2, BEQAL R9,R4,match3
+stall
+stall
+BEQAL R9,R5,match4, BEQAL R9,R6,match5
+stall
+stall
+BEQAL R9,R7,match6, BEQAL R9,R8,match7
+stall
+stall
+DADDIU R16,R16,#64
+BLT R16,R17,loop
+stall
+stall
+```
+28 cycles
+
+Fine-grained:
+```
+LD R1,0(R16), LD R2,8(R16), LD R3,16(R16), LD R4,24(R16) (1)
+LD R5,32(R16), LD R6,40(R16), LD R7,48(R16), LD R8,56(R16) (2)
+stall
+BEQAL R9,R1,match0, BEQAL R9,R2,match1, BEQAL R9,R3,match2, BEQAL R9,R4,match3 (1)
+BEQAL R9,R5,match4, BEQAL R9,R6,match5, BEQAL R9,R7,match6, BEQAL R9,R8,match7 (1)
+stall
+DADDIU R16,R16,#64
+BLT R16,R17,loop
+stall
+stall
+```
+10 cycles
+
+Coarse-grained:
+```
+LD R1,0(R16), LD R2,8(R16) (1, switch because of cache miss)
+LD R3,16(R16), LD R4,24(R16) (2)
+LD R5,32(R16), LD R6,40(R16) (3)
+LD R7,48(R16), LD R8,56(R16) (4)
+BEQAL R9,R1,match0, BEQAL R9,R2,match1 (1)
+BEQAL R9,R3,match2, BEQAL R9,R4,match3 (1)
+BEQAL R9,R5,match4, BEQAL R9,R6,match5 (1)
+BEQAL R9,R7,match6, BEQAL R9,R8,match7 (1)
+DADDIU R16,R16,#64
+BLT R16,R17,loop
+stall
+stall
+```
+12 cycles
+
 ## 9 - 4.9
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f32c40f0-1a12-4fa1-bf69-bce238d5d79d)
@@ -40,6 +177,14 @@ A chime is completing a vector operation. There are 8 loads, 4 muls, 1 sub, 1 ad
 
 All of the units need to start up, so 15+8+5 startup cycles. Chaining allows operations to start before previous one is finished. If we say that a new operation is 5 cycles, and each additional one is 1 more cycle,
 we will get 5 + 7*1 + 4+1+1+2 = 20 cycles + 28 startup cycles, or 48 total.
+
+d) If the vector sequence is chained, how many clock cycles are required per complex result value, including overhead?
+
+I dont see how this result would change from C.
+
+e) Now assume that the processor has three memory pipelines and chaining. If there are no bank conflicts in the loop’s accesses, how many clock cycles are required per result?
+
+3 memory pipelines would allow 3 load/stores to occur at the same time. So the pipeline can be shorted by about 6 load/stores, or 6 cycles, resulting in 42 cycles.
 
 ## 8 - 1.9
 You are designing a system for a real-time application in which
