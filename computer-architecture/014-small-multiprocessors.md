@@ -39,4 +39,21 @@ Even SC consistent code can end up with inconsistent values when we introduce ca
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/68ba87b5-fc8d-42c3-93b6-7354d7d29f56)
 
 ### Cache Coherence vs Memory Consistency
+- Q: Explain cache coherence and memory consistency.
+  
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0f16b165-19cf-49f5-b68f-95e5e8ad526f)
+
+## Bus-Based Multiprocessors
+
+### Warmup: Parellel I/O
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/931e1baf-f09d-443d-b87b-860bcd1c3792)
+
+### Problems with Parallel I/O
+- Q1: How to have disk see the data thats in the cache?
+- Q2: What could be some problem transferring data memory->disk and disk->memory?
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/54b61596-a239-4e6e-800d-387747465ebb)
+
+- A1: One option is to invalidate the cache and pull in the latest copy of the data.
+
+### 
