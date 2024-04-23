@@ -1,4 +1,22 @@
 ## Set 2
+10 - What are parallel threads in Verilog?
+
+I am not sure. My best guess is various parts of the program executing simultaneously is different threads. Or diffent programs simultaneously executing in different threads.
+
+9 - What are different types of delay control?
+
+Regular control: #50;
+
+I don't really know other delay controls.
+
+8 - What is verilog $random?
+
+$random generates a random 32-bit unsigned integer in verilog.
+
+7 - What is duty cycle?
+
+Duty cycle is the percentage of time a digital signal stays on during 1 clock cycle.
+
 6 - What do you understand by casex and casez statements in Verilog?
 
 casex and casez are case statements or structures. In regular case the operand needs to match completely. In casex and casez, the digits of the operand that do not need to match completely are replaced by x and z, respectively. For example: if case is 4'b01x0, the 2nd MSB doesnt need to match.
