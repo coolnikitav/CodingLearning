@@ -68,3 +68,18 @@ support	chaining	through	the	register	file,	but	only	has	two read	ports and	one	
 file
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7965852d-cf3f-49e3-9734-8bd17279924d)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/9904392f-f008-4d16-b273-f17ff691f558)
+
+## Problem 7
+Redo	the	above	pipeline	diagram	(Problem	#6)	assuming	that	the	pipeline	has	a	
+write	port	and	two	read	ports	per	functional	unit	and	that	the	architecture	has	two	lanes	(two	
+duplicates	of	all	functional	unit	resources).
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/bad43a5c-3f65-4c83-96c3-0c622776bba7)
+
+## Problem 8
+Do	GPUs	have	vector	length	registers?		Describe	how	GPUs	handle	the	case	
+where	two	elements	in	a	vector	of	data	need	different	processing.
+
+GPUs do have vector length registers. They stall the one that takes longer.
