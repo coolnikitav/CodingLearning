@@ -202,7 +202,7 @@ Since the process is running 2 times longer, multiply the ratio by 2. So you sav
 
 - b: How much energy do you save if you set the voltage and frequency to be half as much?
 
-Same as a?
+Energy is proportional to Voltage squared. Frequency does not affect energy, only power. So the new energy is (1/2V)^2 = 25%
 
 ## 7 - 3.14
 In this exercise, we look at how software techniques
