@@ -1,4 +1,6 @@
 ## Week of April 22
+- Wednesday:
+  - SV: 00-1
 - Tuesday:
   - CA: 009, 000-9-d,e, 010, 011
   - VER: 00-2
