@@ -16,3 +16,6 @@
   - @3002: 1820 (ADD R1 R2 R0)
   - @3003: EC03 (LEA R6 #-2)
 - Instructions 16'h3004-16'h4095 will be filled up with randomized AND, ADD, NOT, LEA operations.
+
+## Challenges
+- Dealing with project instructions
