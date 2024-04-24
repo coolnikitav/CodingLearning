@@ -1,3 +1,46 @@
+## 12 - 2.9
+You are investigating the possible benefits of a waypredicting L1 cache. Assume that a 64 KB four-way set associative singlebanked L1 data cache is the cycle time limiter in a system. As an alternative
+cache organization you are considering a way-predicted cache modeled as a
+64 KB direct-mapped cache with 80% prediction accuracy. Unless stated otherwise, assume that a mispredicted way access that hits in the cache takes one more
+cycle. Assume the miss rates and the miss penalties in question 2.8 part (c).
+
+2.8c: misses per instruction for a certain workload suite is 0.00664 for direct mapped, 0.00366 for two-way set associative, 0.000987 for four-way set associative, and 0.000266 for eight-way set associative cache. Overall, there are 0.3 data references per
+instruction. Assume cache misses take 10 ns in all models.
+
+a) What is the average memory access time of the current cache (in cycles) versus the way-predicted cache?
+
+Memory access time = hit time + miss rate * miss penalty
+
+Miss rate for 4-way SA cache is 0.000987. Miss rate for direct-mapped is 0.00664. Im assuming the hit time is 1 cycle. It says miss penalty is 10ns in all cache models. Not sure how
+to convert between ns and cycles.
+
+b) If all other components could operate with the faster way-predicted cache cycle time (including the main memory), what would be the
+impact on performance from using the way-predicted cache?
+
+The impact on performance can be calculated by dividing memory access time for 4-way SA cache by the direct-mapped cache.
+
+c) Way-predicted caches have usually been used only for instruction
+caches that feed an instruction queue or buffer. Imagine that you want to try out
+way prediction on a data cache. Assume that you have 80% prediction accuracy
+and that subsequent operations (e.g., data cache access of other instructions,
+dependent operations) are issued assuming a correct way prediction. Thus, a
+way misprediction necessitates a pipe flush and replay trap, which requires
+15 cycles. Is the change in average memory access time per load instruction
+with data cache way prediction positive or negative, and how much is it?
+
+Cannot answer without result from a.
+
+d) As an alternative to way prediction, many large associative L2
+caches serialize tag and data access, so that only the required dataset array
+needs to be activated. This saves power but increases the access time. Use
+CACTI’s detailed Web interface for a 0.065 μm process 1 MB four-way set
+associative cache with 64 byte blocks, 144 bits read out, 1 bank, only 1 read/
+write port, 30 bit tags, and ITRS-HP technology with global wires. What is
+the ratio of the access times for serializing tag and data access in comparison
+to parallel access?
+
+Don't have access to the tool.
+
 ## 11 - 1.10
 Server farms such as Google and Yahoo! provide enough
 compute capacity for the highest request rate of the day. Imagine that most of the
