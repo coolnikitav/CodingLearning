@@ -60,3 +60,21 @@
 - Q: How does software tunnel messaging over shared memory?
   
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d00f6290-6140-48dd-9dee-1551c8d51143)
+
+## Interconnect Design
+
+### Interconnect Design
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/959f7b18-ea38-4370-b8b7-f82b85cba3b3)
+
+### Anatomy of a Message
+- Q: What is a flit? What is a phit?
+  
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7711ba35-e116-4f65-a9cc-071f05674c94)
+
+SRC - source | DST - destination | LEN - length
+
+### Switching
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d4921a2b-0748-4375-99f2-ac2f7cb4a4fb)
+
+### Topology
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/89c410f3-13b6-4d4f-8151-51a66ab573dc)
