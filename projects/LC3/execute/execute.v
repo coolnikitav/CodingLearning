@@ -11,8 +11,8 @@ module execute(
     input      [15:0] VSR1,
     input      [15:0] VSR2,
     output reg [2:0]  dr,
-    output reg [2:0]  sr1,
-    output reg [2:0]  sr2,
+    output     [2:0]  sr1,
+    output     [2:0]  sr2,
     output reg [15:0] pcout
     );
     
@@ -95,9 +95,10 @@ module execute(
             pcout         <= 16'h0;
         end else if (enable_execute == 1'b1) begin
             W_control_out <= W_control_in;
-            dr            <= IR[11:9];
-            sr1           <= IR[8:6];
-            sr2           <= IR[2:0];
+            dr            <= IR[11:9];            
         end
     end
+    
+    assign sr1 = IR[8:6];
+    assign sr2 = IR[2:0];
 endmodule
