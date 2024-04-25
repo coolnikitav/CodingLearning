@@ -1,3 +1,37 @@
+- 1 - 4,9,10
+- 2 - 9,13
+- 3 - 1,13,14
+- 4 - 9
+- 5
+
+## 13 - 4.10
+In this problem, we will compare the performance of a vector processor with a hybrid system that contains a scalar processor and a GPU-based coprocessor. In the hybrid system, the host processor has superior scalar performance
+to the GPU, so in this case all scalar code is executed on the host processor while
+all vector code is executed on the GPU. We will refer to the first system as the
+vector computer and the second system as the hybrid computer. Assume that your
+target application contains a vector kernel with an arithmetic intensity of 0.5
+FLOPs per DRAM byte accessed; however, the application also has a scalar component which that must be performed before and after the kernel in order to prepare the input vectors and output vectors, respectively. For a sample dataset, the
+scalar portion of the code requires 400 ms of execution time on both the vector
+processor and the host processor in the hybrid system. The kernel reads input
+vectors consisting of 200 MB of data and has output data consisting of 100 MB
+of data. The vector processor has a peak memory bandwidth of 30 GB/sec and
+the GPU has a peak memory bandwidth of 150 GB/sec. The hybrid system has an
+additional overhead that requires all input vectors to be transferred between the
+host memory and GPU local memory before and after the kernel is invoked. The
+hybrid system has a direct memory access (DMA) bandwidth of 10 GB/sec and
+an average latency of 10 ms. Assume that both the vector processor and GPU are performance bound by memory bandwidth. Compute the execution time required
+by both computers for this application.
+
+Answer:
+
+Vector processor vs hybrid (scalar host processor with a GPU-based coprocessor)
+
+Application: scalar component (400ms) -> vector kernel (arithmetic intensity of 0.5 FLOPs per DRAM B accessed) -> scalar component (400 ms)
+
+Vector processor: Execution time = 400ms + 200MB/(30GB/sec) + 400ms = 400ms + 200MB/(30GB/1000ms) + 400ms = 800ms + 200MB(30MB/ms) = 800ms + 6.67ms = 806.67ms
+
+Hybrid processor: Execution time = 400ms + 200MB/(10GB/sec) + 200MB/(150GB/sec) + 100MB/(10GB/sec) + 400ms = 400ms + 20ms + 1.33ms + 10ms + 400ms = 841.33ms
+
 ## 12 - 2.9
 You are investigating the possible benefits of a waypredicting L1 cache. Assume that a 64 KB four-way set associative singlebanked L1 data cache is the cycle time limiter in a system. As an alternative
 cache organization you are considering a way-predicted cache modeled as a
