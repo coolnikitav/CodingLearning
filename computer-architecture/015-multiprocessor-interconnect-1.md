@@ -78,3 +78,15 @@ SRC - source | DST - destination | LEN - length
 
 ### Topology
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/89c410f3-13b6-4d4f-8151-51a66ab573dc)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0c01e0fa-dd95-4664-8e61-cd48c4459577)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0d960093-6066-4131-ad08-69dba9854067)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7754aac0-96b5-4632-abd9-6ffb4438fcda)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/1c15b419-a5bc-4f71-b865-a80062ecb2bf)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/466f372f-58c8-4275-969f-e4aee19bbb7b)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c7f93ae4-c1d9-4ba4-822e-82da3862b452)
