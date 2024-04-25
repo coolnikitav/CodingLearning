@@ -1,8 +1,24 @@
 - 1 - 4,9,10
 - 2 - 9,13
 - 3 - 1,13,14
-- 4 - 9
-- 5
+- 4 - 9,10
+- 5 - 19
+
+## 14 - 5.19
+Assume that we have a function for an application of the form F(i, p),
+which gives the fraction of time that exactly i processors are usable given that a
+total of p processors is available. That means that
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/50998839-cd7f-46a1-aaa0-00242d417c52)
+
+Assume that when i processors are in use, the applications run i times faster. Rewrite
+Amdahl’s law so it gives the speedup as a function of p for some application.
+
+Answer:
+
+Amdahl's law: speedup = 1/((fraction of speedup program)/(speedup speed) + (fraction regular program)/(regular speed = 1)
+
+If i processors are used, the speedup is i. So speedup = i. I am not sure how to relate it to p.
 
 ## 13 - 4.10
 In this problem, we will compare the performance of a vector processor with a hybrid system that contains a scalar processor and a GPU-based coprocessor. In the hybrid system, the host processor has superior scalar performance
