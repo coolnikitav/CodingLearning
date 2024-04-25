@@ -1,6 +1,6 @@
 ## Week of April 22
 - Thursday:
-  - CA: 000-13
+  - CA: 000-13, 14
 - Wednesday:
   - CA: 000-12
   - SV: 00-1
