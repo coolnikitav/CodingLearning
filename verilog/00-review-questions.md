@@ -1,4 +1,44 @@
 ## Set 3
+10 - Give major differences between a task and a function.
+
+Task is used to perform a series of actions. Function is used to process an input and get an output.
+
+Function can accept multiple inputs and has one output. Task can have multiple outputs.
+
+9 - What are blocking and non-blocking statements?
+
+Blocking statements execute in sequence and use "="
+
+Non-blocking statements execute in parallel and use "<="
+
+8 - What is a reg in Verilog?
+
+Reg is a variable that stores a value.
+
+7 - What does a wire refer to?
+
+Wire refers to a physical wire constantly connecting 2 nodes in a design.
+
+6 - What are verilog parallel case and full case statements?
+
+parallel case - a case statement where not every case it covered. In situations where case isn't covered, default behavior (latch) will be assumed.
+
+full case - every possibility of a case is covered.
+
+5 - Give a few examples of compiler directives.
+
+`define - macros
+
+`include - to include all of the content from another file into this one
+
+`timescale - defines the timescale of the simulation
+
+`ifdef ... endif - conditional statements
+
+4 - What is meant by logic synthesis?
+
+Logic getting synthesized into hardware layout.
+
 3 - How is rise, fall and turnoff delays represented in Verilog?
 
 It can be specified as one delay (equal delay for all 3), two delay (rise, fall), or three delay (rise, fall, turnoff).
