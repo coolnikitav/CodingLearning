@@ -2,6 +2,7 @@
 - Friday:
   - CA: 016
   - VER: 00-3
+  - LC3: Maybe need to add bugs into the code.
 - Thursday:
   - CA: 000-13,14; 015
   - LC3: Realized that sr1 and sr2 are determined asynchronously in Execute block
