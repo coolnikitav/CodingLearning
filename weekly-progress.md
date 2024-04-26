@@ -1,5 +1,6 @@
 ## Week of April 22
 - Friday:
+  - CA: 016
   - VER: 00-3
 - Thursday:
   - CA: 000-13,14; 015
