@@ -1,4 +1,6 @@
 ## Week of April 22
+- Friday:
+  - VER: 00-3
 - Thursday:
   - CA: 000-13, 14
   - LC3: Realized that sr1 and sr2 are determined asynchronously in Execute block
