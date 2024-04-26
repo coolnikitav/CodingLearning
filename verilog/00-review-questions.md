@@ -1,3 +1,18 @@
+## Set 3
+3 - How is rise, fall and turnoff delays represented in Verilog?
+
+It can be specified as one delay (equal delay for all 3), two delay (rise, fall), or three delay (rise, fall, turnoff).
+
+One delay: #(5) | Two delay: #(5,6) | Three delay: #(6,7,8)
+
+2 - What is $time in Verilog?
+
+$time variable gives the current time of the simulation. By current time, meaning how long the simulation has been running.
+
+1 - What is a defparam used for?
+
+I am not sure. The name is default parameter. Maybe you could have a default paremeter as one of the function arguments if the argument is not specified.
+
 ## Set 2
 10 - What are parallel threads in Verilog?
 
