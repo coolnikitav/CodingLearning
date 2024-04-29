@@ -1,5 +1,6 @@
 ## Week of April 29
 - Monday:
+  - CA: 000-15,16
 
 ## Week of April 22
 - Friday:
