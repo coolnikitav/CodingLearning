@@ -1,8 +1,65 @@
 - 1 - 4,9,10
-- 2 - 9,13
+- 2 - 9,11,13
 - 3 - 1,13,14
 - 4 - 9,10
 - 5 - 19
+
+## 16 - 4.12
+The following kernel performs a portion of the finitedifference time-domain (FDTD) method for computing Maxwell’s equations
+in a three-dimensional space, part of one of the SPEC06fp benchmarks:
+```
+for (int x=0; x<NX-1; x++) {
+ for (int y=0; y<NY-1; y++) {
+ for (int z=0; z<NZ-1; z++) {
+ int index = x*NY*NZ + y*NZ + z;
+ if (y>0 && x >0) {
+ material = IDx[index];
+ dH1 = (Hz[index] – Hz[index-incrementY])/dy[y];
+ dH2 = (Hy[index] – Hy[index-incrementZ])/dz[z];
+ Ex[index] = Ca[material]*Ex[index]+Cb[material]*(dH2-dH1);
+}}}}
+```
+Assume that dH1, dH2, Hy, Hz, dy, dz, Ca, Cb, and Ex are all single-precision
+floating-point arrays. Assume IDx is an array of unsigned int.
+
+a) What is the arithmetic intensity of this kernel?
+
+This code has a O(N^3) arithmetic intensity, since it has a triple nested for loop.
+
+b) Is this kernel amenable to vector or SIMD execution? Why or why not?
+
+This kernel can be executed both with vectors and SIMD. The same repetitive operation needs to be computed on the z array, then on the y, then on the x. Vectors and SIMD both work for this.
+
+c)  Assume this kernel is to be executed on a processor that has 30
+GB/sec of memory bandwidth. Will this kernel be memory bound or compute
+bound?
+
+In worst case scenario, we would need NX * NY * NZ * 8B. I am not sure if that would exceed 30GB/sec.
+
+d) Develop a roofline model for this processor, assuming it has a
+peak computational throughput of 85 GFLOP/sec.
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0c77daa5-a1cd-4fff-96ba-2063aa87e8aa)
+
+## 15 - 2.11
+Consider the usage of critical word first and early restart on L2
+cache misses. Assume a 1 MB L2 cache with 64 byte blocks and a refill path that
+is 16 bytes wide. Assume that the L2 can be written with 16 bytes every 4 processor cycles, the time to receive the first 16 byte block from the memory controller
+is 120 cycles, each additional 16 byte block from main memory requires 16
+cycles, and data can be bypassed directly into the read port of the L2 cache.
+Ignore any cycles to transfer the miss request to the L2 cache and the requested
+data to the L1 cache.
+
+a) How many cycles would it take to service an L2 cache miss with
+and without critical word first and early restart?
+
+Answer: 120+3*16 = 168 for both of them
+
+b) Do you think critical word first and early restart would be more
+important for L1 caches or L2 caches, and what factors would contribute to
+their relative importance?
+
+They would be more important to L2 caches because L2 cache is slower. Thus, it will benefit more from retrieving the needed word first.
 
 ## 14 - 5.19
 Assume that we have a function for an application of the form F(i, p),
