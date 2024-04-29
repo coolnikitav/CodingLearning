@@ -424,3 +424,247 @@ endmodule
 # KERNEL: [DRV1]     1
 # KERNEL: [UVM/RELNOTES]     1
 ```
+
+## Changing Associated Actions of Macros
+- Q: What are the 8 macros discussed here and what do they do?
+- Q: What does set_report_severity_action do? What are its parameters?
+- Q: How to get the simulation to display the uvm_info message and then stop the simulation?
+- Q: How to get the simulation to display the uvm_fatal, but not stop the simulation?
+  
+- UVM_NO_ACTION - No action is taken
+- UVM_DISPLAY - Sends the report to the standard output
+- UVM_LOG - Sends the report to the files(s) for this (severity, id) pair
+- UVM_COUNT - Counts the number of reports with the COUNT attribute. When this value reaches max_quit_count, the simulation terminates
+- UVM_EXIT - Terminates the simulation immediately
+- UVM_CALL_HOOK - Callback the report hook methods
+- UVM_STOP - Causes ~$stop~ to be executed, putting the simulation into interactive mode.
+- UVM_RM_RECORD - Sends the report to the recorder
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////////
+
+class driver extends uvm_driver;
+  `uvm_component_utils(driver)
+  
+  function new (string path, uvm_component parent);
+    super.new(path,parent);
+  endfunction
+  
+  task run();
+    `uvm_info("DRV", "Informational Message", UVM_NONE);
+    `uvm_warning("DRV", "Potential Error");
+    `uvm_error("DRV", "Real Error");
+    #10;
+    `uvm_fatal("DRV", "Simulation cannot continue DRV1");
+    #10;
+    `uvm_fatal("DRV1", "Simulation cannot continue DRV1");
+  endtask
+endclass
+
+////////////////////////////////
+
+module tb;
+  driver d;
+  
+  initial begin
+    d = new("DRV", null);
+    d.set_report_severity_action(UVM_INFO, UVM_NO_ACTION);
+    d.run();
+  end
+endmodule
+
+# KERNEL: UVM_WARNING /home/runner/testbench.sv(15) @ 0: DRV [DRV] Potential Error
+# KERNEL: UVM_ERROR /home/runner/testbench.sv(16) @ 0: DRV [DRV] Real Error
+# KERNEL: UVM_FATAL /home/runner/testbench.sv(18) @ 10: DRV [DRV] Simulation cannot continue DRV1
+# KERNEL: UVM_INFO /home/build/vlib1/vlib/uvm-1.2/src/base/uvm_report_server.svh(869) @ 10: reporter [UVM/REPORT/SERVER] 
+# KERNEL: --- UVM Report Summary ---
+# KERNEL: 
+# KERNEL: ** Report counts by severity
+# KERNEL: UVM_INFO :    1
+# KERNEL: UVM_WARNING :    1
+# KERNEL: UVM_ERROR :    1
+# KERNEL: UVM_FATAL :    1
+# KERNEL: ** Report counts by id
+# KERNEL: [DRV]     3
+# KERNEL: [UVM/RELNOTES]     1
+```
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////////
+
+class driver extends uvm_driver;
+  `uvm_component_utils(driver)
+  
+  function new (string path, uvm_component parent);
+    super.new(path,parent);
+  endfunction
+  
+  task run();
+    `uvm_warning("DRV", "First error");
+    `uvm_info("DRV", "Informational Message", UVM_NONE);
+    `uvm_warning("DRV", "Potential Error");
+    `uvm_error("DRV", "Real Error");
+    #10;
+    `uvm_fatal("DRV", "Simulation cannot continue DRV1");
+    #10;
+    `uvm_fatal("DRV1", "Simulation cannot continue DRV1");
+  endtask
+endclass
+
+////////////////////////////////
+
+module tb;
+  driver d;
+  
+  initial begin
+    d = new("DRV", null);
+    d.set_report_severity_action(UVM_INFO, UVM_DISPLAY | UVM_EXIT);  // UVM_INFO will get displayed and then simulation will stop
+    d.run();
+  end
+endmodule
+
+# KERNEL: UVM_WARNING /home/runner/testbench.sv(14) @ 0: DRV [DRV] First error
+# KERNEL: UVM_INFO /home/runner/testbench.sv(15) @ 0: DRV [DRV] Informational Message
+# KERNEL: UVM_INFO /home/build/vlib1/vlib/uvm-1.2/src/base/uvm_report_server.svh(869) @ 0: reporter [UVM/REPORT/SERVER] 
+# KERNEL: --- UVM Report Summary ---
+# KERNEL: 
+# KERNEL: ** Report counts by severity
+# KERNEL: UVM_INFO :    2
+# KERNEL: UVM_WARNING :    1
+# KERNEL: UVM_ERROR :    0
+# KERNEL: UVM_FATAL :    0
+# KERNEL: ** Report counts by id
+# KERNEL: [DRV]     2
+# KERNEL: [UVM/RELNOTES]     1
+```
+
+```
+module tb;
+  driver d;
+  
+  initial begin
+    d = new("DRV", null);
+    d.set_report_severity_action(UVM_FATAL, UVM_DISPLAY);  // simulation will not stop after a FATAL error, only display the message
+    d.run();
+  end
+endmodule
+
+# KERNEL: UVM_WARNING /home/runner/testbench.sv(14) @ 0: DRV [DRV] First error
+# KERNEL: UVM_INFO /home/runner/testbench.sv(15) @ 0: DRV [DRV] Informational Message
+# KERNEL: UVM_WARNING /home/runner/testbench.sv(16) @ 0: DRV [DRV] Potential Error
+# KERNEL: UVM_ERROR /home/runner/testbench.sv(17) @ 0: DRV [DRV] Real Error
+# KERNEL: UVM_FATAL /home/runner/testbench.sv(19) @ 10: DRV [DRV] Simulation cannot continue DRV1
+# KERNEL: UVM_FATAL /home/runner/testbench.sv(21) @ 20: DRV [DRV1] Simulation cannot continue DRV1
+```
+
+## Working with quit_count and UVM_ERROR
+- Q: What is the function to set the maximum quit count in the report handler? What are its parameters?
+- Q2: How to set it to not have an upper limit?
+  
+The number of times you have a uvm_error will be stored in a count variable.
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////////
+
+class driver extends uvm_driver;
+  `uvm_component_utils(driver)
+  
+  function new (string path, uvm_component parent);
+    super.new(path,parent);
+  endfunction
+  
+  task run();
+    `uvm_info("DRV", "Informational Message", UVM_NONE);
+    `uvm_warning("DRV", "Potential Error");
+    `uvm_error("DRV", "Real Error");  // default action of uvm_count
+    `uvm_error("DRV", "Second Real Error");  // default action of uvm_count
+    `uvm_error("DRV", "Third Real Error");  // default action of uvm_count
+  endtask
+endclass
+
+////////////////////////////////
+
+module tb;
+  driver d;
+  
+  initial begin
+    d = new("DRV", null);
+    d.set_report_max_quit_count(2);
+    d.run();
+  end
+endmodule
+
+# KERNEL: UVM_INFO /home/runner/testbench.sv(14) @ 0: DRV [DRV] Informational Message
+# KERNEL: UVM_WARNING /home/runner/testbench.sv(15) @ 0: DRV [DRV] Potential Error
+# KERNEL: UVM_ERROR /home/runner/testbench.sv(16) @ 0: DRV [DRV] Real Error
+# KERNEL: UVM_ERROR /home/runner/testbench.sv(17) @ 0: DRV [DRV] Second Real Error
+# KERNEL: UVM_INFO /home/build/vlib1/vlib/uvm-1.2/src/base/uvm_report_server.svh(869) @ 0: reporter [UVM/REPORT/SERVER] 
+# KERNEL: --- UVM Report Summary ---
+# KERNEL: 
+# KERNEL: Quit count reached!
+# KERNEL: Quit count :     2 of     2
+# KERNEL: ** Report counts by severity
+# KERNEL: UVM_INFO :    2
+# KERNEL: UVM_WARNING :    1
+# KERNEL: UVM_ERROR :    2
+# KERNEL: UVM_FATAL :    0
+# KERNEL: ** Report counts by id
+# KERNEL: [DRV]     4
+# KERNEL: [UVM/RELNOTES]     1
+```
+- A2: Default value of 0.
+
+## Working with log file
+- Q: How to declare the file descriptor ID and then open the file in write mode?
+- Q: How to get the simulation to print uvm_info messages to a log file?
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////////
+
+class driver extends uvm_driver;
+  `uvm_component_utils(driver)
+  
+  function new (string path, uvm_component parent);
+    super.new(path,parent);
+  endfunction
+  
+  task run();
+    `uvm_info("DRV", "Informational Message", UVM_NONE);
+    `uvm_warning("DRV", "Potential Error");
+    `uvm_error("DRV", "Real Error");  // default action of uvm_count
+    `uvm_error("DRV", "Second Real Error");  // default action of uvm_count
+    `uvm_error("DRV", "Third Real Error");  // default action of uvm_count
+  endtask
+endclass
+
+////////////////////////////////
+
+module tb;
+  driver d;
+  int file;
+  
+  initial begin
+    file = $fopen("log.txt", "w");
+    d = new("DRV", null);
+    d.set_report_default_file(file);
+    d.set_report_severity_action(UVM_INFO, UVM_DISPLAY | UVM_LOG);
+    d.set_report_severity_action(UVM_WARNING, UVM_DISPLAY | UVM_LOG);
+    d.set_report_severity_action(UVM_ERROR, UVM_DISPLAY | UVM_LOG);
+    d.run();
+    #10;
+    $fclose(file);
+  end
+endmodule
+```
