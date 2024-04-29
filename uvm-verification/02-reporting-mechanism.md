@@ -233,3 +233,194 @@ endmodule
 
 ## Working with Hierarchy
 ```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////////
+
+class driver extends uvm_driver;
+  `uvm_component_utils(driver)
+  
+  function new (string path, uvm_component parent);
+    super.new(path, parent);
+  endfunction
+  
+  task run();
+    `uvm_info("DRV", "Executed Driver Code", UVM_HIGH);
+  endtask
+endclass
+
+////////////////////////////////
+
+class monitor extends uvm_monitor;
+  `uvm_component_utils(monitor)
+  
+  function new (string path, uvm_component parent);
+    super.new(path, parent);
+  endfunction
+  
+  task run();
+    `uvm_info("MON", "Executed Monitor Code", UVM_HIGH);
+  endtask
+endclass
+
+////////////////////////////////
+
+class env extends uvm_env;
+  `uvm_component_utils(env)
+  
+  driver drv;
+  monitor mon;
+  
+  function new (string path, uvm_component parent);
+    super.new(path, parent);
+  endfunction
+  
+  task run();
+    drv = new("DRV", this);
+    mon = new("MON", this);
+    drv.run();
+    mon.run();
+  endtask
+endclass
+
+////////////////////////////////
+
+module tb;
+  env e;
+  
+  initial begin
+    e = new("ENV", null);
+    e.set_report_verbosity_level_hier(UVM_HIGH);
+    e.run();
+  end
+endmodule
+```
+
+## Other Reporting Macros
+- Q: How to print an info message? A warning? An error? A fatal error?
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////////
+
+class driver extends uvm_driver;
+  `uvm_component_utils(driver)
+  
+  function new (string path, uvm_component parent);
+    super.new(path,parent);
+  endfunction
+  
+  task run();
+    `uvm_info("DRV", "Informational Message", UVM_NONE);
+    `uvm_warning("DRV", "Potential Error");
+    `uvm_error("DRV", "Real Error");
+    #10;
+    `uvm_fatal("DRV", "Simulation cannot continue");
+  endtask
+endclass
+
+////////////////////////////////
+
+module tb;
+  driver d;
+  
+  initial begin
+    d = new("DRV", null);
+    d.run();
+  end
+endmodule
+
+# KERNEL: UVM_INFO /home/runner/testbench.sv(14) @ 0: DRV [DRV] Informational Message
+# KERNEL: UVM_WARNING /home/runner/testbench.sv(15) @ 0: DRV [DRV] Potential Error
+# KERNEL: UVM_ERROR /home/runner/testbench.sv(16) @ 0: DRV [DRV] Real Error
+# KERNEL: UVM_FATAL /home/runner/testbench.sv(18) @ 10: DRV [DRV] Simulation cannot continue
+# KERNEL: UVM_INFO /home/build/vlib1/vlib/uvm-1.2/src/base/uvm_report_server.svh(869) @ 10: reporter [UVM/REPORT/SERVER] 
+# KERNEL: --- UVM Report Summary ---
+# KERNEL: 
+# KERNEL: ** Report counts by severity
+# KERNEL: UVM_INFO :    2
+# KERNEL: UVM_WARNING :    1
+# KERNEL: UVM_ERROR :    1
+# KERNEL: UVM_FATAL :    1
+# KERNEL: ** Report counts by id
+# KERNEL: [DRV]     4
+# KERNEL: [UVM/RELNOTES]     1
+# KERNEL: 
+# RUNTIME: Info: RUNTIME_0068 uvm_root.svh (135): $finish called.
+```
+
+## Changing Severity of Macros
+- Q: What are the 2 functions that allow us to override report severity (explain the arguments as well)?
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+////////////////////////////////
+
+class driver extends uvm_driver;
+  `uvm_component_utils(driver)
+  
+  function new (string path, uvm_component parent);
+    super.new(path,parent);
+  endfunction
+  
+  task run();
+    `uvm_info("DRV", "Informational Message", UVM_NONE);
+    `uvm_warning("DRV", "Potential Error");
+    `uvm_error("DRV", "Real Error");
+    #10;
+    `uvm_fatal("DRV", "Simulation cannot continue");
+  endtask
+endclass
+
+////////////////////////////////
+
+module tb;
+  driver d;
+  
+  initial begin
+    d = new("DRV", null);
+    d.set_report_severity_override(UVM_FATAL, UVM_ERROR);  // change severity of UVM_FATAL to UVM_ERROR
+    d.run();
+  end
+endmodule
+
+# KERNEL: UVM_INFO /home/runner/testbench.sv(14) @ 0: DRV [DRV] Informational Message
+# KERNEL: UVM_WARNING /home/runner/testbench.sv(15) @ 0: DRV [DRV] Potential Error
+# KERNEL: UVM_ERROR /home/runner/testbench.sv(16) @ 0: DRV [DRV] Real Error
+# KERNEL: UVM_ERROR /home/runner/testbench.sv(18) @ 10: DRV [DRV] Simulation cannot continue
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+```
+
+```
+module tb;
+  driver d;
+  
+  initial begin
+    d = new("DRV", null);
+    //d.set_report_severity_override(UVM_FATAL, UVM_ERROR);  // change severity of UVM_FATAL to UVM_ERROR
+    d.set_report_severity_id_override(UVM_FATAL, "DRV", UVM_ERROR);
+    d.run();
+  end
+endmodule
+
+# KERNEL: UVM_INFO /home/runner/testbench.sv(14) @ 0: DRV [DRV] Informational Message
+# KERNEL: UVM_WARNING /home/runner/testbench.sv(15) @ 0: DRV [DRV] Potential Error
+# KERNEL: UVM_ERROR /home/runner/testbench.sv(16) @ 0: DRV [DRV] Real Error
+# KERNEL: UVM_ERROR /home/runner/testbench.sv(18) @ 10: DRV [DRV] Simulation cannot continue DRV1
+# KERNEL: UVM_FATAL /home/runner/testbench.sv(20) @ 20: DRV [DRV1] Simulation cannot continue DRV1
+# KERNEL: UVM_INFO /home/build/vlib1/vlib/uvm-1.2/src/base/uvm_report_server.svh(869) @ 20: reporter [UVM/REPORT/SERVER] 
+# KERNEL: --- UVM Report Summary ---
+# KERNEL: 
+# KERNEL: ** Report counts by severity
+# KERNEL: UVM_INFO :    2
+# KERNEL: UVM_WARNING :    1
+# KERNEL: UVM_ERROR :    2
+# KERNEL: UVM_FATAL :    1
+# KERNEL: ** Report counts by id
+# KERNEL: [DRV]     4
+# KERNEL: [DRV1]     1
+# KERNEL: [UVM/RELNOTES]     1
+```
