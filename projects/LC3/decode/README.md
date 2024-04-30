@@ -1,5 +1,5 @@
 # LC3 Decode
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7f0009ee-575d-460c-bd0c-6cb0bd1444b3)
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7c066fab-c53f-47ef-8576-4670afd42fcb)
 
 ### Inputs
 - clock
