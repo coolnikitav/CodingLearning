@@ -7,18 +7,19 @@ Don't have access to CACTI
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/983c82ea-b167-448f-aae7-011fe1b10849)
 
 a.
-Both can take 120 + 16*3 = 168 cycles
+- Critical word first miss time is 120 cycles.
+- Early restart can take 120 cycles if the word is in the first block, 136 if in second block, 152 if in third block, and 168 if in fourth block.
+- Without critical word or early restart, the cache processor would need to wait for all 4 blocks, which takes 168 cycles.
 
 b.
-L1 cache is smaller and faster. Critical word first allows and processor to get the needed word first and resume execution. Thus, if the L2 cache can get that
-word quickly, it will save a lot more time than an L1 cache would.
+L1 cache contributes to average access time more, so it would be more beneficial for it to have early restart/critical word first.
 
 # Problem Set 4
 
 ## Problem 3
 What	is	the	reach	of	a	16	entry	fully	associative	TLB	assuming	that	there	are	two	valid	page	sizes,	4KB	and	1MB?
 
-64 KB and 16 MB
+16 entries * 1MB/entry = 16MB reach maximum
 
 ## Problem 4
 You	are	designing	the	page	tables	for	a	processor	with	a	64-bit	virtual	address	
