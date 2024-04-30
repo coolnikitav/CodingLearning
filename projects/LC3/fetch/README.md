@@ -1,5 +1,5 @@
 # LC3 Fetch
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/82175d80-1c0a-4173-820a-db14d753a0e8)
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/ededf866-5fda-4685-9657-f4175535e364)
 
 ### Inputs
 - clock
