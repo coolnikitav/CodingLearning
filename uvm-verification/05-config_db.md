@@ -79,3 +79,7 @@ endmodule
 # KERNEL: [UVM/RELNOTES]     1
 ```
 
+## Demonstration
+uvm_config_db:
+- set: set the value of a parameter that we will share between classes
+- get: retrieve value of parameter that is set by set method
