@@ -75,17 +75,89 @@ file
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7965852d-cf3f-49e3-9734-8bd17279924d)
 
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/9904392f-f008-4d16-b273-f17ff691f558)
+We only draw the vector pipeline because the scalar pipeline is usually decoupled.
+
+Answer:
+```
+LV V1, R4          | F D R L0 L1 L2 W
+                   |       R  L0 L1 L2 W
+                   |          R  L0 L1 L2 W
+                   |             R  L0 L1 L2 W
+                   |                R  L0 L1 L2 W
+                   |                   R  L0 L1 L2 W
+MULVS.D V3, V1, F2 |   F D D  D  D  D  D  R  Y0 Y1 Y2 Y3 Y4 W           
+                   |                         R  Y0 Y1 Y2 Y3 Y4 W
+                   |                            R  Y0 Y1 Y2 Y3 Y4 W
+                   |                               R  Y0 Y1 Y2 Y3 Y4 W
+                   |                                  R  Y0 Y1 Y2 Y3 Y4 W
+                   |                                     R  Y0 Y1 Y2 Y3 Y4 W
+LV V2, R5          |     F D  D  D  D  D  D  D  D  D  D  D  D  D  R  L0 L1 L2 W 
+                   |                                                 R  L0 L1 L2 W
+                   |                                                    R  L0 L1 L2 W
+                   |                                                       R  L0 L1 L2 W
+                   |                                                          R  L0 L1 L2 W
+                   |                                                             R  L0 L1 L2 W
+ADD V4, V3, V2     |       F  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  R  X0 X1 W
+                   |                                                                      R  X0 X1 W
+                   |                                                                         R  X0 X1 W
+                   |                                                                            R  X0 X1 W
+                   |                                                                               R  X0 X1 W
+                   |                                                                                  R  X0 X1 W
+SV R6, V4          |          F  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  D  R  S0 S1 W
+                   |                                                                                        R  S0 S1 W
+                   |                                                                                           R  S0 S1 W
+                   |                                                                                              R  S0 S1 W
+                   |                                                                                                 R  S0 S1 W
+                   |                                                                                                    R  S0 S1 W
+```
+Solution matches the answer.
 
 ## Problem 7
 Redo	the	above	pipeline	diagram	(Problem	#6)	assuming	that	the	pipeline	has	a	
 write	port	and	two	read	ports	per	functional	unit	and	that	the	architecture	has	two	lanes	(two	
 duplicates	of	all	functional	unit	resources).
 
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/bad43a5c-3f65-4c83-96c3-0c622776bba7)
+Answer:
+```
+LV V1, R4          | F D R L0 L1 L2 W
+                   |       R  L0 L1 L2 W
+                   |          R  L0 L1 L2 W
+                   |     R L0 L1 L2 W
+                   |        R L0 L1 L2 W
+                   |          R  L0 L1 L2 W
+MULVS.D V3, V1, F2 |   F D D  D  R  Y0 Y1 Y2 Y3 Y4 W           
+                   |                R  Y0 Y1 Y2 Y3 Y4 W
+                   |                   R  Y0 Y1 Y2 Y3 Y4 W
+                   |             R  Y0 Y1 Y2 Y3 Y4 W
+                   |                R  Y0 Y1 Y2 Y3 Y4 W
+                   |                   R  Y0 Y1 Y2 Y3 Y4 W
+LV V2, R5          |     F D  D  D  D  D  D  D  R  L0 L1 L2 W 
+                   |                               R  L0 L1 L2 W
+                   |                                  R  L0 L1 L2 W
+                   |                            R  L0 L1 L2 W
+                   |                               R  L0 L1 L2 W
+                   |                                  R  L0 L1 L2 W
+ADD V4, V3, V2     |       F  D  D  D  D  D  D  D  D  D  D  R  X0 X1 W
+                   |                                           R  X0 X1 W
+                   |                                              R  X0 X1 W
+                   |                                        R  X0 X1 W
+                   |                                           R  X0 X1 W
+                   |                                              R  X0 X1 W
+SV R6, V4          |          F  D  D  D  D  D  D  D  D  D  D  D  D  R  S0 S1 W
+                   |                                                    R  S0 S1 W
+                   |                                                       R  S0 S1 W
+                   |                                                    R  S0 S1 W
+                   |                                                       R  S0 S1 W
+                   |                                                          R  S0 S1 W
+```
+Solution:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0f4a17e9-8f10-4edc-9700-ced1faa6f5a9)
 
 ## Problem 8
 Do	GPUs	have	vector	length	registers?		Describe	how	GPUs	handle	the	case	
 where	two	elements	in	a	vector	of	data	need	different	processing.
 
-GPUs do have vector length registers. They stall the one that takes longer.
+GPUs do not have VLRs.Instead, they pack a vector into SIMD style operations.
+
+When 2 elements of data in a vector need different processing, operations are masked using a vector mask. This is a form of predication.
