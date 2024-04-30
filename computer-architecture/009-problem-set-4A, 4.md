@@ -31,6 +31,8 @@ two	software	reserved	bits.		Assuming	that	the	OS	dedicates 10	pages	to	page	tab
 a	particular	process,	what	is	the	maximum	amount	of	physical	memory	that	can	be	addressed	by	that	
 process?		What	is	the	minimum?
 
+*Answer is not correct, solution doesn't make sense*
+
 Assuming byte addressable memory:
 
 Page size = 8KB = 2^13 B
