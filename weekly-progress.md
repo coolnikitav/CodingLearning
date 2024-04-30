@@ -1,4 +1,6 @@
 ## Week of April 29
+- Tuesday:
+  - UVM: 05
 - Monday:
   - CA: 000-15,16
   - UVM: 02
