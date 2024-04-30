@@ -1,5 +1,8 @@
 # Problem Set 4A
 
+## Problem 1
+Don't have access to CACTI
+
 ## Problem 2
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/983c82ea-b167-448f-aae7-011fe1b10849)
 
