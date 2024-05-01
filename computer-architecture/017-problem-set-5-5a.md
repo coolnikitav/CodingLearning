@@ -93,3 +93,62 @@ function(int	input_array_size,	int	*	input_array,	int	*	output_array)
 			}
 }
 ```
+Answer: I don't know
+
+## Problem #5
+Show	for	each	cache	line	and	cache	what	state	it	is	in	on	every	cycle	assuming	
+three	processors	executing	code	as	interleaved	below.		Assume	a	64-byte	cache	line	block	size.		Assume	
+all	cores	contain	a	direct	mapped	cache	that	is	4KB	large.		First,	assume	that	the	processors	are	using	a	
+snoopy	MSI	cache	coherence	protocol.		Second,	repeat	this	for	a	MESI	protocol.
+
+```
+Time
+	P1:			  P2: 				P3:
+1  	LW R1,	4(R0)			
+2				  LW	R1,	16(R0)
+3								LW	R1,	4(R0)
+4								SW	R2,	100(R0)
+5								LW	R4,	104(R0)
+6				  LW	R3,	100(R0)
+7  	SW	R1,	0(R0)
+8	LW	R1,	4100(R0)
+9	SW	R2,	4100(R0)
+10				  SW	R3,	4100(R0)
+11								SW	R5,	0(R0)
+```
+
+I'm assuming all caches are reset in the beginning, so all lines are invalid.
+
+MSI
+```
+Time
+	C1:			  C2: 				C3:
+1  	Line 1: S		
+2	                          Line 1: S			  
+3	                                                        Line 1: S
+4						                Line 2: S -> M
+5								
+6				  Line 2: S                     Line 2: S
+7  	Line 1: M                 Line 1: I                     Line 1: I
+8	Line 64: S
+9	Line 64: M
+10	Line 64: I                Line 64: S->M	                 		 
+11	Line 1: I                                               Line 1: S -> M
+```
+
+MESI
+```
+Time
+	C1:			  C2: 				C3:
+1  	Line 1: E	
+2	Line 1: S                 Line 1: S                        		  
+3	                                                        Line 1: S                
+4						                Line 2: E->M
+5								Line 2: M
+6				  Line 2: S                     Line 2: S
+7  	Line 1: M                 Line 1: I                     Line 1: I
+8	Line 64: E
+9	Line 64: M
+10	Line 64: I                Line 64: E -> M    		 
+11      Line 1: I                                               Line 1: E->M 
+```
