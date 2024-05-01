@@ -1,17 +1,17 @@
 ## Set 1
 10 - Difference between dynamic and associative array.
 
-Dynamic arrays are arrays defined without a size and can have size specified at runtime and then changed.
+Dynamic arrays are arrays defined without a size and can have size specified at runtime and then changed. Values are accessed using the index.
 
-Associative arrays im not sure.
+Associative arrays is a dictionary or a map. It's a collection of key-value pairs. Values are accessed using the key.
 
 9 - Difference between module and program block?
 
-Module defines a hardware component. Program defines functions and tasks that help us with execution by detemining the inputs an performing actions on the outputs.
+Module contains RTL design code. A program is a verification container used to avoid race conditions by executing its contents at the end of the time step. It executes it in the reactive region, after the variables are updated.
 
 8 - Difference between static and automatic variables.
 
-I am not sure.
+A static variable gets initialized before time 0 at some memory location and stays there for the duration of the program. Automatic variables get initialized every time the program enters their scope and gets stored at a new memory location each time.
 
 7 - Difference between fork-join, fork-join_any, and fork-join_none
 
