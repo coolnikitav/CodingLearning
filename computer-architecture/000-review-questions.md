@@ -306,21 +306,19 @@ BLT R1, 300, loop
 
 c) Assuming chaining and a single memory pipeline, how many chimes are required? How many clock cycles are required per complex result value, including start-up overhead?
 
-A chime is completing a vector operation. There are 8 loads, 4 muls, 1 sub, 1 add, 2 stores. So 16 chimes.
-
-All of the units need to start up, so 15+8+5 startup cycles. Chaining allows operations to start before previous one is finished. If we say that a new operation is 5 cycles, and each additional one is 1 more cycle,
-we will get 5 + 7*1 + 4+1+1+2 = 20 cycles + 28 startup cycles, or 48 total.
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/a5eee697-b581-411d-9e6c-261ac8e103ec)
 
 d) If the vector sequence is chained, how many clock cycles are required per complex result value, including overhead?
 
-I dont see how this result would change from C.
+total cycles per iteration = 6 chimes * 64 elements + 15 cycles (load/store) * 6 + 8 cycles (multiply) * 4 + 5 cycles (add/sub) *2 = 516
+
+cycles per result = 516/128 = 4
 
 e) Now assume that the processor has three memory pipelines and chaining. If there are no bank conflicts in the loop’s accesses, how many clock cycles are required per result?
 
 3 memory pipelines would allow 3 load/stores to occur at the same time. So the pipeline can be shorted by about 6 load/stores, or 6 cycles, resulting in 42 cycles.
 
-
-
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/ab520c43-ccb0-4b39-8fec-7b59d5889917)
 
 
 ## 8 - 1.9
