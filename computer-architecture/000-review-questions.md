@@ -61,6 +61,10 @@ their relative importance?
 
 They would be more important to L2 caches because L2 cache is slower. Thus, it will benefit more from retrieving the needed word first.
 
+
+
+
+
 ## 14 - 5.19
 Assume that we have a function for an application of the form F(i, p),
 which gives the fraction of time that exactly i processors are usable given that a
@@ -76,6 +80,10 @@ Answer:
 Amdahl's law: speedup = 1/((fraction of speedup program)/(speedup speed) + (fraction regular program)/(regular speed = 1)
 
 If i processors are used, the speedup is i. So speedup = i. I am not sure how to relate it to p.
+
+
+
+
 
 ## 13 - 4.10
 In this problem, we will compare the performance of a vector processor with a hybrid system that contains a scalar processor and a GPU-based coprocessor. In the hybrid system, the host processor has superior scalar performance
@@ -105,8 +113,16 @@ Vector processor: Execution time = 400ms + 200MB/(30GB/sec) + 400ms = 400ms + 20
 
 Hybrid processor: Execution time = 400ms + 200MB/(10GB/sec) + 200MB/(150GB/sec) + 100MB/(10GB/sec) + 400ms = 400ms + 20ms + 1.33ms + 10ms + 400ms = 841.33ms
 
+
+
+
+
 ## 12 - 2.9
 Problem deleted.
+
+
+
+
 
 ## 11 - 1.10
 Server farms such as Google and Yahoo! provide enough
@@ -135,6 +151,10 @@ So Pnew/Pold = (0.8)^2*0.6/1 = 0.64*0.6 = 0.384, or 61.6% savings
 d)  How much power savings would be achieved by placing 30% of the servers in the “barely alive” state and 30% off?
 
 Pnew/Pold = (30*20 + 30*0 + 40*90) / (100*90) = (4200)/(9000) = 0.467, or 53.3% savings
+
+
+
+
 
 ## 10 - 3.13
 In this exercise, you will explore performance trade-offs between
@@ -249,6 +269,7 @@ stall
 
 
 
+
 ## 9 - 4.9
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f32c40f0-1a12-4fa1-bf69-bce238d5d79d)
@@ -259,30 +280,28 @@ Arithmetic intensity is the ratio of floating-point operations to memory bytes a
 
 b) Convert this loop into VMIPS assembly code using strip mining.
 ```
-LD R1, #300
-LD R2, #64
+LD VL, #44  ; 300 % 64
+LD R1, #64
 loop:
-LV V2, 0(Rare)
-LV V3, 0(Rbre)
-LV V4, 0(Raim)
-LV V5, 0(Rbim)
-MULVV V6, V2, V3
-MULVV V7, V4, V5
-MULVV V8, V2, V5
-MULVV V9, V4, V3
-SUBVV V10, V6, V7
-ADDVV V11, V8, V9
-SV V10, 0(Rcre)
-SV V11, 0(Rcim)
-DADDIU Rare, Rare, #64
-DADDIU Rbre, Rbre, #64
-DADDIU Raim, Raim, #64
-DADDIU Rbim, Rbim, #64
-DADDIU Rcre, Rcre, #64
-DADDIU Rcim, Rcim, #64
-DSUBIU R1,R1,#64
-BGT R1, R2, loop
-; last couple cases handle with scalar instructions
+LV V1, a_re+R1
+LV V2, b_re+R1
+MULVV.S V3, V1, V2
+LV V4, a_im+R1
+LV V5, b_im+R1
+MULVV.S V6, V4, V5
+SUBVV.S V6, V3, V6
+SV V6, c_re+R1
+MULVV.S V7, V1, V5
+MULVV.S V8, V4, V2
+ADDVV.S V8, V8, V7
+SV V8, c_im+R1
+BNE R1, 0, else  ; fist iteration increment by 44
+ADDI R1, R1, #44
+LD VL, #64  ; load MVL back in
+j loop
+else:
+ADDI R1, R1, #64
+BLT R1, 300, loop
 ```
 
 c) Assuming chaining and a single memory pipeline, how many chimes are required? How many clock cycles are required per complex result value, including start-up overhead?
