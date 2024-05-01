@@ -245,14 +245,17 @@ stall
 ```
 12 cycles
 
+
+
+
+
 ## 9 - 4.9
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f32c40f0-1a12-4fa1-bf69-bce238d5d79d)
 
 a) What is the arithmetic intensity of this kernel? Justify your answer.
   
-Arithmetic intensity is the ratio of floating-point operations to memory bytes accessed. In this example, there are 6 FP ops per loop (4 mul, 1 add, 1 sub) and 10 bytes of memory accessed. 
-This makes it O(N) arithmetic intensity.
+Arithmetic intensity is the ratio of floating-point operations to memory bytes accessed. This code reads 4 floats and writes 2 floats for every 6 FLOPS, so arithmetic intensity = 6/6 = 1.
 
 b) Convert this loop into VMIPS assembly code using strip mining.
 ```
@@ -296,6 +299,10 @@ I dont see how this result would change from C.
 e) Now assume that the processor has three memory pipelines and chaining. If there are no bank conflicts in the loop’s accesses, how many clock cycles are required per result?
 
 3 memory pipelines would allow 3 load/stores to occur at the same time. So the pipeline can be shorted by about 6 load/stores, or 6 cycles, resulting in 42 cycles.
+
+
+
+
 
 ## 8 - 1.9
 You are designing a system for a real-time application in which
