@@ -152,3 +152,24 @@ Time
 10	Line 64: I                Line 64: E -> M    		 
 11      Line 1: I                                               Line 1: E->M 
 ```
+
+## Problem 6
+Calculate	the	bisection	bandwidth	for	a	4-ary	3-cube	without	end-around,	but	
+where	each	link	is	32-bits	wide	and	clocks	at	800MHz.		Calculate	the	bisection	bandwidth	of	an 8-node	
+omega	network	with	64-bit	links	that	clock	at	1.2GHz.
+
+Bisection the shortest line that cuts the network in half.
+
+This is what 4-ary 3-cube without end-around connections looks like:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/bac846a6-eed9-41b5-89fa-9ff12b26efd2)
+
+Bisection would have 12 bi-directional connections. Thus, it can transfer 12 * 32 * 800MHz = 307200 Mb/sec
+
+8-node omega network:
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/4ae7085d-41f6-42f2-8bf5-195907406fb2)
+
+Bisection bandwidth is 8. It can transfer 8 * 64 * 1.2GHZ = 614.4 Gb/sec
+
+## Problem 7
