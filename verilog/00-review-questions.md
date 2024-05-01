@@ -56,17 +56,17 @@ I am not sure. The name is default parameter. Maybe you could have a default par
 ## Set 2
 10 - What are parallel threads in Verilog?
 
-I am not sure. My best guess is various parts of the program executing simultaneously is different threads. Or diffent programs simultaneously executing in different threads.
+Multiple blocks within a module that execute concurrently. Parallel threads are also created in fork...join.
 
 9 - What are different types of delay control?
 
-Regular control: #50;
+#delay, @posedge, @negedge, wait
 
 I don't really know other delay controls.
 
 8 - What is verilog $random?
 
-$random generates a random 32-bit unsigned integer in verilog.
+$random generates a random 32-bit signed integer in verilog.
 
 7 - What is duty cycle?
 
@@ -74,7 +74,7 @@ Duty cycle is the percentage of time a digital signal stays on during 1 clock cy
 
 6 - What do you understand by casex and casez statements in Verilog?
 
-casex and casez are case statements or structures. In regular case the operand needs to match completely. In casex and casez, the digits of the operand that do not need to match completely are replaced by x and z, respectively. For example: if case is 4'b01x0, the 2nd MSB doesnt need to match.
+casex and casez are case statements or structures. In regular case the operand needs to match completely. In casex and casez, the digits of the operand that do not need to match completely are replaced by x/z/? and ?/Z, respectively. For example: if case is 4'b01x0, the 2nd MSB doesnt need to match.
 
 5 - How can you generate a sine wave using the verilog coding style?
 
@@ -86,7 +86,7 @@ They are constraints in the simulation. Setup time is the time signal has to be 
 
 3 - Can 'define be used for text substitution through variable instead of literal substitution?
 
-Yes, 'define can have a function defined in it.
+No. It can only be used for literal substitution with a value.
 
 2 - What do you understand by continuous assignment?
 
