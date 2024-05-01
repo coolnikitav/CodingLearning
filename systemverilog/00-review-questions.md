@@ -51,7 +51,7 @@ endclass
 ```
 2 - What is the use of scope resolution operator?
 
-:: allows to access members of a class.
+:: specifies the scope where an item should be searched in.
 
 1 - How will you test the functionality of interrupts using functional coverage?
 
