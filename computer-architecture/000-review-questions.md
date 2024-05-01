@@ -255,7 +255,7 @@ Arithmetic intensity is the ratio of floating-point operations to memory bytes a
 This makes it O(N) arithmetic intensity.
 
 b) Convert this loop into VMIPS assembly code using strip mining.
-
+```
 LD R1, #300
 LD R2, #64
 loop:
@@ -280,6 +280,7 @@ DADDIU Rcim, Rcim, #64
 DSUBIU R1,R1,#64
 BGT R1, R2, loop
 ; last couple cases handle with scalar instructions
+```
 
 c) Assuming chaining and a single memory pipeline, how many chimes are required? How many clock cycles are required per complex result value, including start-up overhead?
 
