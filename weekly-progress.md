@@ -14,7 +14,7 @@
   - CA: 000-13,14; 015
   - LC3: Realized that sr1 and sr2 are determined asynchronously in Execute block
 - Wednesday:
-  - CA: 000-12
+  - CA: 000-12; 014
   - SV: 00-1
 - Tuesday:
   - CA: 009, 000-9, 010, 011
