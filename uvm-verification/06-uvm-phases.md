@@ -40,3 +40,91 @@
     - check_phase
     - report_phase
     - final_phase
+
+## How to Override Phases
+- Phases
+  - Do not consume time (function + super)
+    - build phase
+    - connect phase
+    - end of elaboration
+    - start of simulation
+    - extract
+    - check
+    - report
+    - final
+  - Consume time (task)
+    - run phase
+   
+Phases are only allowed in UVM_COMPONENT
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+class test extends uvm_test;
+  `uvm_component_utils(test)
+  
+  function new (string path = "test", uvm_component parent = null);
+    super.new(path, parent);
+  endfunction
+  
+  /* 
+   *  Construction Phases
+   */
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    `uvm_info("test", "Build Phase Executed", UVM_NONE);
+  endfunction
+  
+  function void connect_phase(uvm_phase phase);
+    super.connect_phase(phase);
+    `uvm_info("test", "Connect Phase Executed", UVM_NONE);
+  endfunction
+  
+  function void end_of_elaboration_phase(uvm_phase phase);
+    super.end_of_elaboration_phase(phase);
+    `uvm_info("test", "End of Elaboration Phase Executed", UVM_NONE);
+  endfunction
+  
+  function void start_of_simulation_phase(uvm_phase phase);
+    super.start_of_simulation_phase(phase);
+    `uvm_info("test", "Start of Simulation Phase Executed", UVM_NONE);
+  endfunction
+  
+  /*
+   *  Main Phases
+   */
+  task run_phase(uvm_phase phase);
+    `uvm_info("test", "Run Phase", UVM_NONE);
+  endtask
+  
+  /*
+   *  Cleanup Phases
+   */
+  function void extract_phase(uvm_phase phase);
+    super.extract_phase(phase);
+    `uvm_info("test", "Extract Phase", UVM_NONE);
+  endfunction
+  
+  function void check_phase(uvm_phase phase);
+    super.check_phase(phase);
+    `uvm_info("test", "Check Phase", UVM_NONE);
+  endfunction
+  
+  function void report_phase(uvm_phase phase);
+    super.report_phase(phase);
+    `uvm_info("test", "Report Phase", UVM_NONE);
+  endfunction
+  
+  function void final_phase(uvm_phase phase);
+    super.final_phase(phase);
+    `uvm_info("test", "Final Phase", UVM_NONE);
+  endfunction
+endclass
+```
+
+## Understanding execution of build_phase in multiple components
+- Q1: What does top-down approach mean?
+- Q2: What does bottom-up approach mean?
+- A1: Test -> ENV -> Agent -> Drv/Mon
+- A2: Drv/Mon -> Agent -> Env -> Test
