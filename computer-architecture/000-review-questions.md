@@ -41,6 +41,10 @@ peak computational throughput of 85 GFLOP/sec.
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0c77daa5-a1cd-4fff-96ba-2063aa87e8aa)
 
+
+
+
+
 ## 15 - 2.11
 Consider the usage of critical word first and early restart on L2
 cache misses. Assume a 1 MB L2 cache with 64 byte blocks and a refill path that
@@ -109,9 +113,9 @@ Vector processor vs hybrid (scalar host processor with a GPU-based coprocessor)
 
 Application: scalar component (400ms) -> vector kernel (arithmetic intensity of 0.5 FLOPs per DRAM B accessed) -> scalar component (400 ms)
 
-Vector processor: Execution time = 400ms + 200MB/(30GB/sec) + 400ms = 400ms + 200MB/(30GB/1000ms) + 400ms = 800ms + 200MB(30MB/ms) = 800ms + 6.67ms = 806.67ms
+Vector processor: Execution time = 400ms (for scalar execution) + (200MB + 100MB)/(30GB/sec) = 410ms
 
-Hybrid processor: Execution time = 400ms + 200MB/(10GB/sec) + 200MB/(150GB/sec) + 100MB/(10GB/sec) + 400ms = 400ms + 20ms + 1.33ms + 10ms + 400ms = 841.33ms
+Hybrid processor: Execution time = 400ms + (200MB+100MB)/(10GB/sec) + (200MB+100MB)/(150GB/sec) = 400 + 30 + 2 = 432ms
 
 
 
