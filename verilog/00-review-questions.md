@@ -3,7 +3,7 @@
 
 Task is used to perform a series of actions. Function is used to process an input and get an output.
 
-Function can accept multiple inputs and has one output. Task can have multiple outputs.
+The main difference is that a task can contain statements that consumer simulation time, like delays.
 
 9 - What are blocking and non-blocking statements?
 
@@ -37,7 +37,7 @@ full case - every possibility of a case is covered.
 
 4 - What is meant by logic synthesis?
 
-Logic getting synthesized into hardware layout.
+Logic synthesis is the process of transforming an electronic circuit design description into a gate-level netlist.
 
 3 - How is rise, fall and turnoff delays represented in Verilog?
 
@@ -45,13 +45,21 @@ It can be specified as one delay (equal delay for all 3), two delay (rise, fall)
 
 One delay: #(5) | Two delay: #(5,6) | Three delay: #(6,7,8)
 
+They can also be specified using specify block:
+```
+specify
+  specparam delay = 5;
+  delay (a, out) = (specify_values => (delay, 0));
+endspecify
+```
+
 2 - What is $time in Verilog?
 
-$time variable gives the current time of the simulation. By current time, meaning how long the simulation has been running.
+$time variable gives the current time of the simulation. By current time, meaning how long the simulation has been running. It is measured in time units defined by timescale.
 
 1 - What is a defparam used for?
 
-I am not sure. The name is default parameter. Maybe you could have a default paremeter as one of the function arguments if the argument is not specified.
+Defparam is used to overwrite parameters set in a module.
 
 ## Set 2
 10 - What are parallel threads in Verilog?
