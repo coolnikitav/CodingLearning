@@ -107,3 +107,20 @@ cc - cache coherence
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/73547f60-67a0-44cf-a299-38b17497edd2)
 
 Even if we used MESI for cache, we could still use USE for directory.
+
+### Message Types
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/bf54889d-f66f-4bb4-8759-5bb949054ee7)
+
+## Scalability of Directory Coherence
+
+### Multiple Logical Communication Channels Needed
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/73368031-0355-41cb-bf9e-9eb163a63a29)
+
+### Memory Ordering Point
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/72f97b07-05ab-4b75-ac5e-146c77189367)
+
+### Scalability of Directory Sharere List Storage
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/836413ac-a559-4443-8846-975d29d0e02d)
+
+### Beyond Simple Directory Coherence
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/e83dd798-64c6-45f8-9d18-49f23f702062)
