@@ -427,3 +427,240 @@ endmodule
 @400: Driver main phase ended
 @700: Monitor main phase ended
 ```
+
+## Timeout
+Timeout is the maximum absolute simulation time allowed before a FATAL occurs. Default value is 9200sec
+
+```
+module tb;
+  initial begin
+    uvm_top.set_timeout(100ns,0);
+    run_test("comp");
+  end
+endmodule
+```
+
+## Drain time: Individual Component
+Drain time indicates how long the simulator should stay in a phase
+
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+/////Default Timeout = 9200sec
+ 
+ 
+class comp extends uvm_component;
+  `uvm_component_utils(comp)
+  
+ 
+  function new(string path = "comp", uvm_component parent = null);
+    super.new(path, parent);
+  endfunction
+  
+  task reset_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    `uvm_info("comp","Reset Started", UVM_NONE);
+     #10;
+    `uvm_info("comp","Reset Completed", UVM_NONE);
+    phase.drop_objection(this);
+  endtask
+  
+  task main_phase(uvm_phase phase);
+    phase.phase_done.set_drain_time(this,200);
+    phase.raise_objection(this);
+    `uvm_info("mon", " Main Phase Started", UVM_NONE);
+    #100;
+    `uvm_info("mon", " Main Phase Ended", UVM_NONE);
+    phase.drop_objection(this);
+  endtask
+  
+  task post_main_phase(uvm_phase phase);
+    `uvm_info("mon", " Post-Main Phase Started", UVM_NONE);
+  endtask
+  
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase); 
+  endfunction
+  
+  
+endclass
+ 
+///////////////////////////////////////////////////////////////////////////
+module tb;
+  
+  initial begin
+   // uvm_top.set_timeout(100ns, 0);
+    
+    run_test("comp");
+  end
+  
+ 
+endmodule
+```
+
+```
+@0: Reset Started
+@10: Reset Completed
+@10: Main Phase Started
+@110: Main Phase Ended
+@310: Post-Main Phase Started
+```
+
+## Drain Time: Multiple Components
+```
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+ 
+ 
+ 
+ 
+///////////////////////////////////////////////////////////////
+ 
+class driver extends uvm_driver;
+  `uvm_component_utils(driver) 
+  
+  
+  function new(string path = "test", uvm_component parent = null);
+    super.new(path, parent);
+  endfunction
+  
+  task reset_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    `uvm_info("drv", "Driver Reset Started", UVM_NONE);
+    #100;
+    `uvm_info("drv", "Driver Reset Ended", UVM_NONE);
+    phase.drop_objection(this);
+  endtask
+  
+  
+  task main_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    `uvm_info("drv", "Driver Main Phase Started", UVM_NONE);
+    #100;
+    `uvm_info("drv", "Driver Main Phase Ended", UVM_NONE);
+    phase.drop_objection(this);
+  endtask
+  
+  task post_main_phase(uvm_phase phase);
+    `uvm_info("drv", "Driver Post-Main Phase Started", UVM_NONE);  
+  endtask
+  
+ 
+  
+endclass
+ 
+///////////////////////////////////////////////////////////////
+ 
+class monitor extends uvm_monitor;
+  `uvm_component_utils(monitor) 
+  
+  
+  function new(string path = "monitor", uvm_component parent = null);
+    super.new(path, parent);
+  endfunction
+  
+  task reset_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    `uvm_info("mon", "Monitor Reset Started", UVM_NONE);
+     #150;
+    `uvm_info("mon", "Monitor Reset Ended", UVM_NONE);
+    phase.drop_objection(this);
+  endtask
+  
+  
+  task main_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    `uvm_info("mon", "Monitor Main Phase Started", UVM_NONE);
+     #200;
+    `uvm_info("mon", "Monitor Main Phase Ended", UVM_NONE);
+    phase.drop_objection(this);
+  endtask
+  
+  task post_main_phase(uvm_phase phase);
+    `uvm_info("mon", "Monitor Post-Main Phase Started", UVM_NONE);  
+  endtask
+  
+endclass
+ 
+////////////////////////////////////////////////////////////////////////////////////
+ 
+class env extends uvm_env;
+  `uvm_component_utils(env) 
+  
+  driver d;
+  monitor m;
+  
+  function new(string path = "env", uvm_component parent = null);
+    super.new(path, parent);
+  endfunction
+  
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    d = driver::type_id::create("d", this);
+    m = monitor::type_id::create("m", this);
+  endfunction
+  
+ 
+  
+endclass
+ 
+ 
+ 
+////////////////////////////////////////////////////////////////////////////////////////
+ 
+class test extends uvm_test;
+  `uvm_component_utils(test)
+  
+  env e;
+  
+  function new(string path = "test", uvm_component parent = null);
+    super.new(path, parent);
+  endfunction
+  
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    e = env::type_id::create("e", this);
+  endfunction
+  
+ function void end_of_elaboration_phase(uvm_phase phase);
+   uvm_phase main_phase;
+   super.end_of_elaboration_phase(phase);
+    main_phase = phase.find_by_name("main", 0);
+    main_phase.phase_done.set_drain_time(this, 100);
+  endfunction
+  
+  
+endclass
+ 
+///////////////////////////////////////////////////////////////////////////
+module tb;
+  
+  initial begin
+    run_test("test");
+  end
+  
+ 
+endmodule
+```
+```
+@0: Monitor reset started
+@0: Driver reset started
+@100: Driver reset ended
+@150: Monitor reset ended
+@150: Monitor main phase started
+@150: Driver main phase started
+@250: Driver main phase ended
+@350: Monitor main phase ended
+@450: Monitor post-main phase started
+@450: Driver post-main phase started
+```
+
+## Phase Debug
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/bc5fd6bc-4bb0-4d28-950a-2468d8952639)
+
+Prints more elaborate debugging statements about the phases.
+
+## Objection Debug
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0f6d7af9-65bb-4bf7-ac0a-885d6841daf1)
+
+Prints more elaborate debugging statements about the objections.
