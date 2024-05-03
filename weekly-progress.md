@@ -1,4 +1,6 @@
 ## Week of April 29
+- Friday:
+  - CA: 018
 - Tuesday:
   - UVM: 05
 - Monday:
