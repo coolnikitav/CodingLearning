@@ -81,9 +81,13 @@ Amdahl’s law so it gives the speedup as a function of p for some application.
 
 Answer:
 
-Amdahl's law: speedup = 1/((fraction of speedup program)/(speedup speed) + (fraction regular program)/(regular speed = 1)
+Amdahl's law: speedup = Old execution time/New execution time
 
-If i processors are used, the speedup is i. So speedup = i. I am not sure how to relate it to p.
+Old execution time = 1
+
+New execution time = SUM(i=1 to p) of F(i,p)/i  because F(i,p) is old time and it can be reduced i times
+
+So speedup = SUM(i=1 to p) of i/F(i,p)
 
 
 
