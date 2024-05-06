@@ -17,7 +17,7 @@ TLM does not use classes. We use port(initiator) and export(responder)
 
 All of these operations can be implemented in a blocking or nonblocking manner.
 
-## Blocking PUT Operation P1
+## Blocking PUT Operation
 - Q: What are the 3 functions? Write them out.
   
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/f3ba0f99-25c0-4da4-ae73-1039831d21ab)
@@ -25,3 +25,7 @@ All of these operations can be implemented in a blocking or nonblocking manner.
 - uvm_blocking_put_port #(parameter) // parameter is the type of data you are communicating
 - uvm_blocking_put_export #(parameter)
 - uvm_blocking_put_imp #(parameter)  // implementation
+
+- Connection of TLM port operating between Driver and Sequencer happens in connect_phase of agent
+- Connection of TLM port operating between Monitor and Scoreboard happens in connect_phase of environment
+ 
