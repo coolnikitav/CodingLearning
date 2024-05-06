@@ -173,3 +173,49 @@ Bisection would have 12 bi-directional connections. Thus, it can transfer 12 * 3
 Bisection bandwidth is 8. It can transfer 8 * 64 * 1.2GHZ = 614.4 Gb/sec
 
 ## Problem 7
+
+## Problem 8
+
+## Problem 9
+```
+Time      P1:                      P2:                      P3:
+1         LW R1, 4(R0)
+2                                  LW R1, 16(R0)
+3                                                           LW R1, 4(R0)
+4                                                           SW R2, 100(R0)
+5                                                           LW R4, 104(R0)
+6                                  LW R3, 100(R0)
+7         SW R1, 0(R0)
+8         LW R1, 4100(R0)
+9         SW R2, 4100(R0)
+10                                 SW R3, 4100(R0)
+11                                                          SW R5, 0(R0)
+```
+```
+Time      C1:                      C2:                      C3:
+1         LW R1, 4(R0) [S]
+2                                  LW R1, 16(R0) [S]
+3                                                           LW R1, 4(R0) [S]
+4                                                           SW R2, 100(R0) [S->M]
+5                                                           LW R4, 104(R0) [M]
+6                                  LW R3, 100(R0) [S]       [S]
+7         SW R1, 0(R0) [M]         Line 1 [I]               Line 1 [I]
+8         LW R1, 4100(R0) [S]
+9         SW R2, 4100(R0) [M]
+10        Line 64 [I]              SW R3, 4100(R0) [M]
+11        Line 1 [I]                                        SW R5, 0(R0) [M]
+```
+```
+Time      D1:                      D2:                      D3:                  Share list:
+1         LW R1, 4(R0) [S]                                                       Line1: P1
+2                                  LW R1, 16(R0) [S]                             Line1: P1, P2
+3                                                           LW R1, 4(R0) [S]     Line1: P1, P2, P3
+4                                                           SW R2, 100(R0) [E]   Line1: P1, P2, P3; Line2: P3
+5                                                           LW R4, 104(R0) [U]   Line1: P1, P2, P3
+6                                  LW R3, 100(R0) [E]                            Line1: P1, P2, P3 
+7         SW R1, 0(R0) [E]         Line1: [U]               Line1: [U]           Line1: P1
+8         LW R1, 4100(R0) [S]                                                    Line1: P1, Line64: P1
+9         SW R2, 4100(R0) [E]                                                    Line1: P1, Line64: P1
+10        Line64 [U]               SW R3, 4100(R0) [E]                           Line1: P1, Line64: P2
+11        Line1 [U]                                         SW R5, 0(R0) [E]     Line1: P3, Line64: P2
+```
