@@ -39,7 +39,9 @@ c)  Assume this kernel is to be executed on a processor that has 30
 GB/sec of memory bandwidth. Will this kernel be memory bound or compute
 bound?
 
-In worst case scenario, we would need NX * NY * NZ * 8B. I am not sure if that would exceed 30GB/sec.
+Solution:
+
+If the processor has peak throughput greater than 30GB/s * 0.18FLOPs/B = 5.4GFLOPs/s, then the code will be memory bounded.
 
 d) Develop a roofline model for this processor, assuming it has a
 peak computational throughput of 85 GFLOP/sec.
