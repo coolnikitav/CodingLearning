@@ -46,7 +46,7 @@ If the processor has peak throughput greater than 30GB/s * 0.18FLOPs/B = 5.4GFLO
 d) Develop a roofline model for this processor, assuming it has a
 peak computational throughput of 85 GFLOP/sec.
 
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0c77daa5-a1cd-4fff-96ba-2063aa87e8aa)
+Deleted.
 
 
 
