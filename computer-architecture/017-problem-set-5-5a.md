@@ -219,3 +219,5 @@ Time      D1:                      D2:                      D3:                 
 10        Line64 [U]               SW R3, 4100(R0) [E]                           Line1: P1, Line64: P2
 11        Line1 [U]                                         SW R5, 0(R0) [E]     Line1: P3, Line64: P2
 ```
+
+## Problem 10
