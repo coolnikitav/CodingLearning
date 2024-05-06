@@ -30,7 +30,10 @@ Arithmetic intensity: 8FLOPS/(10(reads)*4B + 1(writes)*4B) = 0.18FLOPS/B
 
 b) Is this kernel amenable to vector or SIMD execution? Why or why not?
 
-This kernel can be executed both with vectors and SIMD. The same repetitive operation needs to be computed on the z array, then on the y, then on the x. Vectors and SIMD both work for this.
+Solution:
+
+This kernel can be executed both with vectors and SIMD. The same repetitive operation needs to be computed on the z array, then on the y, then on the x. Vectors and SIMD both work for this. 
+SIMD would need to use gather-type load instruction because this code performs indirect references through the Ca and Cb arrays, as their index is in the IDx array, which index gets calculated at runtime.
 
 c)  Assume this kernel is to be executed on a processor that has 30
 GB/sec of memory bandwidth. Will this kernel be memory bound or compute
