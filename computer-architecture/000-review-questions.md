@@ -57,13 +57,15 @@ data to the L1 cache.
 a) How many cycles would it take to service an L2 cache miss with
 and without critical word first and early restart?
 
-Answer: 120+3*16 = 168 for both of them
+Solution:
+- 120 cycles with critical word first
+- 120+3*16 = 168 cycles without critical word first
 
 b) Do you think critical word first and early restart would be more
 important for L1 caches or L2 caches, and what factors would contribute to
 their relative importance?
 
-They would be more important to L2 caches because L2 cache is slower. Thus, it will benefit more from retrieving the needed word first.
+It depends on the reduction in miss time for each cache.
 
 
 
