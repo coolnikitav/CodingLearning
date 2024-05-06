@@ -24,7 +24,9 @@ floating-point arrays. Assume IDx is an array of unsigned int.
 
 a) What is the arithmetic intensity of this kernel?
 
-This code has a O(N^3) arithmetic intensity, since it has a triple nested for loop.
+Solution:
+
+Arithmetic intensity: 8FLOPS/(10(reads)*4B + 1(writes)*4B) = 0.18FLOPS/B
 
 b) Is this kernel amenable to vector or SIMD execution? Why or why not?
 
