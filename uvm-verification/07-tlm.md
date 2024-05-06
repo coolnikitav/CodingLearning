@@ -570,3 +570,262 @@ endmodule
 
 ## Get Operation
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c5f53cf0-a639-4a26-a178-e060d3b02b76)
+
+```
+`timescale 1ns / 1ps
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+/////////////////////////////////////
+
+class producer extends uvm_component;
+    `uvm_component_utils(producer)
+        
+    uvm_blocking_get_port #(int) port;
+    
+    int data = 0;
+    
+    function new (input string path = "producer", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction
+    
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        port = new("port", this);
+    endfunction
+    
+    task main_phase(uvm_phase phase);
+        phase.raise_objection(this);
+        port.get(data);
+        `uvm_info("PROD", $sformatf("Data sent : %0d", data), UVM_NONE);
+        phase.drop_objection(this);
+    endtask
+endclass
+
+/////////////////////////////////////
+
+class consumer extends uvm_component;
+    `uvm_component_utils(consumer)
+    
+    int data = 12;
+    
+    uvm_blocking_get_imp #(int, consumer) imp;
+    
+    function new (input string path = "consumer", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction
+    
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        imp = new("imp", this);
+    endfunction
+    
+    virtual task get(output int datar);
+        `uvm_info("CONS", $sformatf("Data sent : %0d", data), UVM_NONE);
+        datar = data;
+    endtask
+endclass
+
+/////////////////////////////////////
+
+class env extends uvm_component;
+    `uvm_component_utils(env)
+    
+    producer p;
+    consumer c;
+    
+    function new (input string path = "env", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction
+    
+    virtual function void build_phase (uvm_phase phase);
+        super.build_phase(phase);
+        p = producer::type_id::create("p", this);
+        c = consumer::type_id::create("c", this);
+    endfunction
+    
+    virtual function void connect_phase (uvm_phase phase);
+        super.connect_phase(phase);
+        p.port.connect(c.imp);
+    endfunction
+endclass
+
+/////////////////////////////////////
+
+class test extends uvm_test;
+    `uvm_component_utils(test)
+    
+    env e;
+    
+    function new (input string path = "test", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction
+    
+    virtual function void build_phase (uvm_phase phase);
+        super.build_phase(phase);
+        e = env::type_id::create("e", this);
+    endfunction
+endclass
+
+/////////////////////////////////////
+
+module tlm;    
+    initial begin
+        run_test("test");
+    end
+endmodule
+
+VM_INFO @ 0: reporter [RNTST] Running test test...
+UVM_INFO C:/Xilinx/Vivado/2023.2/data/system_verilog/uvm_1.2/xlnx_uvm_package.sv(20867) @ 0: reporter [UVM/COMP/NAMECHECK] This implementation of the component name checks requires DPI to be enabled
+UVM_INFO C:/eng_apps/vivado_projects/07_TLM/07_TLM.srcs/sim_1/new/tlm.sv(50) @ 0: uvm_test_top.e.c [CONS] Data sent : 12
+UVM_INFO C:/eng_apps/vivado_projects/07_TLM/07_TLM.srcs/sim_1/new/tlm.sv(26) @ 0: uvm_test_top.e.p [PROD] Data sent : 12
+UVM_INFO C:/Xilinx/Vivado/2023.2/data/system_verilog/uvm_1.2/xlnx_uvm_package.sv(13673) @ 0: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :    5
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Report counts by id
+[CONS]     1
+[PROD]     1
+[RNTST]     1
+[UVM/COMP/NAMECHECK]     1
+[UVM/RELNOTES]     1
+```
+
+## Transport Port
+```
+`timescale 1ns / 1ps
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+/////////////////////////////////////
+
+class producer extends uvm_component;
+    `uvm_component_utils(producer)
+        
+    uvm_blocking_transport_port #(int, int) port;
+    
+    int datas = 12;
+    int datar = 0;
+    
+    function new (input string path = "producer", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction
+    
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        port = new("port", this);
+    endfunction
+    
+    task main_phase(uvm_phase phase);
+        phase.raise_objection(this);
+        port.transport(datas, datar);
+        `uvm_info("PROD", $sformatf("Data sent : %0d, Data recv : %0d", datas, datar), UVM_NONE);
+        phase.drop_objection(this);
+    endtask
+endclass
+
+/////////////////////////////////////
+
+class consumer extends uvm_component;
+    `uvm_component_utils(consumer)
+    
+    int datas = 13;
+    int datar = 0;
+    
+    uvm_blocking_transport_imp #(int, int, consumer) imp;
+    
+    function new (input string path = "consumer", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction
+    
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        imp = new("imp", this);
+    endfunction
+    
+    virtual task transport(input int datar, output int datas);
+        datas = this.datas;
+        `uvm_info("CONS", $sformatf("Data sent : %0d, Data rcvd: %0d", datas, datar), UVM_NONE);
+    endtask
+endclass
+
+/////////////////////////////////////
+
+class env extends uvm_env;
+    `uvm_component_utils(env)
+    
+    producer p;
+    consumer c;
+    
+    function new (input string path = "env", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction
+    
+    virtual function void build_phase (uvm_phase phase);
+        super.build_phase(phase);
+        p = producer::type_id::create("p", this);
+        c = consumer::type_id::create("c", this);
+    endfunction
+    
+    virtual function void connect_phase (uvm_phase phase);
+        super.connect_phase(phase);
+        p.port.connect(c.imp);
+    endfunction
+endclass
+
+/////////////////////////////////////
+
+class test extends uvm_test;
+    `uvm_component_utils(test)
+    
+    env e;
+    
+    function new (input string path = "test", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction
+    
+    virtual function void build_phase (uvm_phase phase);
+        super.build_phase(phase);
+        e = env::type_id::create("e", this);
+    endfunction
+endclass
+
+/////////////////////////////////////
+
+module tlm;    
+    initial begin
+        run_test("test");
+    end
+endmodule
+
+UVM_INFO @ 0: reporter [RNTST] Running test test...
+UVM_INFO C:/Xilinx/Vivado/2023.2/data/system_verilog/uvm_1.2/xlnx_uvm_package.sv(20867) @ 0: reporter [UVM/COMP/NAMECHECK] This implementation of the component name checks requires DPI to be enabled
+UVM_INFO C:/eng_apps/vivado_projects/07_TLM/07_TLM.srcs/sim_1/new/tlm.sv(53) @ 0: uvm_test_top.e.c [CONS] Data sent : 13, Data rcvd: 12
+UVM_INFO C:/eng_apps/vivado_projects/07_TLM/07_TLM.srcs/sim_1/new/tlm.sv(27) @ 0: uvm_test_top.e.p [PROD] Data sent : 12, Data recv : 13
+UVM_INFO C:/Xilinx/Vivado/2023.2/data/system_verilog/uvm_1.2/xlnx_uvm_package.sv(13673) @ 0: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+** Report counts by severity
+UVM_INFO :    5
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Report counts by id
+[CONS]     1
+[PROD]     1
+[RNTST]     1
+[UVM/COMP/NAMECHECK]     1
+[UVM/RELNOTES]     1
+```
+
+## Analysis Port
+Used to broadcast same data to multiple components.
+
+- uvm_analysis_port #(datatype)
+- uvm_analysis_imp #(datatype, class)
+
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/a3339283-090e-420a-aee4-a5a4dd35acc7)
