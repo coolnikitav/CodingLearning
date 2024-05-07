@@ -221,3 +221,4 @@ Time      D1:                      D2:                      D3:                 
 ```
 
 ## Problem 10
+I don't understand what its asking.
