@@ -494,3 +494,187 @@ trans: (transaction@585) { a: 'hf  b: 'h7  y: 'h0  begin_time: 0  end_time: 0  d
 - A: We use virtual keyword whenever we override and define implementation for any inbuilt method
 
 ## Sending Data to Driver Method 2
+```
+1)
+`uvm_do(trans)
+
+- Pros: easy to use.
+- Cons: user doesn't have any control of the generated data.
+
+2)
+create
+start_item(trans)
+assert(trans.randomize)
+finish_item(trans)
+
+- More flexible than method 1. Not as much work as method 3.
+
+3)
+create_item
+wait_for_grant
+assert(trans.randomize)
+send_request
+wait_for_item_done
+
+- Pros: Can modify data
+- Cons: too much work
+```
+
+```
+///////////////////////////////////////////////////////
+
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+///////////////////////////////////////////////////////
+
+class transaction extends uvm_sequence_item;
+    rand bit [3:0] a;
+    rand bit [3:0] b;
+         bit [4:0] y;
+         
+    function new(input string path = "transaction");
+        super.new(path);
+    endfunction
+    
+    `uvm_object_utils_begin(transaction)
+        `uvm_field_int(a, UVM_DEFAULT)
+        `uvm_field_int(b, UVM_DEFAULT)
+        `uvm_field_int(y, UVM_DEFAULT)
+    `uvm_object_utils_end
+endclass
+
+///////////////////////////////////////////////////////
+
+class sequence1 extends uvm_sequence#(transaction);
+    `uvm_object_utils(sequence1)
+    
+    transaction trans;
+    
+    function new(input string inst = "seq1");
+        super.new(inst);
+    endfunction
+    
+    virtual task body();
+        repeat(5) begin
+            trans = transaction::type_id::create("trans");
+            start_item(trans);
+            assert(trans.randomize);
+            finish_item(trans);
+            `uvm_info("SEQ", $sformatf("a: %0d, b: %0d", trans.a, trans.b), UVM_NONE);
+        end
+    endtask         
+endclass
+
+///////////////////////////////////////////////////////
+
+class driver extends uvm_driver#(transaction);
+    `uvm_component_utils(driver)
+    transaction trans;
+    
+    function new(input string inst = "DRV", uvm_component c);
+        super.new(inst, c);
+    endfunction
+
+    virtual task run_phase(uvm_phase phase);
+        trans = transaction::type_id::create("trans");
+        forever begin
+            seq_item_port.get_next_item(trans);
+            `uvm_info("DRV", $sformatf("a: %0d, b: %0d", trans.a, trans.b), UVM_NONE);
+            seq_item_port.item_done();
+        end
+    endtask
+endclass
+
+///////////////////////////////////////////////////////
+
+class agent extends uvm_agent;
+    `uvm_component_utils(agent)
+    
+    function new(input string path = "agent", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction    
+    
+    driver d;
+    uvm_sequencer #(transaction) seqr;
+    
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        d = driver::type_id::create("d", this);
+        seqr = uvm_sequencer#(transaction)::type_id::create("seqr", this);
+    endfunction
+    
+    virtual function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        d.seq_item_port.connect(seqr.seq_item_export);
+    endfunction
+endclass
+
+///////////////////////////////////////////////////////
+
+class env extends uvm_env;
+    `uvm_component_utils(env)
+    
+    agent a;
+    sequence1 s1;
+    
+    function new(input string path = "env", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction        
+    
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        a = agent::type_id::create("a", this);
+        s1 = sequence1::type_id::create("s1");
+    endfunction
+    
+    virtual task run_phase(uvm_phase phase);
+        phase.raise_objection(this);
+        s1.start(a.seqr);
+        phase.drop_objection(this);
+    endtask
+endclass
+
+///////////////////////////////////////////////////////
+
+class test extends uvm_test;
+    `uvm_component_utils(test)
+    
+    env e;
+    
+    function new(input string path = "test", uvm_component parent = null);
+        super.new(path, parent);
+    endfunction
+        
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        e = env::type_id::create("e", this);
+    endfunction
+endclass
+
+///////////////////////////////////////////////////////
+
+module tb;    
+    initial begin
+        run_test("test");
+    end
+endmodule
+
+UVM_INFO @ 0: reporter [RNTST] Running test test...
+UVM_INFO C:/Xilinx/Vivado/2023.2/data/system_verilog/uvm_1.2/xlnx_uvm_package.sv(20867) @ 0: reporter [UVM/COMP/NAMECHECK] This implementation of the component name checks requires DPI to be enabled
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(60) @ 0: uvm_test_top.e.a.d [DRV] a: 11, b: 2
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(41) @ 0: uvm_test_top.e.a.seqr@@s1 [SEQ] a: 11, b: 2
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(60) @ 0: uvm_test_top.e.a.d [DRV] a: 11, b: 8
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(41) @ 0: uvm_test_top.e.a.seqr@@s1 [SEQ] a: 11, b: 8
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(60) @ 0: uvm_test_top.e.a.d [DRV] a: 15, b: 2
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(41) @ 0: uvm_test_top.e.a.seqr@@s1 [SEQ] a: 15, b: 2
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(60) @ 0: uvm_test_top.e.a.d [DRV] a: 8, b: 8
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(41) @ 0: uvm_test_top.e.a.seqr@@s1 [SEQ] a: 8, b: 8
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(60) @ 0: uvm_test_top.e.a.d [DRV] a: 10, b: 10
+UVM_INFO C:/eng_apps/vivado_projects/08_Sequence/08_Sequence.srcs/sim_1/new/tb.sv(41) @ 0: uvm_test_top.e.a.seqr@@s1 [SEQ] a: 10, b: 10
+UVM_INFO C:/Xilinx/Vivado/2023.2/data/system_verilog/uvm_1.2/xlnx_uvm_package.sv(19968) @ 0: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+UVM_INFO C:/Xilinx/Vivado/2023.2/data/system_verilog/uvm_1.2/xlnx_uvm_package.sv(13673) @ 0: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+```
+
+## Multiple Sequences in Parallel
