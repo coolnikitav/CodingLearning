@@ -1,6 +1,6 @@
 ## Week of May 6
 - Wednesday:
-  - UVM: 09
+  - UVM: 09, 010
 - Tuesday:
   - CA: 017
 - Monday:
