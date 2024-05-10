@@ -1,4 +1,6 @@
 ## Week of May 6
+- Friday:
+  - UVM: 14
 - Thursday:
   - UVM: 11, 12, 13
 - Wednesday:
