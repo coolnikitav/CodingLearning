@@ -1,4 +1,6 @@
 ## Week of May 13
+- Wednesday:
+  - UVM: 18
 - Tuesday:
   - UVM: 17
 - Monday:
