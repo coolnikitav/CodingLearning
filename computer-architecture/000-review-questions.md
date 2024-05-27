@@ -4,6 +4,51 @@
 - 4 - 9,10
 - 5 - 19
 
+## 17 - Final exam
+
+- 1 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/a2df2302-ac05-4a98-a968-5f007c3dd3b9)
+- 2 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/13e1f161-0f0f-4ef7-adb2-3c472e50151a)
+- 3 5
+- 4 3
+- 5 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/4158d458-946d-4efb-b472-f6e7418f9eb5)
+- 6 0.25
+- 7 0.75
+- 8 No
+- 9 7
+- 10 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0f658006-0b50-4ee0-92d3-93944cd34e53)
+- 11 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/9cd41922-859e-42a2-bd3a-372d13378b02)
+- 12 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/2952ec5d-65b1-4fc5-a74c-0e425e728e55)
+- 13 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/06caa15c-eff5-48a3-9625-296af108f56d)
+- 14 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/cc083c43-f965-499a-8e28-181a23409fbb)
+- 15 13
+- 16 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/0921593b-3598-47ae-997e-84db89144a80)
+- 17 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/5a822a93-e13c-42f4-99a0-6a089ecd3728)
+- 18 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/9affb005-366e-4de4-8e81-cded75a1efeb)
+- 19 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c42ad11c-623a-4186-98f5-d3e46fd53756)
+- 20 0
+- 21 7
+- 22 128
+- 23 14
+- 24 18
+- 25 14
+- 26 2
+- 27 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/1979fc68-b981-416b-ae72-007983d3f1b9)
+- 28 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/3fedaf8e-134a-468b-bc7c-bff1040f610b)
+- 29 No
+- 30 Yes
+- 31 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c5eebd73-a901-4991-8de6-afb1b0f94292)
+- 32 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/d0f8b3ee-24bd-4492-8dc1-04b6b77969c7)
+- 33 25.6
+- 34 15.6
+
+
+
+
+
+
+
+
+
 ## 16 - 4.12
 The following kernel performs a portion of the finitedifference time-domain (FDTD) method for computing Maxwell’s equations
 in a three-dimensional space, part of one of the SPEC06fp benchmarks:
