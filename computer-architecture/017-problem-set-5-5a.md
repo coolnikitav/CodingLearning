@@ -208,13 +208,13 @@ This is what 4-ary 3-cube without end-around connections looks like:
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/bac846a6-eed9-41b5-89fa-9ff12b26efd2)
 
-Bisection would have 12 bi-directional connections. Thus, it can transfer 12 * 32 * 800MHz = 307200 Mb/sec
+Bisection would have 16 bi-directional connections. Thus, it can transfer 16 * 32 * 800MHz = 4.096 Tbps
 
 8-node omega network:
 
 ![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/4ae7085d-41f6-42f2-8bf5-195907406fb2)
 
-Bisection bandwidth is 8. It can transfer 8 * 64 * 1.2GHZ = 614.4 Gb/sec
+Bisection bandwidth is 4 because at any time only 4 links are active. It can transfer 84 * 64 * 1.2GHZ = 307.2 Gb/sec
 
 ## Problem 7
 
