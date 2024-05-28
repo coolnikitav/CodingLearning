@@ -60,36 +60,48 @@ SW	R7,	0(j)
 T3:
 ADD	R8,	R0,	100
 SW	R8,	0(i)
+```
 
+Solution:
 ```
-1:
-```
-ADDI R1, R0, 30   ; R1 = 30
-SW R1, 0(i)       ; i = 30
-LW R2, 0(j)       ; R2 = 10
-SW R2, 0(j)       ; j = 10
-ADDI R5, R0, #99  ; R5 = 99
-LW R6, 0(j)       ; R6 = 10
-ADD	R7,	R5,	R6    ; R7 = 109
-SW	R7,	0(j)      ; j = 109
-ADD	R8,	R0,	100   ; R8 = 100
-SW	R8,	0(i)      ; i = 100
-; Outcome: i = 100, j = 109
-```
-3:
-```
-ADD	R8,	R0,	100    ; R8 = 100
-SW	R8,	0(i)       ; i = 100
-ADDI	R5,	R0,	99   ; R5 = 99
-LW	R6,	0(j)       ; R6 = 10
-ADD	R7,	R5,	R6     ; R7 = 109
-SW	R7,	0(j)       ; j = 109
-ADDI	R1,	R0,	30   ; R1 = 30
-SW	R1,	0(i)       ; i = 30
-LW	R2,	0(j)       ; R2 = 109
-SW	R2,	0(j)       ; j = 109
-; Outcome: i = 30, j = 109
-```
+We first investigate the final value for ‘i’.  Because thread T3 only has one memory operation, that
+memory operation is either ordered before or after the store to ‘i’ in thread T1, therefore `i` is either 30
+or 100 and these outcomes are valid with all outcomes of ‘j’.
+Now we investigate valid values for ‘j’.
+Case 1:
+T2 LW R6, 0(j) j = 10
+T2 SW R7, 0(j) j = 109
+T1 LW R2, 0(j) j = 109
+T1 SW R2, 0(j) j = 109
+Case 2:
+T2 LW R6, 0(j) j = 10
+T1 LW R2, 0(j) j = 10
+T2 SW R7, 0(j) j = 109
+T1 SW R2, 0(j) j = 10
+Case 2:
+T2 LW R6, 0(j) j = 10
+T1 LW R2, 0(j) j = 10
+T1 SW R2, 0(j) j = 10
+T2 SW R7, 0(j) j = 109
+Case 3:
+T1 LW R2, 0(j) j = 10
+T2 LW R6, 0(j) j = 10
+T2 SW R7, 0(j) j = 109
+T1 SW R2, 0(j) j = 10
+Case 4:
+T1 LW R2, 0(j) j = 10
+T2 LW R6, 0(j) j = 10
+T1 SW R2, 0(j) j = 10
+T2 SW R7, 0(j) j = 109
+   
+Case 5:
+T1 LW R2, 0(j) j = 10
+T1 SW R2, 0(j) j = 10
+T2 LW R6, 0(j) j = 10
+T2 SW R7, 0(j) j = 109
+Therefore, valid sequentially consistent outcomes are {i, j} = {30, 10}, {30,
+109}, {100, 10}, and {100, 109}
+```			
 
 ## Problem #4
 You	are	writing	a	multi-threaded	program	that	will	count	the	number	of	
