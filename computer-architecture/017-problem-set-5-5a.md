@@ -99,6 +99,7 @@ T1 LW R2, 0(j) j = 10
 T1 SW R2, 0(j) j = 10
 T2 LW R6, 0(j) j = 10
 T2 SW R7, 0(j) j = 109
+
 Therefore, valid sequentially consistent outcomes are {i, j} = {30, 10}, {30,
 109}, {100, 10}, and {100, 109}
 ```			
