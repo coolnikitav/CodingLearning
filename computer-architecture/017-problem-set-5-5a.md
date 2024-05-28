@@ -157,34 +157,44 @@ MSI
 ```
 Time
 	C1:			  C2: 				C3:
-1  	Line 1: S		
-2	                          Line 1: S			  
-3	                                                        Line 1: S
-4						                Line 2: S -> M
-5								
-6				  Line 2: S                     Line 2: S
-7  	Line 1: M                 Line 1: I                     Line 1: I
-8	Line 64: S
-9	Line 64: M
-10	Line 64: I                Line 64: S->M	                 		 
-11	Line 1: I                                               Line 1: S -> M
+1  	Line 0: S		
+2	Line 0: S                 Line 0: S			  
+3	Line 0: S                 Line 0: S                     Line 0: S
+4	Line 0: S		  Line 0: S			Line 0: S
+							        Line 1: M
+5	Line 0: S		  Line 0: S			Line 0: S
+							        Line 1: M							
+6	Line 0: S                 Line 0: S                     Line 0: S
+                                  Line 1: S                     Line 1: S
+7       Line 0: M                 Line 1: S                     Line 1: S
+8       Line 64: S                Line 1: S                     Line 1: S
+9       Line 64: M                Line 1: S                     Line 1: S
+10                                Line 1: S                     Line 1: S
+				  Line 64: M
+11				  Line 1: S                     Line 1: S
+                                  Line 64: M                    Line 0: M
 ```
 
 MESI
 ```
 Time
 	C1:			  C2: 				C3:
-1  	Line 1: E	
-2	Line 1: S                 Line 1: S                        		  
-3	                                                        Line 1: S                
-4						                Line 2: E->M
-5								Line 2: M
-6				  Line 2: S                     Line 2: S
-7  	Line 1: M                 Line 1: I                     Line 1: I
-8	Line 64: E
-9	Line 64: M
-10	Line 64: I                Line 64: E -> M    		 
-11      Line 1: I                                               Line 1: E->M 
+1  	0: E
+2       0: S                      0: S
+3       0: S                      0: S                          0: S
+4       0: S                      0: S                          0: S
+                                                                64: M
+5       0: S                      0: S                          0: S
+                                                                64: M
+6       0: S                      0: S                          0: S
+                                  64: S                         64: S
+7       0: M                      64: S                         64: S
+8       4096: M                   64: S                         64: S
+9       4096: M                   64: S                         64: S
+10                                64: S                         64: S
+                                  4096: M
+11                                64: S                         64: S
+                                  4096: M                       0: M
 ```
 
 ## Problem 6
