@@ -7,14 +7,36 @@ Skip this.
 Assume	that	your	architecture	has	a	test-and-set	instruction	as	its	only	atomic	
 primitive.		Implement	atomic	compare-and-exchange	out	of	the	test-and-set	primitive.
 
-Answer:
-Test&Set (m), R: if M[m] is 0, set it to 1
-
-Compare&Swap(m), Rt, Rs: if Rt is in M[m], then put Rs in M[m] and Rt into old Rs
-
-We have Rt in M[m] and Rs we want to swap it with.
-
-How can we set M[m] to Rs if we can only set it to 1 with Test&Set?
+Solution:
+```
+typedef struct cae_t
+{
+   int value;
+   int lock;  // 1 denotes locked
+} cae_t;
+// prototype of test_and_set
+// old value returned
+int test_and_set(int * mem);
+// returns 1 if compare success
+// returns 0 if compare failure
+int compare_and_exchange(cae_t * mem, int compare_value, int swap_value)
+{
+   int ret_value = 0;
+   // grab lock
+   while(test_and_set(&(mem‐>lock)){}
+   if(compare_value == mem‐>value)
+   {
+      mem‐>value = swap_value;
+      ret_value = 1;
+   }
+   else
+   {
+      ret_value = 0;
+   }
+   // release lock
+   mem‐>lock = 0;
+} 
+```
 
 
 ## Problem #3
