@@ -236,33 +236,32 @@ Time      P1:                      P2:                      P3:
 11                                                          SW R5, 0(R0)
 ```
 ```
-Time      C1:                      C2:                      C3:
-1         LW R1, 4(R0) [S]
-2                                  LW R1, 16(R0) [S]
-3                                                           LW R1, 4(R0) [S]
-4                                                           SW R2, 100(R0) [S->M]
-5                                                           LW R4, 104(R0) [M]
-6                                  LW R3, 100(R0) [S]       [S]
-7         SW R1, 0(R0) [M]         Line 1 [I]               Line 1 [I]
-8         LW R1, 4100(R0) [S]
-9         SW R2, 4100(R0) [M]
-10        Line 64 [I]              SW R3, 4100(R0) [M]
-11        Line 1 [I]                                        SW R5, 0(R0) [M]
+Time      C1:                      C2:                      C3:                      D: 
+1         0: S                                                                       0: S: {P1}
+2         0: S                     0: S                                              0: S: {P1, P2}
+3         0: S                     0: S                     0: S                     0: S: {P1,P2,P3}
+4         0: S                     0: S                     0: S                     0: S: {P1,P2,P3}
+                                                            64: M                    64: E: {P3}
+5         0: S                     0: S                     0: S                     0: S: {P1,P2,P3}
+                                                            64: M                    64: E: {P3}
+6         0: S                     0: S                     0: S                     0: S: {P1,P2,P3}
+                                   64: S                    64: S                    64: S: {P2,P3}
+7         0: M                                                                       0: E: {P1}
+                                   64: S                    64: S                    64: S: {P2,P3}
+8         4096: S                  64: S                    64: S                    0: I
+                                                                                     64: S: {P2,P3}
+                                                                                     4096: S: {P1}
+9         4096: M                  64: S                    64: S                    0: I
+                                                                                     64: S: {P2,P3}
+                                                                                     4096: E: {P1}
+10                                 64: S                    64: S                    0: I
+                                   4096: M                                           64: S: {P2,P3}
+                                                                                     4096: E: {P2}
+11                                 64: S                    64: S                    0: E: {P3}
+                                   4096: M                  0: M                     64: S: {P2,P3}
+                                                                                     4096: E: {P2}
 ```
-```
-Time      D1:                      D2:                      D3:                  Share list:
-1         LW R1, 4(R0) [S]                                                       Line1: P1
-2                                  LW R1, 16(R0) [S]                             Line1: P1, P2
-3                                                           LW R1, 4(R0) [S]     Line1: P1, P2, P3
-4                                                           SW R2, 100(R0) [E]   Line1: P1, P2, P3; Line2: P3
-5                                                           LW R4, 104(R0) [U]   Line1: P1, P2, P3
-6                                  LW R3, 100(R0) [E]                            Line1: P1, P2, P3 
-7         SW R1, 0(R0) [E]         Line1: [U]               Line1: [U]           Line1: P1
-8         LW R1, 4100(R0) [S]                                                    Line1: P1, Line64: P1
-9         SW R2, 4100(R0) [E]                                                    Line1: P1, Line64: P1
-10        Line64 [U]               SW R3, 4100(R0) [E]                           Line1: P1, Line64: P2
-11        Line1 [U]                                         SW R5, 0(R0) [E]     Line1: P3, Line64: P2
-```
+
 
 ## Problem 10
 I don't understand what its asking.
