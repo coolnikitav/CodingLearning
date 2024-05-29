@@ -1,6 +1,14 @@
 ## Set 4
+10. What is PLI?
+    - Programming Language Interface. It allows software developers to access and control simulation data within a simulation environment.
+9. What are some of the features in VHDL?
+   - 9 values of wires.
+8. What does timescale 1ns/1ps mean?
+   - It means that each step is 1 ns with precision in the picoseconds.
+7. Explain stages in the setup of a regression environment for simulations?
+   - Not sure what this is.
 6. Explain force and release commands in verilog.
-   
+   - Force and release can be applied to wires, nets, variable. Force will override any action performed on the variable until it is released.
 5. What are good practices of writing FSM code?
    - Define states, know what causes them to transition, draw out the FSM diagram, understand how outputs are determined.
 4. What is meant by inertial delay?
