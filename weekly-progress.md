@@ -1,6 +1,7 @@
 ## Week of May 27
 - Wednesday:
   - UVM: 00-1
+  - VER: 00-4
 - Monday:
   - UVM: 20
 
