@@ -1,3 +1,25 @@
+## Set 2
+10. Difference between structure and class.
+   - By default, a structure is public and a class is private.
+9. Difference between dynamic array and queue.
+   - Dynamic array is an array which size is specified in runtime. Besides that it functions like a regular array. A queue behaves like a queue. You can push items to the back and pull them from the front.
+8. Explain the cycle of verification and its closure.
+   - Create a test plan, write the testbench, look at results.
+7. What is layered architecture in verification?
+   - classes containing other classes. Example: environment contains generator, driver, monitor, scoreboard.
+6. How to ensure address range 0x2000 to 0x9000 is covered in simulations?
+   - Set a constraint that includes values in this range.
+5. What are 2 state and 4 state variables? Provide some examples.
+   - 2 state variables can take on values of 1 and 0. Example: bit. 4 state variables can take on a value of 1,0,x,z. Example: reg,logic.
+4. What is ignore_bins?
+   - Ignore values in the existing bins. Very useful when existing bins cover a range.
+3. Difference between code and functional coverage?
+   - Functional coverage is checking to make sure that all features of the design are covered. Code coverage is the process of checking that all of the code in the DUT has been ran through.
+2. How to disable constraints?
+   - constraint.disable();
+1. What is the difference between a depp copy and a shallow copy?
+   - A deep copy points to the original object. A shallow copy creates a new object. When a change is made to the deep copy, it is reflected on the original. On the other hand, when a change is made to the shallow copy, the change is not reflected on the original.
+
 ## Set 1
 10 - Difference between dynamic and associative array.
 
