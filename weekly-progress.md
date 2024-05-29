@@ -1,4 +1,6 @@
 ## Week of May 27
+- Wednesday:
+  - UVM: 00-1
 - Monday:
   - UVM: 20
 
