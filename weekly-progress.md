@@ -2,6 +2,7 @@
 - Wednesday:
   - UVM: 00-1
   - VER: 00-4
+  - SV: 00-2
 - Monday:
   - UVM: 20
 
