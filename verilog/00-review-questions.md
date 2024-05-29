@@ -1,3 +1,17 @@
+## Set 4
+6. Explain force and release commands in verilog.
+   
+5. What are good practices of writing FSM code?
+   - Define states, know what causes them to transition, draw out the FSM diagram, understand how outputs are determined.
+4. What is meant by inertial delay?
+   - Delay introduced by gates and wires.
+3. What does transport delay mean in verilog?
+   - The time it takes for a signal to propagate through a real circuit.
+2. Explain $monitor, $display, $strobe.
+   - $display prints to the console. Not sure what $monitor and $strobe do.
+1. What is a sensitivity list?
+   - A sensitivity list is a list of all signal that would trigger a procedural or combinatorial block to execute.
+
 ## Set 3
 10 - Give major differences between a task and a function.
 
