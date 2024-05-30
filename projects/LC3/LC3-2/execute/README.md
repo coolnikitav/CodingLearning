@@ -1,3 +1,3 @@
 # Execute
 
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/7cd8c202-e858-4fb7-bfb1-66132245593e)
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/c8fb7e73-74b7-4dc5-8f65-19579ac40f5b)
