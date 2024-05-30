@@ -1,4 +1,3 @@
 # Decode
 
-![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/eaab2d2e-93fc-4e93-aea4-e117370c7b78)
-
+![image](https://github.com/coolnikitav/coding-lessons/assets/30304422/e7574aa3-0e33-45d0-8355-e6602d9e7b08)
