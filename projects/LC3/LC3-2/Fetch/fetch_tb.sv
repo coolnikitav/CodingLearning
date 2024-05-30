@@ -18,7 +18,7 @@ class transaction extends uvm_sequence_item;
          logic        br_taken;
          logic [15:0] pc;
          logic [15:0] npc;
-         logic Imem_rd;         
+         logic        Imem_rd;         
     
     function new(string name = "transaction");
         super.new(name);
@@ -41,7 +41,7 @@ class branch_taken extends uvm_sequence#(transaction);
         start_item(tr);
         assert(tr.randomize);
         tr.op = update_br_taken;
-        `uvm_info("SEQ", $sformatf("MODE: BRANCH TAKEN, ADDR : %0d", tr.taddr), UVM_NONE);
+        `uvm_info("SEQ", $sformatf("MODE: BRANCH TAKEN, TADDR : %0h", tr.taddr), UVM_NONE);
         finish_item(tr);
     endtask
 endclass
@@ -62,7 +62,7 @@ class branch_not_taken extends uvm_sequence#(transaction);
         start_item(tr);
         assert(tr.randomize);
         tr.op = update_br_nt_taken;
-        `uvm_info("SEQ", $sformatf("MODE: BRANCH NOT TAKEN"), UVM_NONE);
+        `uvm_info("SEQ", "MODE: BRANCH NOT TAKEN", UVM_NONE);
         finish_item(tr);
     endtask
 endclass
@@ -83,7 +83,7 @@ class not_updated extends uvm_sequence#(transaction);
         start_item(tr);
         assert(tr.randomize);
         tr.op = no_update;
-        `uvm_info("SEQ", $sformatf("MODE: NO UPDATE"), UVM_NONE);        
+        `uvm_info("SEQ", "MODE: NO UPDATE", UVM_NONE);        
         finish_item(tr);
     endtask
 endclass
@@ -104,24 +104,9 @@ class reset extends uvm_sequence#(transaction);
         start_item(tr);
         assert(tr.randomize);
         tr.op = rst;
-        `uvm_info("SEQ", $sformatf("MODE: RESET"), UVM_NONE);
+        `uvm_info("SEQ", "MODE: RESET", UVM_NONE);
         finish_item(tr);
     endtask
-endclass
-
-///////////////////////////////////////////////
-
-class seq_library extends uvm_sequence_library#(transaction);
-    `uvm_object_utils(seq_library)
-    `uvm_sequence_library_utils(seq_library)
-    
-    function new(string name = "seq_library");
-        super.new(name);
-        add_typewide_sequence(branch_taken::get_type());
-        add_typewide_sequence(branch_not_taken::get_type());
-        add_typewide_sequence(not_updated::get_type());
-        add_typewide_sequence(reset::get_type());
-    endfunction
 endclass
 
 ///////////////////////////////////////////////
@@ -144,47 +129,51 @@ class driver extends uvm_driver#(transaction);
     endfunction
     
     task branch_taken();
-        `uvm_info("DRV", $sformatf("MODE: BRANCH TAKEN, TADDR: %0d", tr.taddr), UVM_NONE);
+        
         vif.rst             <= 1'b0;
         vif.enable_updatePC <= 1'b1;
         vif.enable_fetch    <= 1'b1;
         vif.taddr           <= tr.taddr;
         vif.br_taken        <= 1'b1;
         @(posedge vif.clk);
+        `uvm_info("DRV", $sformatf("MODE: BRANCH TAKEN, TADDR: %0h", tr.taddr), UVM_NONE); #0.002;
     endtask
     
     task branch_not_taken();
-        `uvm_info("DRV", "MODE: BRANCH NOT TAKEN", UVM_NONE);
         vif.rst             <= 1'b0;
         vif.enable_updatePC <= 1'b1;
         vif.enable_fetch    <= 1'b1;
         vif.taddr           <= tr.taddr;
         vif.br_taken        <= 1'b0;
         @(posedge vif.clk);
+        `uvm_info("DRV", "MODE: BRANCH NOT TAKEN", UVM_NONE); #0.002;
     endtask
     
     task not_updated();
-        `uvm_info("SEQ", "MODE: NO UPDATE", UVM_NONE);
+        
         vif.rst             <= 1'b0; 
         vif.enable_updatePC <= 1'b0;
         vif.enable_fetch    <= 1'b0;
         vif.taddr           <= tr.taddr;
         vif.br_taken        <= 1'b0;
         @(posedge vif.clk);
+        `uvm_info("SEQ", "MODE: NO UPDATE", UVM_NONE); #0.002;
     endtask
     
     task reset();
-        `uvm_info("SEQ", $sformatf("MODE: RESET"), UVM_NONE);
+        
         vif.rst             <= 1'b1; 
         vif.enable_updatePC <= 1'b0;
         vif.enable_fetch    <= 1'b0;
         vif.taddr           <= tr.taddr;
         vif.br_taken        <= 1'b0;
         @(posedge vif.clk);
+        `uvm_info("SEQ", $sformatf("MODE: RESET"), UVM_NONE); #0.002;
     endtask
     
     virtual task run_phase(uvm_phase phase);
         forever begin
+            
             seq_item_port.get_next_item(tr);
             case(tr.op)
               update_br_taken:    branch_taken();
@@ -220,7 +209,7 @@ class monitor extends uvm_monitor;
     
     virtual task run_phase(uvm_phase phase);
         forever begin
-            @(posedge vif.clk);
+            @(posedge vif.clk); #0.001;
             tr.pc        = vif.pc;
             tr.npc       = vif.npc;
             tr.Imem_rd   = vif.Imem_rd;
@@ -230,7 +219,7 @@ class monitor extends uvm_monitor;
             end else if (vif.br_taken) begin
                 tr.op    = update_br_taken;
                 tr.taddr = vif.taddr;
-                `uvm_info("MON", $sformatf("BRANCH TAKEN: TADDR: %0 | PC: %0h | NPC: %0h | Imem_rd: %0b",tr.taddr,tr.pc,tr.npc,tr.Imem_rd), UVM_NONE);
+                `uvm_info("MON", $sformatf("BRANCH TAKEN: TADDR: %0h | PC: %0h | NPC: %0h | Imem_rd: %0b",tr.taddr,tr.pc,tr.npc,tr.Imem_rd), UVM_NONE);
             end else if (vif.enable_updatePC && vif.enable_fetch) begin
                 tr.op    = update_br_nt_taken;
                 `uvm_info("MON", $sformatf("BRANCH NOT TAKEN: PC: %0h | NPC: %0h | Imem_rd: %0b",tr.pc,tr.npc,tr.Imem_rd), UVM_NONE);
@@ -263,7 +252,7 @@ class scoreboard extends uvm_scoreboard;
         if (tr.op == rst) begin       
             `uvm_info("SCO", $sformatf("SYSTEM RESET DETECTED: PC: %0h | NPC: %0h | Imem_rd: %0b",tr.pc,tr.npc,tr.Imem_rd), UVM_NONE);
         end else if (tr.op == update_br_taken) begin
-            `uvm_info("SCO", $sformatf("BRANCH TAKEN: TADDR: %0 | PC: %0h | NPC: %0h | Imem_rd: %0b",tr.taddr,tr.pc,tr.npc,tr.Imem_rd), UVM_NONE);
+            `uvm_info("SCO", $sformatf("BRANCH TAKEN: TADDR: %0h | PC: %0h | NPC: %0h | Imem_rd: %0b",tr.taddr,tr.pc,tr.npc,tr.Imem_rd), UVM_NONE);
         end else if (tr.op == update_br_nt_taken) begin
             `uvm_info("SCO", $sformatf("BRANCH NOT TAKEN: PC: %0h | NPC: %0h | Imem_rd: %0b",tr.pc,tr.npc,tr.Imem_rd), UVM_NONE);
         end else if (tr.op == no_update) begin
@@ -333,22 +322,31 @@ class test extends uvm_test;
     endfunction
     
     environment e;
-    seq_library seqlib;
+    branch_taken     b_t;
+    branch_not_taken b_n_t;
+    not_updated      n_u;
+    reset            r;
     
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         e      = environment::type_id::create("environment", this);
-        seqlib = seq_library::type_id::create("seqlib", this);
-        seqlib.selection_mode = UVM_SEQ_LIB_RANDC;
-        seqlib.sequence_count = 25;
-        seqlib.init_sequence_library();
-        seqlib.print();
+        b_t = branch_taken::type_id::create("b_t");
+        b_n_t = branch_not_taken::type_id::create("b_n_t");
+        n_u = not_updated::type_id::create("n_u");
+        r = reset::type_id::create("r");       
     endfunction
     
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
-        assert(seqlib.randomize());
-        seqlib.start(e.a.seqr);
+        r.start(e.a.seqr);  // reset dut to start
+        for (int i = 0; i < 25; i++) begin
+            case($urandom_range(3))
+                2'h0: b_t.start(e.a.seqr);
+                2'h1: b_n_t.start(e.a.seqr);
+                2'h2: n_u.start(e.a.seqr);
+                2'h3: r.start(e.a.seqr);
+            endcase
+        end
         phase.drop_objection(this);
     endtask
 endclass
