@@ -1,4 +1,6 @@
 ## Week of May 27
+- Thursday:
+  - LC3: Couldn't figure out how to use a sequence library, so had to move on.
 - Wednesday:
   - UVM: 00-1
   - VER: 00-4
