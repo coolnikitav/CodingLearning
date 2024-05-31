@@ -42,7 +42,7 @@ class transaction extends uvm_sequence_item;
             4'b1110,  // LEA
             4'b0011,  // ST
             4'b0111,  // STR
-            4'b1011  // STI  
+            4'b1011   // STI  
         };
     };
 endclass
