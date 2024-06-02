@@ -6,6 +6,9 @@ $computers = @(
     # Add more computers as needed
 )
 
+# Add the local computer to the list
+$computers += $env:COMPUTERNAME
+
 # Display a menu for selecting computers
 Write-Host "Select computers to stop the service on (separate numbers by commas):"
 for ($i = 0; $i -lt $computers.Count; $i++) {
