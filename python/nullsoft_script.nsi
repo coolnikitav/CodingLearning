@@ -1,48 +1,23 @@
-OutFile "RemoteInstaller.exe"
-Name "Remote Service Stopper"
-InstallDir "$INSTDIR"
+Section "Stop Service"
+    ; Define variables
+    Var /GLOBAL REMOTE_HOST
+    Var /GLOBAL SERVICE_NAME
+    Var /GLOBAL PSEXEC_PATH
 
-RequestExecutionLevel admin
+    ; Assign values to variables
+    StrCpy $REMOTE_HOST "\\hostname"
+    StrCpy $SERVICE_NAME "ServiceName"
+    StrCpy $PSEXEC_PATH "C:\Path\To\PsExec.exe"
 
-Var REMOTE_COMPUTER
+    ; Execute the PsExec command to stop the service
+    nsExec::ExecToLog '"$PSEXEC_PATH" $REMOTE_HOST -u yourUsername -p yourPassword sc stop $SERVICE_NAME'
+    Pop $0
 
-Section "Stop Service on Remote Computers"
+    ; Check if the command was successful
+    StrCmp $0 "0" done
+    MessageBox MB_OK|MB_ICONEXCLAMATION "Failed to stop the service on $REMOTE_HOST"
+    Abort
 
-  ; Define the remote computers
-  StrCpy $REMOTE_COMPUTER "Computer1"
-  Call StopServiceOnRemote
-  StrCpy $REMOTE_COMPUTER "Computer2"
-  Call StopServiceOnRemote
-  ; Add more computers as needed
-
+    done:
+    MessageBox MB_OK "Service stopped successfully on $REMOTE_HOST"
 SectionEnd
-
-Function StopServiceOnRemote
-
-  ; Define the command to stop the service on the remote machine
-  StrCpy $0 "psexec \\\\$REMOTE_COMPUTER -u admin_user -p admin_password net stop \"ATI Logging ETAS Usage Service\""
-
-  ; Run the stop service command using PsExec
-  DetailPrint "Executing: $0"
-  nsExec::ExecToStack $0
-
-  ; Check execution result and log output
-  Pop $1
-  StrCmp $1 0 Success
-  DetailPrint "Command failed with error code $1"
-  ; Log the output from the stack
-  ${Do}
-    Pop $2
-    StrCmp $2 "" DoneOutput
-    DetailPrint $2
-  ${Loop}
-DoneOutput:
-
-  MessageBox MB_OK|MB_ICONERROR "Failed to stop service on $REMOTE_COMPUTER"
-  Quit
-
-Success:
-  MessageBox MB_OK|MB_ICONINFORMATION "Service stopped successfully on $REMOTE_COMPUTER"
-
-FunctionEnd
-
