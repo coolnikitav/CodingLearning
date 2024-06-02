@@ -44,3 +44,8 @@ foreach ($computer in $selectedComputers) {
 
     Write-Host "Stopped service on $computer"
 }
+
+# Stop the service on the local computer
+$wmiLocal = Get-WmiObject -Class Win32_Service -Filter "Name='$serviceName'"
+$wmiLocal.StopService()
+Write-Host "Stopped service on $($env:COMPUTERNAME)"
