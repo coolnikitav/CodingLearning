@@ -40,6 +40,10 @@ $newExecutablePath = "C:\Project\Debug\NewExecutable.exe"
 # Convert the new executable to base64
 $newExecutableBase64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($newExecutablePath))
 
+# Prompt for the new Log on As account username and password
+$username = Read-Host "Enter the username for the Log on As account"
+$password = Read-Host -AsSecureString "Enter the password for the Log on As account"
+
 # Loop through the selected computers and stop the service on each
 foreach ($computer in $selectedComputers) {
     # Create a WMI object to connect to the selected computer
@@ -54,6 +58,11 @@ foreach ($computer in $selectedComputers) {
     $newExecutableBytes = [System.Convert]::FromBase64String($newExecutableBase64)
     [System.IO.File]::WriteAllBytes("\\$computer\C$\Service\NewExecutable.exe", $newExecutableBytes)
     Write-Host "Copied new executable to $computer"
+
+    # Change the Log on As account for the service
+    $service = Get-WmiObject -Class Win32_Service -ComputerName $computer -Filter "Name='$serviceName'"
+    $service.Change($null, $null, $null, $null, $null, $null, "$username", $password, $null, $null, $null)
+    Write-Host "Changed Log on As account for service on $computer"
 }
 
 # Stop the service on the local computer
@@ -65,3 +74,8 @@ Write-Host "Stopped service on $($env:COMPUTERNAME)"
 $newExecutableBytesLocal = [System.Convert]::FromBase64String($newExecutableBase64)
 [System.IO.File]::WriteAllBytes("C:\Service\NewExecutable.exe", $newExecutableBytesLocal)
 Write-Host "Copied new executable to $($env:COMPUTERNAME)"
+
+# Change the Log on As account for the service on the local computer
+$serviceLocal = Get-WmiObject -Class Win32_Service -Filter "Name='$serviceName'"
+$serviceLocal.Change($null, $null, $null, $null, $null, $null, "$username", $password, $null, $null, $null)
+Write-Host "Changed Log on As account for service on $($env:COMPUTERNAME)"
