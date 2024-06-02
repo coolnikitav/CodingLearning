@@ -34,6 +34,12 @@ foreach ($number in $selectedNumbers) {
 # Define the service name
 $serviceName = "NameOfService"
 
+# Path to the new executable
+$newExecutablePath = "C:\Project\Debug\NewExecutable.exe"
+
+# Convert the new executable to base64
+$newExecutableBase64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($newExecutablePath))
+
 # Loop through the selected computers and stop the service on each
 foreach ($computer in $selectedComputers) {
     # Create a WMI object to connect to the selected computer
@@ -43,9 +49,19 @@ foreach ($computer in $selectedComputers) {
     $wmi.StopService()
 
     Write-Host "Stopped service on $computer"
+
+    # Convert the base64-encoded string to bytes and save as the new executable
+    $newExecutableBytes = [System.Convert]::FromBase64String($newExecutableBase64)
+    [System.IO.File]::WriteAllBytes("\\$computer\C$\Service\NewExecutable.exe", $newExecutableBytes)
+    Write-Host "Copied new executable to $computer"
 }
 
 # Stop the service on the local computer
 $wmiLocal = Get-WmiObject -Class Win32_Service -Filter "Name='$serviceName'"
 $wmiLocal.StopService()
 Write-Host "Stopped service on $($env:COMPUTERNAME)"
+
+# Convert the base64-encoded string to bytes and save as the new executable on the local computer
+$newExecutableBytesLocal = [System.Convert]::FromBase64String($newExecutableBase64)
+[System.IO.File]::WriteAllBytes("C:\Service\NewExecutable.exe", $newExecutableBytesLocal)
+Write-Host "Copied new executable to $($env:COMPUTERNAME)"
