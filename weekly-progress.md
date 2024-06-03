@@ -1,3 +1,7 @@
+## Week of June 3
+- Monday:
+  - Project: My verification helped me find that I implemented second register identification incorrectly.
+
 ## Week of May 27
 - Thursday:
   - LC3: Couldn't figure out how to use a sequence library, so had to move on.
