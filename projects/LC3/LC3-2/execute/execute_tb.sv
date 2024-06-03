@@ -537,7 +537,7 @@ class monitor extends uvm_monitor;
     endfunction    
     
     task print_outputs(string instr);
-        `uvm_info("MON", $sformatf("%0s: aluout: %04h | W_Control_out: %0h | Mem_Control_out: %0b | M_Data: %04h | dr: %01h | sr1: %01h | sr2: %01h | pcout: %04h | NZP: %03b | IR_Exec: %016b", 
+        `uvm_info("MON", $sformatf("MODE: %0s: aluout: %04h | W_Control_out: %0h | Mem_Control_out: %0b | M_Data: %04h | dr: %01h | sr1: %01h | sr2: %01h | pcout: %04h | NZP: %03b | IR_Exec: %016b", 
                                          instr,
                                          tr.aluout,
                                          tr.W_Control_out,
