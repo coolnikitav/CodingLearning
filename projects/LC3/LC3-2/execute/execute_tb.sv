@@ -615,24 +615,43 @@ class scoreboard extends uvm_scoreboard;
         recv = new("recv", this);
     endfunction        
     
+    reg [15:0] prev_aluout;
+    
     function logic [15:0] golden_aluout (input op_t       op,
                                          input bit [5:0]  E_Control, 
                                          input bit [15:0] VSR1, 
                                          input bit [15:0] VSR2, 
+                                         input bit [15:0] imm5,
                                          input bit [15:0] aluout, 
                                          input bit [15:0] Mem_Bypass_val);
         case (op)
             no_dependencies_op: begin
                 case (E_Control[5:4])
-                    2'h0: return VSR1 + VSR2;
-                    2'h1: return VSR1 & VSR2;
+                    2'h0: if (E_Control[0]) begin
+                        return VSR1 + VSR2;
+                    end else begin
+                        return VSR1 + imm5;
+                    end
+                    2'h1: if (E_Control[0]) begin
+                        return VSR1 & VSR2;
+                    end else begin
+                        return VSR1 & imm5;
+                    end
                     2'h2: return ~VSR1;
                 endcase
             end
             bypass_alu1_op: begin
                 case (E_Control[5:4])
-                    2'h0: return aluout + VSR2;
-                    2'h1: return aluout & VSR2;
+                    2'h0: if (E_Control[0]) begin
+                        return aluout + VSR2;
+                    end else begin
+                        return aluout + imm5;
+                    end
+                    2'h1: if (E_Control[0]) begin
+                        return aluout & VSR2;
+                    end else begin
+                        return aluout & imm5;
+                    end
                     2'h2: return ~aluout;
                 endcase
             end
@@ -645,8 +664,16 @@ class scoreboard extends uvm_scoreboard;
             end
             bypass_mem1_op: begin
                 case (E_Control[5:4])
-                    2'h0: return Mem_Bypass_val + VSR2;
-                    2'h1: return Mem_Bypass_val & VSR2;
+                    2'h0: if (E_Control[0]) begin
+                        return Mem_Bypass_val + VSR2;
+                    end else begin
+                        return Mem_Bypass_val + imm5;
+                    end
+                    2'h1: if (E_Control[0]) begin
+                        return Mem_Bypass_val & VSR2;
+                    end else begin
+                        return Mem_Bypass_val & imm5;
+                    end
                     2'h2: return ~Mem_Bypass_val;
                 endcase
             end
@@ -667,27 +694,26 @@ class scoreboard extends uvm_scoreboard;
         bit [15:0] pc1, pc2;
         
         case (E_Control[3:2])
-            2'h0: pc1 = { {11{IR[4]}},  IR[4:0]  };
-            2'h1: pc1 = { {10{IR[5]}},  IR[5:0]  };
-            2'h2: pc1 = {  {7{IR[8]}},  IR[8:0]  };
-            2'h3: pc1 = {  {5{IR[10]}}, IR[10:0] };
+            2'h0: pc1 = {  {5{IR[10]}}, IR[10:0] };
+            2'h1: pc1 = {  {7{IR[8]}},  IR[8:0]  };
+            2'h2: pc1 = { {10{IR[5]}},  IR[5:0]  };
+            2'h3: pc1 = 0;
         endcase  
         
         case (E_Control[1])
             1'h0: pc2 = VSR1;
             1'h1: pc2 = npc;
         endcase            
-        
         return pc1 + pc2;                      
     endfunction                                        
     
     virtual function void write(transaction tr);
         case(tr.op)
             no_dependencies_op: begin
-                if (tr.aluout          == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, tr.aluout, tr.Mem_Bypass_val) &&
+                if (tr.aluout          == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, {{11{tr.IR[4]}}, tr.IR[4:0]}, prev_aluout, tr.Mem_Bypass_val) &&
                     tr.W_Control_out   == tr.W_Control_in &&
                     tr.Mem_Control_out == tr.Mem_Control_in &&
-                    tr.M_Data          == (tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? tr.VSR1 : 16'h0 &&
+                    tr.M_Data          == ((tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? tr.VSR1 : 16'h0) &&
                     tr.dr              == tr.IR[11:9] &&
                     tr.sr1             == tr.IR[8:6] &&
                     tr.sr2             == tr.IR[2:0] &&
@@ -700,10 +726,10 @@ class scoreboard extends uvm_scoreboard;
                 end
             end
             bypass_alu1_op: begin
-                if (tr.aluout          == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, tr.aluout, tr.Mem_Bypass_val) &&
+                if (tr.aluout          == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, {{11{tr.IR[4]}}, tr.IR[4:0]}, prev_aluout, tr.Mem_Bypass_val) &&
                     tr.W_Control_out   == tr.W_Control_in &&
                     tr.Mem_Control_out == tr.Mem_Control_in &&
-                    tr.M_Data          == (tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? tr.aluout : 16'h0 &&
+                    tr.M_Data          == ((tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? prev_aluout : 16'h0) &&
                     tr.dr              == tr.IR[11:9] &&
                     tr.sr1             == tr.IR[8:6] &&
                     tr.sr2             == tr.IR[2:0] &&
@@ -716,10 +742,10 @@ class scoreboard extends uvm_scoreboard;
                 end
             end
             bypass_alu2_op: begin
-                if (tr.aluout          == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, tr.aluout, tr.Mem_Bypass_val) &&
+                if (tr.aluout          == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, {{11{tr.IR[4]}}, tr.IR[4:0]}, prev_aluout, tr.Mem_Bypass_val) &&
                     tr.W_Control_out   == tr.W_Control_in &&
                     tr.Mem_Control_out == tr.Mem_Control_in &&
-                    tr.M_Data          == (tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? tr.VSR1 : 16'h0 &&
+                    tr.M_Data          == ((tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? tr.VSR1 : 16'h0) &&
                     tr.dr              == tr.IR[11:9] &&
                     tr.sr1             == tr.IR[8:6] &&
                     tr.sr2             == tr.IR[2:0] &&
@@ -732,53 +758,26 @@ class scoreboard extends uvm_scoreboard;
                 end
             end                
             bypass_mem1_op: begin
-            if (tr.aluout == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, tr.aluout, tr.Mem_Bypass_val)) begin
-                if (tr.W_Control_out == tr.W_Control_in) begin
-                    if (tr.Mem_Control_out == tr.Mem_Control_in) begin
-                        if (tr.M_Data == (tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? tr.Mem_Bypass_val : 16'h0) begin
-                            if (tr.dr == tr.IR[11:9]) begin
-                                if (tr.sr1 == tr.IR[8:6]) begin
-                                    if (tr.sr2 == tr.IR[2:0]) begin
-                                        if (tr.pcout == golden_pcout(tr.E_Control_in, tr.IR, tr.VSR1, tr.npc_in)) begin
-                                            if (tr.NZP == (tr.IR[15:12] == 4'b0000 ? tr.IR[11:9] : 3'h0)) begin
-                                                if (tr.IR_Exec == tr.IR) begin
-                                                    `uvm_info("SCO", "DATA MATCH", UVM_NONE)
-                                                end else begin
-                                                    `uvm_error("SCO", "IR Execution Mismatch")
-                                                end
-                                            end else begin
-                                                `uvm_error("SCO", "NZP Mismatch")
-                                            end
-                                        end else begin
-                                            `uvm_error("SCO", "PCOUT Mismatch")
-                                        end
-                                    end else begin
-                                        `uvm_error("SCO", "SR2 Mismatch")
-                                    end
-                                end else begin
-                                    `uvm_error("SCO", "SR1 Mismatch")
-                                end
-                            end else begin
-                                `uvm_error("SCO", "DR Mismatch")
-                            end
-                        end else begin
-                            `uvm_error("SCO", "Mem Bypass Mismatch")
-                        end
-                    end else begin
-                        `uvm_error("SCO", "Mem Control Mismatch")
-                    end
-                end else begin
-                    `uvm_error("SCO", "W Control Mismatch")
-                end
-            end else begin
-                `uvm_error("SCO", $sformatf("ALU Output Mismatch, golden: %04h", golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, tr.aluout, tr.Mem_Bypass_val)));
-            end
-            end
-            bypass_mem2_op: begin
-                if (tr.aluout          == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, tr.aluout, tr.Mem_Bypass_val) &&
+                if (tr.aluout          == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, {{11{tr.IR[4]}}, tr.IR[4:0]}, prev_aluout, tr.Mem_Bypass_val) &&
                     tr.W_Control_out   == tr.W_Control_in &&
                     tr.Mem_Control_out == tr.Mem_Control_in &&
-                    tr.M_Data          == (tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? tr.VSR1 : 16'h0 &&
+                    tr.M_Data          == ((tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? tr.Mem_Bypass_val : 16'h0) &&
+                    tr.dr              == tr.IR[11:9] &&
+                    tr.sr1             == tr.IR[8:6] &&
+                    tr.sr2             == tr.IR[2:0] &&
+                    tr.pcout           == golden_pcout(tr.E_Control_in, tr.IR, tr.VSR1, tr.npc_in) &&
+                    tr.NZP             == (tr.IR[15:12] == 4'b0000 ? tr.IR[11:9] : 3'h0) &&
+                    tr.IR_Exec         == tr.IR) begin
+                    `uvm_info("SCO", "DATA MATCH", UVM_NONE);                                   
+                end else begin
+                    `uvm_error("SCO", "DATA MISMATCH");
+                end
+            end
+            bypass_mem2_op: begin
+                if (tr.aluout          == golden_aluout(tr.op, tr.E_Control_in, tr.VSR1, tr.VSR2, {{11{tr.IR[4]}}, tr.IR[4:0]}, prev_aluout, tr.Mem_Bypass_val) &&
+                    tr.W_Control_out   == tr.W_Control_in &&
+                    tr.Mem_Control_out == tr.Mem_Control_in &&
+                    tr.M_Data          == ((tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011 || tr.IR[15:12] == 4'b0011) ? tr.VSR1 : 16'h0) &&
                     tr.dr              == tr.IR[11:9] &&
                     tr.sr1             == tr.IR[8:6] &&
                     tr.sr2             == tr.IR[2:0] &&
@@ -809,6 +808,7 @@ class scoreboard extends uvm_scoreboard;
             end
         endcase
         $display("---------------------------------------------");
+        prev_aluout = tr.aluout;
     endfunction    
 endclass
 
@@ -895,7 +895,7 @@ class test extends uvm_test;
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
         r.start(e.a.seqr);  // reset dut to start
-        for (int i = 0; i < 10; i++) begin
+        for (int i = 0; i < 100; i++) begin
             case($urandom_range(6))
                 4'h0: n_d.start(e.a.seqr);
                 4'h1: b_a1.start(e.a.seqr);
