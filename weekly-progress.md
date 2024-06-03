@@ -1,6 +1,6 @@
 ## Week of June 3
 - Monday:
-  - Project: My verification helped me find that I implemented second register identification incorrectly.
+  - Project: My verification helped me find that I implemented second register identification incorrectly, found that I implemented pcout1 incorrectly (when pcselect1 is 3, pcout1 should be 0, not imm5)
 
 ## Week of May 27
 - Thursday:
