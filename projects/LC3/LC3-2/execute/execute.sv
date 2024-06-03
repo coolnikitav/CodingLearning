@@ -57,7 +57,7 @@ module execute(
             2'h0: pcout1 = offset11;
             2'h1: pcout1 = offset9;
             2'h2: pcout1 = offset6;
-            2'h3: pcout1 = imm5;
+            2'h3: pcout1 = 0;
         endcase
     end
     
