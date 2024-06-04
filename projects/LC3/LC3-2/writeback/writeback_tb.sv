@@ -4,7 +4,7 @@ import uvm_pkg::*;
 
 ///////////////////////////////////////////////
 
-typedef enum bit  { 
+typedef enum bit [2:0]{ 
     aluout_op,     
     memout_op,
     pcout_op,
@@ -129,8 +129,10 @@ class no_update extends uvm_sequence#(transaction);
         tr = transaction::type_id::create("tr");
         start_item(tr);
         assert(tr.randomize);
-        tr.op = no_update;
-        `uvm_info("SEQ", "MODE: WRITEBACK NOT ENABLED", UVM_NONE);
+        tr.op = no_update_op;
+        `uvm_info("SEQ", $sformatf("MODE: WRITEBACK NOT ENABLED: sr1: %01h | sr2: %01h", 
+                                                                 tr.sr1,
+                                                                 tr.sr2), UVM_NONE);
         finish_item(tr);
     endtask
 endclass
@@ -150,7 +152,7 @@ class reset extends uvm_sequence#(transaction);
         tr = transaction::type_id::create("tr");
         start_item(tr);
         assert(tr.randomize);
-        tr.op = reset;
+        tr.op = reset_op;
         `uvm_info("SEQ", "MODE: RESET", UVM_NONE);
         finish_item(tr);
     endtask
@@ -223,7 +225,7 @@ class driver extends uvm_driver#(transaction);
         vif.aluout           <= tr.aluout;        
         vif.memout           <= tr.memout;
         vif.pcout            <= tr.pcout;
-        vif.W_Control        <= tr.W_Control;
+        vif.W_Control        <= 1'b0;
         vif.dr               <= tr.dr;
         vif.sr1              <= tr.sr1;
         vif.sr2              <= tr.sr2;
@@ -237,7 +239,7 @@ class driver extends uvm_driver#(transaction);
         vif.aluout           <= tr.aluout;        
         vif.memout           <= tr.memout;
         vif.pcout            <= tr.pcout;
-        vif.W_Control        <= tr.W_Control;
+        vif.W_Control        <= 1'b0;
         vif.dr               <= tr.dr;
         vif.sr1              <= tr.sr1;
         vif.sr2              <= tr.sr2;
@@ -281,43 +283,63 @@ class monitor extends uvm_monitor;
             `uvm_error("MON", "Unable to access interface");
     endfunction    
     
-    task print_outputs(string instr);
-        `uvm_info("MON", $sformatf("MODE: %0s: VSR1: %04h | VSR2: %04h | psr: %03b",
-                                          instr,
-                                          tr.VSR1,
-                                          tr.VSR2,
-                                          tr.psr), UVM_NONE);
+    task reset_golden_reg_file();
+        for (int i = 0; i < 8; i++) begin
+                tr.golden_reg_file[i] = 16'h0;
+        end
     endtask
     
     virtual task run_phase(uvm_phase phase);
-        forever begin
-            // VSR1 and VSR2 are asynchronously created as a result of RegFile[sr1] and RegFile[sr2]
+        forever begin  
+            @(posedge vif.clk); #0.001;
             tr.VSR1 = vif.VSR1;
             tr.VSR2 = vif.VSR2;
+            tr.enable_writeback = vif.enable_writeback;
+            tr.aluout = vif.aluout;
+            tr.memout = vif.memout;
+            tr.pcout = vif.pcout;
+            tr.sr1 = vif.sr1;
+            tr.sr2 = vif.sr2;
+            tr.dr = vif.dr;
             if (tr.enable_writeback) begin
-                case(tr.W_Control_in)
+                tr.W_Control = vif.W_Control;
+                case(tr.W_Control)
                     2'h0: tr.golden_reg_file[tr.dr] = tr.aluout;
                     2'h1: tr.golden_reg_file[tr.dr] = tr.memout;
                     2'h2: tr.golden_reg_file[tr.dr] = tr.pcout;
                 endcase
-            end             
-            @(posedge vif.clk); #0.001;
+            end         
             tr.psr  = vif.psr;
             if (vif.rst) begin
                 tr.op = reset_op;
-                print_outputs("RESET");
-            end else if (~vif.enable_execute) begin
+                reset_golden_reg_file();
+                `uvm_info("MON", $sformatf("MODE: RESET: VSR1: %04h | VSR2: %04h | psr: %03b",
+                                                          tr.VSR1,
+                                                          tr.VSR2,
+                                                          tr.psr), UVM_NONE);
+            end else if (~vif.enable_writeback) begin
                 tr.op = no_update_op;
-                print_outputs("WRITEBACK NOT ENABLED");
+                `uvm_info("MON", $sformatf("MODE: WRITEBACK NOT ENABLED: VSR1: %04h | VSR2: %04h",
+                                                          tr.VSR1,
+                                                          tr.VSR2), UVM_NONE);
             end else if (vif.W_Control == 2'h0) begin
                 tr.op = aluout_op;
-                print_outputs("ALUOUT");
+                `uvm_info("MON", $sformatf("MODE: ALUOUT: VSR1: %04h | VSR2: %04h | psr: %03b",
+                                                          tr.VSR1,
+                                                          tr.VSR2,
+                                                          tr.psr), UVM_NONE);
             end else if (vif.W_Control == 2'h1) begin
                 tr.op = memout_op;
-                print_outputs("MEMOUT");
+                `uvm_info("MON", $sformatf("MODE: MEMOUT: VSR1: %04h | VSR2: %04h | psr: %03b",
+                                                          tr.VSR1,
+                                                          tr.VSR2,
+                                                          tr.psr), UVM_NONE);
             end else if (vif.W_Control == 2'h2) begin
                 tr.op = pcout_op;
-                print_outputs("PCOUT");
+                `uvm_info("MON", $sformatf("MODE: PCOUT: VSR1: %04h | VSR2: %04h | psr: %03b",
+                                                          tr.VSR1,
+                                                          tr.VSR2,
+                                                          tr.psr), UVM_NONE);
             end
             send.write(tr);
         end
@@ -340,23 +362,29 @@ class scoreboard extends uvm_scoreboard;
         recv = new("recv", this);
     endfunction        
     
-    function golden_psr();
-        if (tr.golden_reg_file[tr.dr]) begin            // positive
-            return 3'b001;
-        end else if (!tr.golden_reg_file[tr.dr]) begin  // zero
+    function logic [2:0] golden_psr(input bit [15:0] DR_in);
+        if (!DR_in) begin              // zero
             return 3'b010;
-        end else begin                                  // negative
+        end else if (DR_in[15]) begin  // negative
             return 3'b100;
+        end else begin                 // positive
+            return 3'b001; 
         end
     endfunction
     
-    virtual function void write(transaction tr);
-        if (tr.VSR1 == tr.golden_reg_file[tr.sr1] &&
-            tr.VSR2 == tr.golden_reg_file[tr.sr2] &&
-            tr.psr  == golden_psr) begin
-            `uvm_info("SCO", "DATA MATCH", UVM_NONE);
+    virtual function void write(transaction tr);     
+        if (tr.VSR1 == tr.golden_reg_file[tr.sr1]) begin
+            if (tr.VSR2 == tr.golden_reg_file[tr.sr2]) begin
+                if (tr.psr  == (tr.op == no_update_op ? tr.psr : (tr.op == reset_op ? 3'b000 : golden_psr(tr.golden_reg_file[tr.dr])))) begin
+                    `uvm_info("SCO", "DATA MATCH", UVM_NONE);
+                end else begin
+                    `uvm_error("SCO", "PSR MISMATCH");
+                end
+            end else begin
+                `uvm_error("SCO", "VSR2 MISMATCH");
+            end
         end else begin
-            `uvm_error("SCO", "DATA MISMATCH");
+            `uvm_error("SCO", "VSR1 MISMATCH");
         end
         $display("---------------------------------------------");
     endfunction    
@@ -441,7 +469,7 @@ class test extends uvm_test;
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
         r.start(e.a.seqr);  // reset dut to start
-        for (int i = 0; i < 10; i++) begin
+        for (int i = 0; i < 100; i++) begin
             case($urandom_range(4))
                 4'h0: a.start(e.a.seqr);
                 4'h1: m.start(e.a.seqr);
