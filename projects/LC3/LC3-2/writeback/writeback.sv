@@ -48,12 +48,12 @@ module writeback(
         if (rst) begin
             psr_reg <= 3'b0;
         end else begin
-            if (DR_in) begin            // positive
-                psr_reg <= 3'b001;
-            end else if (!DR_in) begin  // zero
+            if (!DR_in) begin              // zero
                 psr_reg <= 3'b010;
-            end else begin              // negative
+            end else if (DR_in[15]) begin  // negative
                 psr_reg <= 3'b100;
+            end else begin                 // positive
+                psr_reg <= 3'b001; 
             end
         end
     end
