@@ -74,7 +74,7 @@ interface memaccess_if;
     logic [15:0] M_Addr;  
     logic [15:0] DMem_dout;
     logic [15:0] DMem_addr;
-    logic [15:0] DMem_rd;
+    logic        DMem_rd;
     logic [15:0] DMem_din;
     logic [15:0] memout; 
 endinterface
