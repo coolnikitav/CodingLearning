@@ -52,9 +52,15 @@ $selectedComputers = @()
 
 # Function to close the window and return the selected computers
 $okButton.Add_Click({
-    $computerListBox.SelectedItems | ForEach-Object {
-        $selectedComputers += $_.Content
-    }
+	Write-Host "Total items in the ListBox: $($computerListBox.Items.Count)"
+	Write-Host "Selected items in the ListBox: $($computerListBox.SelectedItems.Count)"
+    foreach ($item in $computerListBox.Items) {
+		if ($item.IsSelected) {
+			Write-Host "hostname: $($item.Content)"
+			$selectedComputers += $item.Content
+			Write-Host "Selected computers: $($selectedComputers -join ', ')"
+		}		
+	}
     $window.DialogResult = $true
     $window.Close()
 })
