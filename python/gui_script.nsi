@@ -227,3 +227,13 @@ Clear-RegistryValue -computerName $env:COMPUTERNAME -registryPath $registryPath 
 # Start the service
 $wmiLocal.StartService()
 Write-Host "Started service on $($env:COMPUTERNAME)"
+
+Total items in the ListBox: 28
+Selected items in the ListBox: 2
+hostname: USCEDMXL9414N6G
+Selected computers: USCEDMXL9414N6G
+hostname: USCEDMXL9414N6J
+Selected computers: USCEDMXL9414N6GUSCEDMXL9414N6J
+Selected computers:
+Dialog result: True
+No computers selected. Exiting...
