@@ -32,7 +32,7 @@ class transaction extends uvm_sequence_item;
     rand logic [15:0] M_Addr;  
     rand logic [15:0] DMem_dout;
          logic [15:0] DMem_addr;
-         logic [15:0] DMem_rd;
+         logic        DMem_rd;
          logic [15:0] DMem_din;
          logic [15:0] memout; 
     
@@ -181,7 +181,7 @@ class init_state extends uvm_sequence#(transaction);
         tr = transaction::type_id::create("tr");
         start_item(tr);
         assert(tr.randomize);
-        tr.op = init_mem_op;
+        tr.op = init_state_op;
         tr.mem_state = INIT_STATE;
         tr.M_Control = 1'b0;
         print_inputs("INIT_STATE", tr);
@@ -194,8 +194,10 @@ endclass
 class driver extends uvm_driver#(transaction);
     `uvm_component_utils(driver)
     
-    virtual fetch_if vif;
+    virtual memaccess_if vif;
     transaction tr;
+    
+    event drvnext;
     
     function new(input string path = "driver", uvm_component parent = null);
         super.new(path, parent);
@@ -204,7 +206,7 @@ class driver extends uvm_driver#(transaction);
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         tr = transaction::type_id::create("tr");
-        if(!uvm_config_db#(virtual fetch_if)::get(this,"","vif",vif))
+        if(!uvm_config_db#(virtual memaccess_if)::get(this,"","vif",vif))
             `uvm_error("DRV","Unable to access interface");
     endfunction
     
@@ -216,7 +218,8 @@ class driver extends uvm_driver#(transaction);
             vif.M_Data    = tr.M_Data;
             vif.M_Addr    = tr.M_Addr;        
             vif.DMem_dout = tr.DMem_dout;
-            `uvm_info("DRV", $sformatf("MODE: %0s", tr.op), UVM_NONE);
+            -> drvnext;
+            `uvm_info("DRV", $sformatf("MODE: %0s", tr.op.name), UVM_NONE);
             seq_item_port.item_done();
         end
     endtask
@@ -230,6 +233,8 @@ class monitor extends uvm_monitor;
     uvm_analysis_port#(transaction) send;
     transaction tr;
     virtual memaccess_if vif;
+    
+    event drvnext;
     
     function new(input string inst = "monitor", uvm_component parent = null);
         super.new(inst, parent);
@@ -245,6 +250,10 @@ class monitor extends uvm_monitor;
     
     virtual task run_phase(uvm_phase phase);
         forever begin
+            @(drvnext); #0;
+            tr.M_Data    = vif.M_Data;
+            tr.M_Addr    = vif.M_Addr;  
+            tr.DMem_dout = vif.DMem_dout;
             tr.DMem_addr = vif.DMem_addr;
             tr.DMem_rd   = vif.DMem_rd;
             tr.DMem_din  = vif.DMem_din;
@@ -256,7 +265,7 @@ class monitor extends uvm_monitor;
                 INIT_STATE:     tr.op = init_state_op;
             endcase    
             `uvm_info("MON", $sformatf("MODE: %0s: DMem_addr: %04h | DMem_rd: %01b | DMem_din: %04h | memout: %04h",
-                                              tr.op,
+                                              tr.op.name,
                                               tr.DMem_addr,
                                               tr.DMem_rd,
                                               tr.DMem_din,
@@ -282,25 +291,45 @@ class scoreboard extends uvm_scoreboard;
         recv = new("recv", this);
     endfunction        
     
+    function void compare(input transaction tr, [16:0] DMem_dout, DMem_rd, [16:0] DMem_din, [16:0] memout);
+        if (tr.DMem_addr === DMem_dout) begin
+            if (tr.DMem_rd === DMem_rd) begin
+                if (tr.DMem_din === DMem_din) begin
+                    if (tr.memout === memout) begin
+                        `uvm_info("SCO", "DATA MATCH", UVM_NONE);
+                    end else begin
+                        `uvm_error("SCO", "memout MISMATCH");
+                    end
+                end else begin
+                    `uvm_error("SCO", "DMem_din MISMATCH");                            
+                end
+            end else begin
+                `uvm_error("SCO", "DMem_rd MISMATCH");
+            end
+        end else begin
+            `uvm_error("SCO", "DMem_addr MISMATCH");
+        end
+    endfunction
+    
     virtual function void write(transaction tr);
         case (tr.op)
             read_mem_i_op: begin
-            
+                compare(tr, tr.DMem_dout, 1'b1, 16'b0, tr.DMem_dout);
             end
             read_mem_d_op: begin
-            
+                compare(tr, tr.M_Addr, 1'b1, 16'b0, tr.DMem_dout);
             end
             read_mem_indir_op: begin
-            
+                compare(tr, tr.M_Addr, 1'b1, 16'b0, tr.DMem_dout);
             end
             write_mem_i_op: begin
-            
+                compare(tr, tr.DMem_dout, 1'b0, tr.M_Data, 16'b0);
             end
             write_mem_d_op: begin
-            
+                compare(tr, tr.M_Addr, 1'b0, tr.M_Data, 16'b0);
             end
             init_state_op: begin
-            
+                compare(tr, 16'bz, 1'bz, 16'bz, 16'b0);
             end
         endcase    
         $display("---------------------------------------------");
@@ -320,10 +349,14 @@ class agent extends uvm_agent;
     uvm_sequencer#(transaction) seqr;
     monitor m;
     
+    event drvnext;
+    
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         m = monitor::type_id::create("m", this);
         d = driver::type_id::create("d", this);
+        d.drvnext = drvnext;
+        m.drvnext = drvnext;
         seqr = uvm_sequencer#(transaction)::type_id::create("seqr", this);
     endfunction
     
@@ -367,34 +400,59 @@ class test extends uvm_test;
     endfunction
     
     environment e;
-
+    read_mem_i r_m_i;
+    read_mem_d r_m_d;
+    read_mem_indir r_m_indir;
+    write_mem_i w_m_i;
+    write_mem_d w_m_d;
+    init_state i_s;
     
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        e      = environment::type_id::create("environment", this);
-   
+        e         = environment::type_id::create("environment", this);
+        r_m_i     = read_mem_i::type_id::create("r_m_i");
+        r_m_d     = read_mem_d::type_id::create("r_m_d");
+        r_m_indir = read_mem_indir::type_id::create("r_m_indir");
+        w_m_i     = write_mem_i::type_id::create("w_m_i");
+        w_m_d     = write_mem_d::type_id::create("w_m_d");
+        i_s       = init_state::type_id::create("i_s");
     endfunction
     
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
-
+        for (int i = 0; i < 100; i++) begin
+            case ($urandom_range(5))
+                4'h0: r_m_i.start(e.a.seqr);
+                4'h1: r_m_d.start(e.a.seqr);
+                4'h2: r_m_indir.start(e.a.seqr);
+                4'h3: w_m_i.start(e.a.seqr);
+                4'h4: w_m_d.start(e.a.seqr);
+                4'h5: i_s.start(e.a.seqr);
+            endcase
+        end
         phase.drop_objection(this);
     endtask
 endclass
 
 ///////////////////////////////////////////////
 
-module ;
+module memaccess_tb;
+    memaccess_if vif();
+    
+    memaccess dut(
+        .mem_state(vif.mem_state),
+        .M_Control(vif.M_Control),
+        .M_Data(vif.M_Data),
+        .M_Addr(vif.M_Addr),  
+        .DMem_dout(vif.DMem_dout),
+        .DMem_addr(vif.DMem_addr),
+        .DMem_rd(vif.DMem_rd),
+        .DMem_din(vif.DMem_din),
+        .memout(vif.memout)
+    );
 
-    
     initial begin
-        vif.clk <= 0;        
-    end
-    
-    always #5 vif.clk <= ~vif.clk;
-    
-    initial begin
-        uvm_config_db#(virtual )::set(null, "*", "vif", vif);
+        uvm_config_db#(virtual memaccess_if)::set(null, "*", "vif", vif);
         run_test("test");
     end   
 endmodule
