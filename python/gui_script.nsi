@@ -11,7 +11,7 @@ $computers = @(
 # Add the local computer to the list
 $computers += $env:COMPUTERNAME
 
-# Create a new window
+# Create the XAML for the GUI
 [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         Title="Select Computers" Height="300" Width="400">
@@ -33,20 +33,25 @@ $computers += $env:COMPUTERNAME
 </Window>
 "@
 
+# Load the XAML
 $reader = (New-Object System.Xml.XmlNodeReader $xaml)
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
 # Function to close the window and return the selected computers
 $selectedComputers = @()
-$window.OKButton.Add_Click({
-    $window.ComputerListBox.SelectedItems | ForEach-Object {
+$okButton = $window.FindName("OKButton")
+$cancelButton = $window.FindName("CancelButton")
+$computerListBox = $window.FindName("ComputerListBox")
+
+$okButton.Add_Click({
+    $computerListBox.SelectedItems | ForEach-Object {
         $selectedComputers += $_.Content
     }
     $window.Close()
 })
 
 # Function to close the window without selecting computers
-$window.CancelButton.Add_Click({
+$cancelButton.Add_Click({
     $window.Close()
 })
 
@@ -97,4 +102,60 @@ function Clear-RegistryValue {
 }
 
 # Define the registry path and value name
-$re
+$registryPath = "HKLM:\SOFTWARE\TimeoutTime"
+$valueName = "YourRegistryValueName"
+
+# Loop through the selected computers and stop the service on each
+foreach ($computer in $selectedComputers) {
+    # Create a WMI object to connect to the selected computer
+    $wmi = Get-WmiObject -Class Win32_Service -ComputerName $computer -Filter "Name='$serviceName'"
+
+    # Stop the service
+    $wmi.StopService()
+    Write-Host "Stopped service on $computer"
+
+    # Convert the base64-encoded string to bytes and save as the new executable
+    $newExecutableBytes = [System.Convert]::FromBase64String($newExecutableBase64)
+    [System.IO.File]::WriteAllBytes("\\$computer\C$\Service\NewExecutable.exe", $newExecutableBytes)
+    Write-Host "Copied new executable to $computer"
+
+    # Add the user to the Administrators group
+    Add-UserToAdministratorsGroup -computerName $computer -username $username
+
+    # Clear the registry value
+    Clear-RegistryValue -computerName $computer -registryPath $registryPath -valueName $valueName
+
+    # Change the Log on As account and set the startup type to automatic for the service
+    $service = Get-WmiObject -Class Win32_Service -ComputerName $computer -Filter "Name='$serviceName'"
+    $service.Change($null, $null, $null, $null, $null, "Automatic", "$username", $password, $null, $null, $null)
+    Write-Host "Changed Log on As account and set startup type to Automatic for service on $computer"
+
+    # Start the service
+    $wmi.StartService()
+    Write-Host "Started service on $computer"
+}
+
+# Stop the service on the local computer
+$wmiLocal = Get-WmiObject -Class Win32_Service -Filter "Name='$serviceName'"
+$wmiLocal.StopService()
+Write-Host "Stopped service on $($env:COMPUTERNAME)"
+
+# Convert the base64-encoded string to bytes and save as the new executable on the local computer
+$newExecutableBytesLocal = [System.Convert]::FromBase64String($newExecutableBase64)
+[System.IO.File]::WriteAllBytes("C:\Service\NewExecutable.exe", $newExecutableBytesLocal)
+Write-Host "Copied new executable to $($env:COMPUTERNAME)"
+
+# Add the user to the Administrators group on the local computer
+Add-UserToAdministratorsGroup -computerName $env:COMPUTERNAME -username $username
+
+# Clear the registry value on the local computer
+Clear-RegistryValue -computerName $env:COMPUTERNAME -registryPath $registryPath -valueName $valueName
+
+# Change the Log on As account and set the startup type to automatic for the service on the local computer
+$serviceLocal = Get-WmiObject -Class Win32_Service -Filter "Name='$serviceName'"
+$serviceLocal.Change($null, $null, $null, $null, $null, "Automatic", "$username", $password, $null, $null, $null)
+Write-Host "Changed Log on As account and set startup type to Automatic for service on $($env:COMPUTERNAME)"
+
+# Start the service on the local computer
+$wmiLocal.StartService()
+Write-Host "Started service on $($env:COMPUTERNAME)"
