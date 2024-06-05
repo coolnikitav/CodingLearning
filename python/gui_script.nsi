@@ -37,27 +37,34 @@ $computers += $env:COMPUTERNAME
 $reader = (New-Object System.Xml.XmlNodeReader $xaml)
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
-# Function to close the window and return the selected computers
-$selectedComputers = @()
+# Get the WPF elements
 $okButton = $window.FindName("OKButton")
 $cancelButton = $window.FindName("CancelButton")
 $computerListBox = $window.FindName("ComputerListBox")
 
+# Selected computers array
+$selectedComputers = @()
+
+# Function to close the window and return the selected computers
 $okButton.Add_Click({
     $computerListBox.SelectedItems | ForEach-Object {
         $selectedComputers += $_.Content
     }
+    $window.DialogResult = $true
     $window.Close()
 })
 
 # Function to close the window without selecting computers
 $cancelButton.Add_Click({
+    $window.DialogResult = $false
     $window.Close()
 })
 
-$window.ShowDialog() | Out-Null
+# Show the window as a dialog and capture the result
+$result = $window.ShowDialog()
 
-if ($selectedComputers.Count -eq 0) {
+# Check if any computers were selected
+if ($result -ne $true -or $selectedComputers.Count -eq 0) {
     Write-Host "No computers selected. Exiting..."
     exit
 }
