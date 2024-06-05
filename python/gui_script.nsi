@@ -42,6 +42,11 @@ $okButton = $window.FindName("OKButton")
 $cancelButton = $window.FindName("CancelButton")
 $computerListBox = $window.FindName("ComputerListBox")
 
+# Debugging: Check if the WPF elements are correctly instantiated
+if ($null -eq $okButton) { Write-Host "OKButton is null" }
+if ($null -eq $cancelButton) { Write-Host "CancelButton is null" }
+if ($null -eq $computerListBox) { Write-Host "ComputerListBox is null" }
+
 # Selected computers array
 $selectedComputers = @()
 
@@ -63,7 +68,10 @@ $cancelButton.Add_Click({
 # Show the window as a dialog and capture the result
 $result = $window.ShowDialog()
 
-# Check if any computers were selected
+# Debugging: Check if any computers were selected
+Write-Host "Selected computers: $($selectedComputers -join ', ')"
+Write-Host "Dialog result: $result"
+
 if ($result -ne $true -or $selectedComputers.Count -eq 0) {
     Write-Host "No computers selected. Exiting..."
     exit
