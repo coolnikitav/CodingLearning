@@ -18,7 +18,7 @@ module controller(
     output reg        bypass_alu_2,
     output reg        bypass_mem_1,
     output reg        bypass_mem_2,
-    output reg [2:0]  mem_state
+    output [2:0]  mem_state
     );
     typedef enum bit [3:0] {
         // ALU Operations
@@ -39,29 +39,22 @@ module controller(
         BR_op  = 4'b0000,
         JMP_op = 4'b1100
     } op_t;
-    
-    op_t alu_ops [2:0] = {ADD_op, AND_op, NOT_op); 
                
-    typedef enum bit [2:0] { 
-        IDLE      = 3'h0,
-        UPDATE_PC = 3'h1,
-        FETCH     = 3'h2,
-        DECODE    = 3'h3,
-        EXECUTE   = 3'h4,
-        MEMACCESS = 3'h5,
-        WRITEBACK = 3'h6
+    typedef enum bit [3:0] { 
+        IDLE            = 3'd0,
+        UPDATE_PC       = 3'd1,
+        FETCH           = 3'd2,
+        DECODE          = 3'd3,
+        EXECUTE_ALU     = 3'd4,
+        EXECUTE_CONTROL = 3'd5,
+        EXECUTE_MEM     = 3'd6,
+        READ_MEM_INDIR  = 3'd7,
+        READ_MEM        = 3'd8,
+        WRITE_MEM       = 3'd9,
+        WRITEBACK       = 3'd10
     } state_t;
     
     state_t current_state, next_state;
-    
-    typedef enum bit [1:0] {
-        READ_MEM       = 2'h0,
-        READ_MEM_INDIR = 2'h1,
-        WRITE_MEM      = 2'h2,
-        INIT_STATE     = 2'h3
-    } mem_state_t;
-    
-    mem_state_t current_mem_state, next_mem_state;
     
     /*
      *  State transition logic
@@ -69,20 +62,40 @@ module controller(
     always @ (*) begin
         case (current_state)
             IDLE:      next_state = FETCH;
+            UPDATE_PC: next_state = FETCH;
             FETCH:     next_state = complete_instr ? DECODE : FETCH;
-            DECODE:    next_state = EXECUTE;   
-            EXECUTE: begin
-                if (IR[15:12] inside mem_ops) begin
-                    next_state = MEMACCESS;
-                end else begin
+            DECODE: begin
+                if (IR[15:12] inside { ADD_op, AND_op, NOT_op }) begin
+                    next_state = EXECUTE_ALU;
+                end else if (IR[15:12] inside { BR_op, JMP_op }) begin
+                    next_state = EXECUTE_CONTROL;
+                end else if (IR[15:12] inside { LD_op, LDR_op, LDI_op, LEA_op, ST_op, STR_op, STI_op }) begin 
+                    next_state = EXECUTE_MEM;
+                end
+            end
+            EXECUTE_ALU:     next_state = WRITEBACK;
+            EXECUTE_CONTROL: next_state = WRITEBACK;
+            EXECUTE_MEM: begin
+                if (IR_Exec[15:12] inside { LDI_op, STI_op }) begin
+                    next_state = READ_MEM_INDIR; 
+                end else if (IR_Exec[15:12] inside { ST_op, STR_op }) begin
+                    next_state = WRITE_MEM;
+                end else if (IR_Exec[15:12] inside { LD_op, LDR_op }) begin
+                    next_state = READ_MEM;
+                end else if (IR_Exec[15:12] == LEA_op) begin
                     next_state = WRITEBACK;
                 end
             end
-            MEMACCESS: begin
-                
+            READ_MEM_INDIR: begin
+                if (IR_Exec[15:12] == LDI_op) begin
+                    next_state = complete_data ? READ_MEM : READ_MEM_INDIR;
+                end else if (IR_Exec[15:12] == STI_op) begin
+                    next_state = complete_data ? WRITE_MEM : READ_MEM_INDIR;
+                end
             end
-            WRITEBACK: next_state = FETCH;
-            default:   next_state = IDLE; 
+            READ_MEM:  next_state = complete_data ? WRITEBACK : READ_MEM;
+            WRITE_MEM: next_state = complete_data ? UPDATE_PC : WRITE_MEM;
+            WRITEBACK: next_state = UPDATE_PC;
         endcase
     end
     
@@ -97,6 +110,10 @@ module controller(
         end
     end
     
+    assign mem_state = current_state == REAM_MEM_INDIR ? 2'h1 : 
+                                        READ_MEM       ? 2'h0 :
+                                        WRITE_MEM      ? 2'h2 :
+                                                         2'h3;
     /*
      *  Output logic
      */
@@ -108,38 +125,18 @@ module controller(
                 enable_decode    <= 1'b0;
                 enable_execute   <= 1'b0;
                 enable_writeback <= 1'b0;
-                bypass_alu_1     <= 1'b0;
-                bypass_alu_2     <= 1'b0;
-                bypass_mem_1     <= 1'b0;
-                bypass_mem_2     <= 1'b0;
-                mem_state        <= 2'h3; // MEM_IDLE
-                br_taken         <= 1'b0;
             end
-            FETCH: begin
-                if (complete_instr) begin
-                    enable_fetch    <= 1'b1;
-                    enable_updatePC <= 1'b1;
-                end
-            end
-            DECODE: begin
-                enable_decode <= 1'b1;
-            end
-            EXECUTE: begin
-                enable_execute <= 1'b1;
-            end
-            MEMACCESS: begin
-                enable_execute <= 1'b0;
-                if (IMem_dout[15:12] == 4'b0110 || IMem_dout[15:12] == 4'b0111) begin          // Check for LD, LDR, LDI
-                    mem_state <= 2'b00; // MEM_READ
-                end else if (IMem_dout[15:12] == 4'b0011 || IMem_dout[15:12] == 4'b1011) begin // Check for ST, STR, STI
-                    mem_state <= 2'b10; // MEM_WRITE
-                end
-            end
-            WRITEBACK: begin
-                enable_writeback <= 1'b1;
-                mem_state <= 2'b11; // MEM_IDLE
-            end
-        endcase
+            UPDATE_PC:
+            FETCH:
+            DECODE:
+            EXECUTE_ALU:
+            EXECUTE_CONTROL = 3'd5,
+            EXECUTE_MEM     = 3'd6,
+            READ_MEM_INDIR  = 3'd7,
+            READ_MEM        = 3'd8,
+            WRITE_MEM       = 3'd9,
+            WRITEBACK       = 3'd10
+            endcase
 
         // Control signal for branch
         if (IR[15:12] == 4'b0000) begin // BR instruction
@@ -156,23 +153,23 @@ module controller(
 
         // Bypass logic
         if (IR_Exec[15:12] == 4'b0001) begin // ADD instruction
-            if ((IR_Exec[11:9] == IR[8:6]) && (IR_Exec[11:9] != 3'b000)) begin
+            if (IR_Exec[11:9] == IR[8:6]) begin
                 bypass_alu_1 <= 1'b1;
             end else begin
                 bypass_alu_1 <= 1'b0;
             end
-            if ((IR_Exec[11:9] == IR[2:0]) && (IR_Exec[11:9] != 3'b000)) begin
+            if (IR_Exec[11:9] == IR[2:0]) begin
                 bypass_alu_2 <= 1'b1;
             end else begin
                 bypass_alu_2 <= 1'b0;
             end
         end else if (IR_Exec[15:12] == 4'b0101) begin // AND instruction
-            if ((IR_Exec[11:9] == IR[8:6]) && (IR_Exec[11:9] != 3'b000)) begin
+            if (IR_Exec[11:9] == IR[8:6]) begin
                 bypass_alu_1 <= 1'b1;
             end else begin
                 bypass_alu_1 <= 1'b0;
             end
-            if ((IR_Exec[11:9] == IR[2:0]) && (IR_Exec[11:9] != 3'b000)) begin
+            if (IR_Exec[11:9] == IR[2:0]) begin
                 bypass_alu_2 <= 1'b1;
             end else begin
                 bypass_alu_2 <= 1'b0;
@@ -183,7 +180,7 @@ module controller(
         end
 
         if (IR_Exec[15:12] == 4'b0110) begin // LD instruction
-            if ((IR_Exec[11:9] == IR[8:6]) && (IR_Exec[11:9] != 3'b000)) begin
+            if (IR_Exec[11:9] == IR[8:6]) begin
                 bypass_mem_1 <= 1'b1;
             end else begin
                 bypass_mem_1 <= 1'b0;
@@ -193,7 +190,7 @@ module controller(
         end
 
         if (IR_Exec[15:12] == 4'b1001) begin // NOT instruction
-            if ((IR_Exec[11:9] == IR[8:6]) && (IR_Exec[11:9] != 3'b000)) begin
+            if (IR_Exec[11:9] == IR[8:6]) begin
                 bypass_mem_2 <= 1'b1;
             end else begin
                 bypass_mem_2 <= 1'b0;
