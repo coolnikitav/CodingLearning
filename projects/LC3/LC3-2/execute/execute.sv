@@ -138,7 +138,11 @@ module execute(
             end else begin
                 NZP         <= 3'h0; 
             end
-            dr              <= IR[11:9]; 
+            if (IR[15:12] == 4'b0001 || IR[15:12] == 4'b0101 || IR[15:12] == 4'b1001 || IR[15:12] == 4'b0010 || IR[15:12] == 4'b0110 || IR[15:12] == 4'b1010 || IR[15:12] == 4'b1110) begin
+                dr          <= IR[11:9]; 
+            end else begin
+                dr          <= 3'b0;
+            end
             IR_Exec         <= IR;           
         end else begin
             NZP             <= 3'h0;  // when enable_execute is low, NZP goes to 000 synchronously
@@ -146,7 +150,7 @@ module execute(
     end
     
     assign sr1 = IR[8:6];
-    assign sr2 = IR[2:0];
+    assign sr2 = (IR[15:12] == 4'b0001 || IR[15:12] == 4'b0101 || IR[15:12] == 4'b1001) ? IR[2:0] : ((IR[15:12] == 4'b0011 || IR[15:12] == 4'b0011 || IR[15:12] == 4'b0011) ? IR[11:9] : 3'b0;  // ALU, STORE
 endmodule
 
 ///////////////////////////////////////////////
