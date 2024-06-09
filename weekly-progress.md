@@ -1,4 +1,6 @@
 ## Week of June 3
+- Saturday:
+  - Project: corrected enable_fetch to update at the same time as enable_updatePC. Corrected mem_state logic.
 - Monday:
   - Project: My verification helped me find that I implemented second register identification incorrectly, found that I implemented pcout1 incorrectly (when pcselect1 is 3, pcout1 should be 0, not imm5)
 
