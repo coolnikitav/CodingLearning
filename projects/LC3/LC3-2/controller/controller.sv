@@ -57,8 +57,8 @@ module controller(
             enable_execute   <= complete_data;
             enable_writeback <= complete_data && (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op });
         end else begin
-            enable_updatePC  <= IMem_dout[15:12] inside { BR_op, JMP_op };
-            enable_fetch     <= enable_updatePC;
+            enable_updatePC  <= ~(IMem_dout[15:12] inside { BR_op, JMP_op });
+            enable_fetch     <= ~(IMem_dout[15:12] inside { BR_op, JMP_op });;
             enable_decode    <= complete_instr;
             enable_execute   <= enable_decode;
             enable_writeback <= enable_execute;
@@ -89,7 +89,7 @@ module controller(
             if (IR[15:12] inside { ADD_op, AND_op, NOT_op }) begin
                 if (IR_Exec[15:12] inside { ADD_op, AND_op, NOT_op }) begin
                     bypass_alu_1 <= IR[8:6] == IR_Exec[11:9];
-                    bypass_alu_2 <= IR[2:0] == IR_Exec && ~IR[5];        // only ADD, AND register op
+                    bypass_alu_2 <= IR[2:0] == IR_Exec[11:9] && ~IR[5];        // only ADD, AND register op
                 end else if (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, LEA_op }) begin
                     bypass_mem_1 <= IR[8:6] == IR_Exec[11:9];
                     bypass_mem_2 <= IR[2:0] == IR_Exec[11:9] && ~IR[5];  // only ADD, AND register op
@@ -124,7 +124,15 @@ module controller(
         if (rst) begin
             mem_state <= 2'h3;
         end else begin
-            mem_state <= (IR_Exec inside { LD_op, LDR_op }) ? 2'h0 : ((IR_Exec inside { LDI_op, STI_op }) ? 2'h1 : ((IR_Exec inside { LDI_op, STI_op }) ? 2'h2 : 2'h3));
+            if (IR_Exec[15:12] inside { LD_op, LDR_op }) begin
+                mem_state <= 2'h0;
+            end else if (IR_Exec[15:12] inside { LDI_op, STI_op }) begin
+                mem_state <= 2'h1;
+            end else if (IR_Exec[15:12] inside { ST_op, STR_op }) begin
+                mem_state <= 2'h2;
+            end else begin
+                mem_state <= 2'h3;
+            end
         end
     end 
 endmodule
