@@ -160,10 +160,10 @@ class driver extends uvm_driver#(transaction);
         vif.psr            <= 3'b010;
         @(posedge vif.clk);
         print_inputs();
-        vif.complete_instr <= 1'b1;
         vif.IMem_dout      <= 16'h5020;
         @(posedge vif.clk);
         print_inputs();
+        vif.complete_instr <= 1'b1;
         vif.IMem_dout      <= 16'h1027;
         vif.IR             <= 16'h5020;
         @(posedge vif.clk);
@@ -216,10 +216,10 @@ class driver extends uvm_driver#(transaction);
         vif.psr            <= 3'b010;
         @(posedge vif.clk);
         print_inputs();
-        vif.complete_instr <= 1'b1;
         vif.IMem_dout      <= 16'hEC04;
         @(posedge vif.clk); 
-        print_inputs();       
+        print_inputs();   
+        vif.complete_instr <= 1'b1;    
         vif.IMem_dout      <= 16'hC180;
         vif.IR             <= 16'hEC04;
         @(posedge vif.clk);
@@ -232,6 +232,9 @@ class driver extends uvm_driver#(transaction);
         vif.IR_Exec        <= 16'hC180;
         vif.psr            <= 3'b001;  // result of PC + sxt(9'h004) is positive
         @(posedge vif.clk);
+        print_inputs();
+        vif.psr            <= 3'b001;  // result of BaseR + 0 is positive
+        @(posedge vif.clk);
         print_inputs(); #0.002;
     endtask
     
@@ -243,10 +246,10 @@ class driver extends uvm_driver#(transaction);
         vif.psr            <= 3'b010;
         @(posedge vif.clk);
         print_inputs();
-        vif.complete_instr <= 1'b1;
         vif.IMem_dout      <= 16'hEC04;        
         @(posedge vif.clk);
         print_inputs();
+        vif.complete_instr <= 1'b1;
         vif.IMem_dout      <= 16'hA7FA;
         vif.IR             <= 16'hEC04;
         @(posedge vif.clk);
@@ -290,7 +293,7 @@ class driver extends uvm_driver#(transaction);
         vif.psr            <= 1'b0;
         vif.IR_Exec        <= 1'b0;
         vif.IMem_dout      <= 1'b0;
-        repeat(5) @(posedge vif.clk);
+        repeat(5) @(posedge vif.clk); 
         print_inputs(); #0.002;
     endtask
     
@@ -330,7 +333,7 @@ class monitor extends uvm_monitor;
     endfunction    
     
     virtual task run_phase(uvm_phase phase);
-        forever begin
+        forever begin  // 40 clock cycles for all the called sequences
             @(posedge vif.clk); #0.001;
             tr.enable_updatePC  = vif.enable_updatePC;
             tr.enable_fetch     = vif.enable_fetch;
@@ -343,7 +346,7 @@ class monitor extends uvm_monitor;
             tr.bypass_mem_1     = vif.bypass_mem_1;
             tr.bypass_mem_2     = vif.bypass_mem_2;
             tr.mem_state        = vif.mem_state;
-            `uvm_info("MON", $sformatf("enable_updatePC: %01b, enable_fetch: %01b, enable_decode: %01b, enable_execute: %01b, enable_writeback: %01b, br_taken: %01b, bypass_alu_1: %01b, bypass_alu_2: %01b, bypass_mem_1: %01b, bypass_mem_2: %01b, mem_state: %01b",
+            `uvm_info("MON", $sformatf("enable_updatePC: %01b, enable_fetch: %01b, enable_decode: %01b, enable_execute: %01b, enable_writeback: %01b, br_taken: %01b, bypass_alu_1: %01b, bypass_alu_2: %01b, bypass_mem_1: %01b, bypass_mem_2: %01b, mem_state: %01h",
                                         tr.enable_updatePC,
                                         tr.enable_fetch,
                                         tr.enable_decode,
@@ -366,6 +369,7 @@ class scoreboard extends uvm_scoreboard;
     `uvm_component_utils(scoreboard)
     
     uvm_analysis_imp#(transaction, scoreboard) recv;
+    int i;
     
     function new(input string inst = "scoreboard", uvm_component parent = null);
         super.new(inst, parent);
@@ -374,27 +378,93 @@ class scoreboard extends uvm_scoreboard;
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         recv = new("recv", this);
-    endfunction        
-   
-    task compare_alu_instr();
-        
-    endtask
+    endfunction  
     
-    task compare_control_instr();
-    
-    endtask
-    
-    task compare_mem_instr();
-    
-    endtask
-    
-    task compare_reset();
-    
-    endtask
-     
+    function void compare (input transaction tr, 
+                                 bit         enable_updatePC,
+                                             enable_fetch,
+                                             enable_decode,
+                                             enable_execute,
+                                             enable_writeback,
+                                             br_taken,
+                                             bypass_alu_1,
+                                             bypass_alu_2,
+                                             bypass_mem_1,
+                                             bypass_mem_2,
+                                 bit [1:0]   mem_state);
+        if (tr.enable_updatePC  == enable_updatePC &&
+            tr.enable_fetch     == enable_fetch &&
+            tr.enable_decode    == enable_decode &&
+            tr.enable_execute   == enable_execute &&
+            tr.enable_writeback == enable_writeback &&
+            tr.br_taken         == br_taken &&
+            tr.bypass_alu_1     == bypass_alu_1 &&
+            tr.bypass_alu_2     == bypass_alu_2 &&
+            tr.bypass_mem_1     == bypass_mem_1 &&
+            tr.bypass_mem_2     == bypass_mem_2 &&
+            tr.mem_state        == mem_state) begin
+            `uvm_info("SCO", "DATA MATCH", UVM_NONE);
+        end else begin
+            `uvm_error("SCO", "DATA MISMATCH");
+        end                               
+    endfunction       
+                        
     virtual function void write(transaction tr);
-        
-        //$display("---------------------------------------------");
+        if (i inside {[0:4], [16:20], [26:31]}) begin
+            compare(tr, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3); 
+        end else if (i == 5) begin
+            compare(tr, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 6) begin
+            compare(tr, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);  
+        end else if (i == 7) begin
+            compare(tr, 1'b1, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);  // 75000
+        end else if (i == 8) begin
+            compare(tr, 1'b1, 1'b1, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 9) begin
+            compare(tr, 1'b1, 1'b1, 1'b1, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 10) begin
+            compare(tr, 1'b1, 1'b1, 1'b1, 1'b1, 1'b1, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 2'h3);  // 105000
+        end else if (i == 11) begin
+            compare(tr, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 12) begin
+            compare(tr, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 13) begin
+            compare(tr, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);  // 135000
+        end else if (i == 14) begin
+            compare(tr, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 15) begin
+            compare(tr, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 21) begin
+            compare(tr, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);  // 215000
+        end else if (i == 22) begin
+            compare(tr, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 23) begin
+            compare(tr, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 24) begin
+            compare(tr, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);  // 245000
+        end else if (i == 25) begin
+            compare(tr, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);  
+        end else if (i == 26) begin
+            compare(tr, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 32) begin
+            compare(tr, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);  // 325000
+        end else if (i == 33) begin
+            compare(tr, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 34) begin
+            compare(tr, 1'b1, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end else if (i == 35) begin
+            compare(tr, 1'b1, 1'b1, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);  // 355000
+        end else if (i == 36) begin
+            compare(tr, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h1);
+        end else if (i == 37) begin
+            compare(tr, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h1);
+        end else if (i == 38) begin
+            compare(tr, 1'b1, 1'b1, 1'b1, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h1);
+        end else if (i == 39) begin
+            compare(tr, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 2'h3);
+        end
+        $display("---------------------------------------------");
+        i++;
     endfunction    
 endclass
 
