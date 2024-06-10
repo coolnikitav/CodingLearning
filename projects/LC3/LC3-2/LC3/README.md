@@ -16,10 +16,15 @@ Instruction memory:
 - 300B: A802 (R4 <- DMem[3010] = 0015): LDI
 - 300C: 5B01 (R5 <- R4 & R1): AND reg with bypass_mem_1
 - 300D: 0A04 (R5 != 0): BR to 3012
-- 3012: 5CA4 (R6 <- R2 + 4): ADD imm
-- 3013: (R7 <- DMem[LDR
+- 3012: 52A4 (R1 <- R2 + 4): ADD imm
+- 3013: 6F82 (R7 <- DMem[300A]=300B): LDR
+- 3014: EBF8 (R5 <- 300C): LEA
+- 3015: B804 (R4 -> DMem[301B]): STI 
+- 3016: 7545 (R2 -> DMem[[R5]=300C + 5]): STR
 
 Data memory:
+- 300A: 300B
 - 300E: 3010
 - 3010: 0015
+- 301A: 301B
 - 3024: 3008
