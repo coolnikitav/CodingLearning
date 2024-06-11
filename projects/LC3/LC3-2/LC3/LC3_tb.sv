@@ -12,24 +12,24 @@ typedef enum bit  {
 ///////////////////////////////////////////////
 
 typedef enum bit [3:0] {
-        // ALU Operations
-        ADD_op = 4'b0001,
-        AND_op = 4'b0101,
-        NOT_op = 4'b1001,        
-        
-        //Memory Operations
-        LD_op  = 4'b0010,
-        LDR_op = 4'b0110,
-        LDI_op = 4'b1010,
-        LEA_op = 4'b1110,
-        ST_op  = 4'b0011,
-        STR_op = 4'b0111,
-        STI_op = 4'b1011,
-        
-        // Control Operations
-        BR_op  = 4'b0000,
-        JMP_op = 4'b1100
-    } instr_t;
+    // ALU Operations
+    ADD_op = 4'b0001,
+    AND_op = 4'b0101,
+    NOT_op = 4'b1001,        
+    
+    //Memory Operations
+    LD_op  = 4'b0010,
+    LDR_op = 4'b0110,
+    LDI_op = 4'b1010,
+    LEA_op = 4'b1110,
+    ST_op  = 4'b0011,
+    STR_op = 4'b0111,
+    STI_op = 4'b1011,
+    
+    // Control Operations
+    BR_op  = 4'b0000,
+    JMP_op = 4'b1100
+} instr_t;
 
 ///////////////////////////////////////////////
 
@@ -165,37 +165,40 @@ class driver extends uvm_driver#(transaction);
     
     task print_inputs();
         `uvm_info("DRV", $sformatf("rst: %01b, complete_data: %01b, complete_instr: %01b, Instr_dout: %04h, Data_dout: %04h",
-                                    vif.rst,
-                                    vif.complete_data,
-                                    vif.complete_instr,
-                                    vif.Instr_dout,
-                                    vif.Data_dout), UVM_NONE);
+                                    LC3_vif.rst,
+                                    LC3_vif.complete_data,
+                                    LC3_vif.complete_instr,
+                                    LC3_vif.Instr_dout,
+                                    LC3_vif.Data_dout), UVM_NONE);
     endtask
     
     task instr();
-        vif.rst            <= 1'b0;
-        vif.complete_data  <= 1'b0;
-        vif.complete_instr <= 1'b0; 
-        vif.Instr_dout     <= 16'b0;
-        vif.Data_dout      <= 16'b0;    
-        @(posedge vif.clk);
-        vif.Instr_dout     <= vif.instrmem_rd ? 
+        LC3_vif.rst            <= 1'b0;
+        LC3_vif.complete_data  <= LC3_vif.Data_rd;
+        LC3_vif.complete_instr <= LC3_vif.instrmem_rd;
+        LC3_vif.Instr_dout     <= LC3_vif.instrmem_rd ? instr_mem_vif.instr_mem[LC3_vif.PC] : 16'h0;
+        LC3_vif.Data_dout      <= LC3_vif.Data_rd ? data_mem_vif.data_mem[LC3_vif.Data_addr] : 16'h0;
+        @(posedge LC3_vif.clk);
+        print_inputs(); #0.002;
     endtask
     
     task reset();
-        vif.rst            <= 1'b1;
-        vif.complete_data  <= 1'b0;
-        vif.complete_instr <= 1'b0; 
-        vif.Instr_dout     <= 16'b0;
-        vif.Data_dout      <= 16'b0;
-        repeat(5) @(posedge vif.clk);
-        print_inputs();
+        LC3_vif.rst            <= 1'b1;
+        LC3_vif.complete_data  <= 1'b0;
+        LC3_vif.complete_instr <= 1'b0; 
+        LC3_vif.Instr_dout     <= 16'b0;
+        LC3_vif.Data_dout      <= 16'b0;
+        repeat(5) @(posedge LC3_vif.clk);
+        print_inputs(); #0.002;
     endtask
     
     virtual task run_phase(uvm_phase phase);
         forever begin           
             seq_item_port.get_next_item(tr);
-            
+            case(tr.op)
+                instr_op: instr();
+                reset_op: reset();
+            endcase
             seq_item_port.item_done();
         end
     endtask
@@ -209,8 +212,6 @@ class monitor extends uvm_monitor;
     uvm_analysis_port#(transaction) send;
     
     virtual LC3_if       LC3_vif;
-    virtual instr_mem_if instr_mem_vif;
-    virtual data_mem_if  data_mem_vif;
     transaction tr;
     
     function new(input string inst = "monitor", uvm_component parent = null);
@@ -221,16 +222,29 @@ class monitor extends uvm_monitor;
         super.build_phase(phase);
         tr = transaction::type_id::create("tr");
         send = new("send", this);
-        if(!(uvm_config_db#(virtual LC3_if)::get(this,"","LC3_vif",LC3_vif) &&
-             uvm_config_db#(virtual instr_mem_if)::get(this,"","instr_mem_vif",instr_mem_vif) &&
-             uvm_config_db#(virtual data_mem_if)::get(this,"","data_mem_vif",data_mem_vif)))
+        if(!uvm_config_db#(virtual LC3_if)::get(this,"","LC3_vif",LC3_vif))
             `uvm_error("MON", "Unable to access interfaces");
     endfunction    
     
     virtual task run_phase(uvm_phase phase);
         forever begin
-            @(posedge vif.clk); #0.001;
-
+            @(posedge LC3_vif.clk); #0.001;
+            if (LC3_vif.rst) begin
+                tr.op = reset_op;
+            end else begin
+                tr.op = instr_op;
+            end
+            tr.PC          = LC3_vif.PC; 
+            tr.instrmem_rd = LC3_vif.instrmem_rd;
+            tr.Data_addr   = LC3_vif.Data_addr;
+            tr.Data_din    = LC3_vif.Data_din;
+            tr.Data_rd     = LC3_vif.Data_rd;
+            `uvm_info("MON", $sformatf("PC: %04h | isntrmem_rd: %01b | Data_addr: %04h | Data_din: %04h | Data_rd: %01b",
+                                        tr.PC,
+                                        tr.instrmem_rd,
+                                        tr.Data_addr,
+                                        tr.Data_din,
+                                        tr.Data_rd), UVM_NONE);
             send.write(tr);
         end
     endtask
@@ -243,6 +257,13 @@ class scoreboard extends uvm_scoreboard;
     
     uvm_analysis_imp#(transaction, scoreboard) recv;
     
+    virtual LC3_if       LC3_vif;
+    virtual instr_mem_if instr_mem_vif;
+    virtual data_mem_if  data_mem_vif;
+        
+    int PC = 16'h3000;
+    int stalled_cycles = 0;
+    
     function new(input string inst = "scoreboard", uvm_component parent = null);
         super.new(inst, parent);
     endfunction
@@ -250,10 +271,73 @@ class scoreboard extends uvm_scoreboard;
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         recv = new("recv", this);
+        if(!(uvm_config_db#(virtual LC3_if)::get(this,"","LC3_vif",LC3_vif) &&
+             uvm_config_db#(virtual instr_mem_if)::get(this,"","instr_mem_vif",instr_mem_vif) &&
+             uvm_config_db#(virtual data_mem_if)::get(this,"","data_mem_vif",data_mem_vif)))
+            `uvm_error("MON", "Unable to access interfaces");
     endfunction        
     
     virtual function void write(transaction tr);
-
+        /* PC compare logic
+        
+           If instr = ADD, AND, NOT,     then PC++
+           If instr = JMP, BR, LDI, STI, then PC stays the same for 2 additional cycles
+           If instr = LD, ST, LDR, STR,  then PC stays the same for 1 additional cycle
+        */
+        if (instr_mem_vif.instr_mem[PC][15:12] inside { AND_op, ADD_op, NOT_op }) begin
+            PC = PC + 1;
+            if (tr.PC != PC + 1) begin
+                `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC+1, tr.PC));
+            end            
+        end else if (instr_mem_vif.instr_mem[PC][15:12] inside { LDI_op, STI_op }) begin
+            if (stalled_cycles == 0) begin
+                PC = PC + 1;
+                if (tr.PC != PC + 1) begin
+                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                end
+                stalled_cycles = 2;
+            end else begin
+                if (tr.PC != PC) begin
+                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                end
+                stalled_cycles = stalled_cycles-1;
+            end
+        end else if (instr_mem_vif.instr_mem[PC][15:12] inside { BR_op, JMP_op }) begin
+            if (stalled_cycles == 0) begin
+                PC = PC + 1;
+                if (tr.PC != PC + 1) begin
+                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC+1, tr.PC));
+                end
+                stalled_cycles = 3;
+            end else if (stalled_cycles == 2) begin
+                if (tr.PC != PC) begin
+                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                end
+                stalled_cycles = stalled_cycles-1;
+            end else if (stalled_cycles == 1) begin
+                if (instr_mem_vif.instr_mem[PC][15:12] == BR_op) begin
+                    PC = PC + 1 + { {7{instr_mem_vif.instr_mem[PC][8]}}, instr_mem_vif.instr_mem[PC][8:0] };
+                end else if (instr_mem_vif.instr_mem[PC][15:12] == JMP_op) begin
+                    PC = LC3_tb.dut.w.RF[instr_mem_vif.instr_mem[PC][8:6]];
+                end
+                if (tr.PC != PC) begin
+                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                end
+            end               
+        end else if (instr_mem_vif.instr_mem[PC][15:12] inside { LD_op, LDR_op, ST_op, STR_op }) begin
+            if (stalled_cycles == 0) begin
+                PC = PC + 1;
+                if (tr.PC != PC + 1) begin
+                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                end
+                stalled_cycles = 1;
+            end else begin
+                if (tr.PC != PC) begin
+                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                end
+                stalled_cycles = stalled_cycles-1;
+            end
+        end
         $display("---------------------------------------------");
     endfunction    
 endclass
@@ -318,17 +402,22 @@ class test extends uvm_test;
     endfunction
     
     environment e;
-
+    instr i;
+    reset r;
     
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        e      = environment::type_id::create("environment", this);
-   
+        e = environment::type_id::create("environment", this);
+        i = instr::type_id::create("i");
+        r = reset::type_id::create("r");
     endfunction
     
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
-
+        r.start(e.a.seqr);
+        for (int n = 0; n < 30; n++) begin
+            i.start(e.a.seqr);
+        end
         phase.drop_objection(this);
     endtask
 endclass
@@ -341,24 +430,24 @@ module LC3_tb;
     data_mem_if  data_mem_vif();
     
     LC3 dut(
-        .clk(vif.clk),
-        .rst(vif.rst),
-        .complete_data(vif.complete_data),
-        .complete_instr(vif.complete_instr),
-        .Instr_dout(vif.Instr_dout),
-        .Data_dout(vif.Data_dout),
-        .PC(vif.PC),
-        .instrmem_rd(vif.instrmem_rd),
-        .Data_addr(vif.Data_addr),
-        .Data_din(vif.Data_din),
-        .Data_rd(vif.Data_rd)
+        .clk(LC3_vif.clk),
+        .rst(LC3_vif.rst),
+        .complete_data(LC3_vif.complete_data),
+        .complete_instr(LC3_vif.complete_instr),
+        .Instr_dout(LC3_vif.Instr_dout),
+        .Data_dout(LC3_vif.Data_dout),
+        .PC(LC3_vif.PC),
+        .instrmem_rd(LC3_vif.instrmem_rd),
+        .Data_addr(LC3_vif.Data_addr),
+        .Data_din(LC3_vif.Data_din),
+        .Data_rd(LC3_vif.Data_rd)
     );
     
     initial begin
-        vif.clk <= 0;        
+        LC3_vif.clk <= 0;        
     end
     
-    always #5 vif.clk <= ~vif.clk;
+    always #5 LC3_vif.clk <= ~LC3_vif.clk;
     
     initial begin
         uvm_config_db#(virtual LC3_if)::set(null, "*", "LC3_vif", LC3_vif);
