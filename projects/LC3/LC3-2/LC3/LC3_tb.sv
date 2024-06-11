@@ -318,7 +318,7 @@ class scoreboard extends uvm_scoreboard;
                 if (instr_mem_vif.instr_mem[PC][15:12] == BR_op) begin
                     PC = PC + 1 + { {7{instr_mem_vif.instr_mem[PC][8]}}, instr_mem_vif.instr_mem[PC][8:0] };
                 end else if (instr_mem_vif.instr_mem[PC][15:12] == JMP_op) begin
-                    PC = LC3_tb.dut.w.RF[instr_mem_vif.instr_mem[PC][8:6]];
+                    PC = LC3_tb.dut.w.RF.register_files[instr_mem_vif.instr_mem[PC][8:6]];
                 end
                 if (tr.PC != PC) begin
                     `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
