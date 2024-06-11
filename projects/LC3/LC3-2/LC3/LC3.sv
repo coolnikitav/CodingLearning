@@ -80,3 +80,19 @@ writeback w(
     .psr
 );
 endmodule
+
+///////////////////////////////////////////////
+
+interface LC3_if;
+    logic        clk;
+    logic        rst;
+    logic        complete_data;
+    logic        complete_instr;
+    logic [15:0] Instr_dout;
+    logic [15:0] Data_dout;
+    logic [15:0] PC;
+    logic        instrmem_rd;
+    logic        Data_addr;
+    logic        Data_din;
+    logic        Data_rd;
+endinterface
