@@ -19,7 +19,7 @@ module controller(
     output reg        bypass_mem_1,
     output reg        bypass_mem_2,
     output reg [2:0]  mem_state
-    );
+    );   
     typedef enum bit [3:0] {
         // ALU Operations
         ADD_op = 4'b0001,
@@ -50,18 +50,12 @@ module controller(
             enable_decode    <= 1'b0;
             enable_execute   <= 1'b0;
             enable_writeback <= 1'b0;
-        end else if (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op }) begin
-            enable_updatePC  <= complete_data;
-            enable_fetch     <= complete_data;
-            enable_decode    <= complete_data;
-            enable_execute   <= complete_data;
-            enable_writeback <= complete_data && (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op });
         end else begin
-            enable_updatePC  <= ~(IMem_dout[15:12] inside { BR_op, JMP_op });
-            enable_fetch     <= ~(IMem_dout[15:12] inside { BR_op, JMP_op });;
-            enable_decode    <= complete_instr;
-            enable_execute   <= enable_decode;
-            enable_writeback <= enable_execute;
+            enable_updatePC  <= ~(IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op } || IMem_dout[15:12] inside { BR_op, JMP_op });
+            enable_fetch     <= ~(IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op } || IMem_dout[15:12] inside { BR_op, JMP_op });
+            enable_decode    <= (IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op }) ? 1'b0 : enable_fetch;
+            enable_execute   <= (IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op }) ? 1'b0 : enable_decode;
+            enable_writeback <= (IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op }) ? 1'b0 : enable_execute;
         end
     end 
     

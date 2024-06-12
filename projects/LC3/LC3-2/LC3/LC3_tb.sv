@@ -167,13 +167,12 @@ class driver extends uvm_driver#(transaction);
     endtask
     
     task instr();
-        LC3_vif.rst            <= 1'b0;
-        LC3_vif.complete_data  <= LC3_vif.Data_rd;
-        LC3_vif.complete_instr <= 1'b1; //LC3_vif.instrmem_rd;
-        LC3_vif.Instr_dout     <= instr_mem_vif.instr_mem[LC3_vif.PC];
+        @(posedge LC3_vif.clk);
+        LC3_vif.complete_data  <= LC3_vif.Data_rd !== 1'bz;
+        LC3_vif.complete_instr <= 1'b1;
+        LC3_vif.Instr_dout     <= (LC3_vif.instrmem_rd === 1'b1) ? instr_mem_vif.instr_mem[LC3_vif.PC] : LC3_vif.Instr_dout;
         `uvm_info("DRV", $sformatf("PC: %04h", LC3_vif.PC), UVM_NONE); 
         LC3_vif.Data_dout      <= LC3_vif.Data_rd ? data_mem_vif.data_mem[LC3_vif.Data_addr] : 16'h0;
-        @(posedge LC3_vif.clk);
         print_inputs(); #0.002;
     endtask
     
@@ -181,11 +180,12 @@ class driver extends uvm_driver#(transaction);
         LC3_vif.rst            <= 1'b1;
         LC3_vif.complete_data  <= 1'b0;
         LC3_vif.complete_instr <= 1'b0; 
-        LC3_vif.Instr_dout     <= 16'b0;
+        LC3_vif.Instr_dout     <= 16'h5020;  // AND R0, R0, #0 is the NOP instruction in this project
         LC3_vif.Data_dout      <= 16'b0;
         @(posedge LC3_vif.clk);
         print_inputs();
-        repeat(4) @(posedge LC3_vif.clk); #0.002;
+        repeat(4) @(posedge LC3_vif.clk); #7;
+        LC3_vif.rst            <= 1'b0;
     endtask
     
     virtual task run_phase(uvm_phase phase);
