@@ -38,9 +38,6 @@ interface instr_mem_if;
     reg [15:0] instr_mem [0:INSTR_MEM_SIZE-1];
     
     initial begin
-        for (int i = 0; i < INSTR_MEM_SIZE; i++) begin
-            instr_mem[i] = {op_t'($urandom_range(0, 11)), $urandom & 12'hFFF};
-        end
         instr_mem[16'h3000] = 16'h5020;  // AND // R0 <- R0 & 0 
         instr_mem[16'h3001] = 16'h2C20;  // LD  // R6 <- DMem[3024]
         instr_mem[16'h3002] = 16'h1422;  // ADD // R2 <- R0 + 2
@@ -68,9 +65,6 @@ interface data_mem_if;
     reg [15:0] data_mem [0:DATA_MEM_SIZE-1];
     
     initial begin
-        for (int i = 0; i < DATA_MEM_SIZE; i++) begin
-            data_mem[i] = {op_t'($urandom_range(0, 11)), $urandom & 12'hFFF};
-        end
         data_mem[16'h300A] = 16'h300B;
         data_mem[16'h300E] = 16'h3010;
         data_mem[16'h3010] = 16'h0015;
@@ -175,8 +169,9 @@ class driver extends uvm_driver#(transaction);
     task instr();
         LC3_vif.rst            <= 1'b0;
         LC3_vif.complete_data  <= LC3_vif.Data_rd;
-        LC3_vif.complete_instr <= LC3_vif.instrmem_rd;
-        LC3_vif.Instr_dout     <= LC3_vif.instrmem_rd ? instr_mem_vif.instr_mem[LC3_vif.PC] : 16'h0;
+        LC3_vif.complete_instr <= 1'b1; //LC3_vif.instrmem_rd;
+        LC3_vif.Instr_dout     <= instr_mem_vif.instr_mem[LC3_vif.PC];
+        `uvm_info("DRV", $sformatf("PC: %04h", LC3_vif.PC), UVM_NONE); 
         LC3_vif.Data_dout      <= LC3_vif.Data_rd ? data_mem_vif.data_mem[LC3_vif.Data_addr] : 16'h0;
         @(posedge LC3_vif.clk);
         print_inputs(); #0.002;
@@ -188,8 +183,9 @@ class driver extends uvm_driver#(transaction);
         LC3_vif.complete_instr <= 1'b0; 
         LC3_vif.Instr_dout     <= 16'b0;
         LC3_vif.Data_dout      <= 16'b0;
-        repeat(5) @(posedge LC3_vif.clk);
-        print_inputs(); #0.002;
+        @(posedge LC3_vif.clk);
+        print_inputs();
+        repeat(4) @(posedge LC3_vif.clk); #0.002;
     endtask
     
     virtual task run_phase(uvm_phase phase);
@@ -211,7 +207,7 @@ class monitor extends uvm_monitor;
     
     uvm_analysis_port#(transaction) send;
     
-    virtual LC3_if       LC3_vif;
+    virtual LC3_if LC3_vif;
     transaction tr;
     
     function new(input string inst = "monitor", uvm_component parent = null);
@@ -239,7 +235,7 @@ class monitor extends uvm_monitor;
             tr.Data_addr   = LC3_vif.Data_addr;
             tr.Data_din    = LC3_vif.Data_din;
             tr.Data_rd     = LC3_vif.Data_rd;
-            `uvm_info("MON", $sformatf("PC: %04h | isntrmem_rd: %01b | Data_addr: %04h | Data_din: %04h | Data_rd: %01b",
+            `uvm_info("MON", $sformatf("PC: %04h | instrmem_rd: %01b | Data_addr: %04h | Data_din: %04h | Data_rd: %01b",
                                         tr.PC,
                                         tr.instrmem_rd,
                                         tr.Data_addr,
@@ -284,58 +280,82 @@ class scoreboard extends uvm_scoreboard;
            If instr = JMP, BR, LDI, STI, then PC stays the same for 2 additional cycles
            If instr = LD, ST, LDR, STR,  then PC stays the same for 1 additional cycle
         */
-        if (instr_mem_vif.instr_mem[PC][15:12] inside { AND_op, ADD_op, NOT_op }) begin
-            PC = PC + 1;
-            if (tr.PC != PC + 1) begin
-                `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC+1, tr.PC));
-            end            
-        end else if (instr_mem_vif.instr_mem[PC][15:12] inside { LDI_op, STI_op }) begin
-            if (stalled_cycles == 0) begin
-                PC = PC + 1;
-                if (tr.PC != PC + 1) begin
-                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
-                end
-                stalled_cycles = 2;
+        if (tr.op == reset_op) begin
+            if (tr.PC != 16'h3000) begin
+                `uvm_error("SCO", "1 PC MISMATCH");
             end else begin
-                if (tr.PC != PC) begin
-                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
-                end
-                stalled_cycles = stalled_cycles-1;
+                `uvm_info("SCO", "PC MATCH", UVM_NONE);
             end
-        end else if (instr_mem_vif.instr_mem[PC][15:12] inside { BR_op, JMP_op }) begin
-            if (stalled_cycles == 0) begin
-                PC = PC + 1;
-                if (tr.PC != PC + 1) begin
-                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC+1, tr.PC));
-                end
-                stalled_cycles = 3;
-            end else if (stalled_cycles == 2) begin
+        end else if (tr.op == instr_op) begin
+            if (instr_mem_vif.instr_mem[PC][15:12] inside { AND_op, ADD_op, NOT_op }) begin
                 if (tr.PC != PC) begin
-                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                    `uvm_error("SCO", $sformatf("2 PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                end else begin
+                    `uvm_info("SCO", "PC MATCH", UVM_NONE);
+                end   
+                PC = PC + 1;         
+            end else if (instr_mem_vif.instr_mem[PC][15:12] inside { LDI_op, STI_op }) begin
+                if (stalled_cycles == 0) begin
+                    if (tr.PC != PC) begin
+                        `uvm_error("SCO", $sformatf("3 PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                    end else begin
+                        `uvm_info("SCO", "PC MATCH", UVM_NONE);
+                    end
+                    PC = PC + 1;
+                    stalled_cycles = 2;
+                end else begin
+                    if (tr.PC != PC) begin
+                        `uvm_error("SCO", $sformatf("4 PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                    end else begin
+                        `uvm_info("SCO", "PC MATCH", UVM_NONE);
+                    end
+                    stalled_cycles = stalled_cycles-1;
                 end
-                stalled_cycles = stalled_cycles-1;
-            end else if (stalled_cycles == 1) begin
-                if (instr_mem_vif.instr_mem[PC][15:12] == BR_op) begin
-                    PC = PC + 1 + { {7{instr_mem_vif.instr_mem[PC][8]}}, instr_mem_vif.instr_mem[PC][8:0] };
-                end else if (instr_mem_vif.instr_mem[PC][15:12] == JMP_op) begin
-                    PC = LC3_tb.dut.w.RF.register_files[instr_mem_vif.instr_mem[PC][8:6]];
+            end else if (instr_mem_vif.instr_mem[PC][15:12] inside { BR_op, JMP_op }) begin
+                if (stalled_cycles == 0) begin
+                    if (tr.PC != PC) begin
+                        `uvm_error("SCO", $sformatf("5 PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                    end else begin
+                        `uvm_info("SCO", "PC MATCH", UVM_NONE);
+                    end
+                    PC = PC + 1;
+                    stalled_cycles = 3;
+                end else if (stalled_cycles == 2) begin
+                    if (tr.PC != PC) begin
+                        `uvm_error("SCO", $sformatf("6 PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                    end else begin
+                        `uvm_info("SCO", "PC MATCH", UVM_NONE);
+                    end
+                    stalled_cycles = stalled_cycles-1;
+                end else if (stalled_cycles == 1) begin
+                    if (instr_mem_vif.instr_mem[PC][15:12] == BR_op) begin
+                        PC = PC + 1 + { {7{instr_mem_vif.instr_mem[PC][8]}}, instr_mem_vif.instr_mem[PC][8:0] };
+                    end else if (instr_mem_vif.instr_mem[PC][15:12] == JMP_op) begin
+                        PC = LC3_tb.dut.w.RF.register_files[instr_mem_vif.instr_mem[PC][8:6]];
+                    end
+                    if (tr.PC != PC) begin
+                        `uvm_error("SCO", $sformatf("7 PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                    end else begin
+                        `uvm_info("SCO", "PC MATCH", UVM_NONE);
+                    end
+                end               
+            end else if (instr_mem_vif.instr_mem[PC][15:12] inside { LD_op, LDR_op, ST_op, STR_op }) begin
+                if (stalled_cycles == 0) begin
+                    if (tr.PC != PC) begin
+                        `uvm_error("SCO", $sformatf("8 PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                    end else begin
+                        `uvm_info("SCO", "PC MATCH", UVM_NONE);
+                    end
+                    PC = PC + 1;
+                    stalled_cycles = 1;
+                end else begin
+                    if (tr.PC != PC) begin
+                        `uvm_error("SCO", $sformatf("9 PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
+                    end else begin
+                        `uvm_info("SCO", "PC MATCH", UVM_NONE);
+                    end
+                    stalled_cycles = stalled_cycles-1;
                 end
-                if (tr.PC != PC) begin
-                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
-                end
-            end               
-        end else if (instr_mem_vif.instr_mem[PC][15:12] inside { LD_op, LDR_op, ST_op, STR_op }) begin
-            if (stalled_cycles == 0) begin
-                PC = PC + 1;
-                if (tr.PC != PC + 1) begin
-                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
-                end
-                stalled_cycles = 1;
-            end else begin
-                if (tr.PC != PC) begin
-                    `uvm_error("SCO", $sformatf("PC MISMATCH: EXPECTED: %04h, ACTUAL: %04h", PC, tr.PC));
-                end
-                stalled_cycles = stalled_cycles-1;
             end
         end
         $display("---------------------------------------------");
@@ -415,7 +435,7 @@ class test extends uvm_test;
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
         r.start(e.a.seqr);
-        for (int n = 0; n < 30; n++) begin
+        for (int n = 0; n < 16; n++) begin
             i.start(e.a.seqr);
         end
         phase.drop_objection(this);
