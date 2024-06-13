@@ -1,3 +1,7 @@
+## Week of June 10
+- Thursday:
+  - Improve the way mem_state is determined in controller. Maybe use a state machine
+
 ## Week of June 3
 - Saturday:
   - Project: corrected enable_fetch to update at the same time as enable_updatePC. Corrected mem_state logic.
