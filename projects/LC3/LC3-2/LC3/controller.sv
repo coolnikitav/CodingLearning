@@ -51,11 +51,40 @@ module controller(
             enable_execute   <= 1'b0;
             enable_writeback <= 1'b0;
         end else begin
-            enable_updatePC  <= ~(IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op } || IMem_dout[15:12] inside { BR_op, JMP_op });
-            enable_fetch     <= ~(IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op } || IMem_dout[15:12] inside { BR_op, JMP_op });
-            enable_decode    <= (IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op }) ? 1'b0 : enable_fetch;
-            enable_execute   <= (IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op }) ? 1'b0 : enable_decode;
-            enable_writeback <= (IR[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op }) ? 1'b0 : enable_execute;
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || 
+                IR[15:12] == ST_op || IR[15:12] == STR_op || IR[15:12] == STI_op) begin
+                enable_updatePC <= 1'b0;
+            end else if (IMem_dout[15:12] == BR_op || IMem_dout[15:12] == JMP_op) begin
+                enable_updatePC <= 1'b0;
+            end else if (IR_Exec[15:12] == BR_op || IR_Exec[15:12] == JMP_op) begin
+                enable_updatePC <= 1'b1;
+            end else begin
+                enable_updatePC <= 1'b1;
+            end       
+            if (IR[15:12] === LD_op || IR[15:12] === LDR_op || IR[15:12] === LDI_op || IR[15:12] === ST_op || IR[15:12] === STR_op || IR[15:12] === STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op) begin
+                enable_fetch <= 1'b0;
+            end else begin
+                enable_fetch <= 1'b1;
+            end 
+            if (IR[15:12] === LD_op || IR[15:12] === LDR_op || IR[15:12] === LDI_op || IR[15:12] === ST_op || IR[15:12] === STR_op || IR[15:12] === STI_op) begin
+                enable_decode <= 1'b0;
+            end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] === STR_op || IR_Exec[15:12] === STI_op ) begin
+                enable_decode <= 1'b1;
+            end else begin
+                enable_decode <= enable_fetch;
+            end
+            if (IR[15:12] === LD_op || IR[15:12] === LDR_op || IR[15:12] === LDI_op || IR[15:12] === ST_op || IR[15:12] === STR_op || IR[15:12] === STI_op) begin
+                enable_execute <= 1'b0;
+            end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] === STR_op || IR_Exec[15:12] === STI_op ) begin
+                enable_execute <= 1'b1;
+            end else begin
+                enable_execute <= enable_decode;
+            end
+            if (IR[15:12] === LD_op || IR[15:12] === LDR_op || IR[15:12] === LDI_op || IR[15:12] === ST_op || IR[15:12] === STR_op || IR[15:12] === STI_op || IR[15:12] === BR_op || IR[15:12] === JMP_op) begin
+                enable_writeback <= 1'b0;
+            end else begin
+                enable_writeback <= 1'b1;
+            end
         end
     end 
     
@@ -66,7 +95,7 @@ module controller(
         if (rst) begin
             br_taken <= 1'b0;
         end else begin
-            br_taken <= | (NZP & psr);
+            br_taken <= IR_Exec[15:12] == JMP_op ? 1'b1 : (| (NZP & psr));
         end
     end 
     
@@ -119,11 +148,35 @@ module controller(
             mem_state <= 2'h3;
         end else begin
             if (IR_Exec[15:12] inside { LD_op, LDR_op }) begin
-                mem_state <= 2'h0;
+                if (~complete_data) begin
+                    mem_state <= 2'h0;
+                end else if (complete_data) begin
+                    mem_state <= 2'h3;
+                end                
             end else if (IR_Exec[15:12] inside { LDI_op, STI_op }) begin
-                mem_state <= 2'h1;
+                if (~complete_data) begin
+                    mem_state <= 2'h1;
+                end else if (complete_data) begin
+                    if (IR_Exec[15:12] == LDI_op) begin
+                        if (mem_state == 2'h1) begin
+                            mem_state <= 2'h0;
+                        end else if (mem_state == 2'h0) begin
+                            mem_state <= 2'h3;
+                        end 
+                    end else if (IR_Exec[15:12] == STI_op) begin
+                        if (mem_state == 2'h1) begin
+                                mem_state <= 2'h2;
+                        end else if (mem_state == 2'h2) begin
+                            mem_state <= 2'h3;
+                        end 
+                    end
+                end
             end else if (IR_Exec[15:12] inside { ST_op, STR_op }) begin
-                mem_state <= 2'h2;
+                if (~complete_data) begin
+                    mem_state <= 2'h2;
+                end else if (complete_data) begin
+                    mem_state <= 2'h3;
+                end  
             end else begin
                 mem_state <= 2'h3;
             end
