@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="LC3_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="LC3_tb" />
+            <top_module name="\$unit_LC3_sv_2387841489 " />
+            <top_module name="glbl" />
+            <top_module name="std" />
+            <top_module name="uvm_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="215.801 ns"></ZoomEndTime>
+      <Cursor1Time time="55.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="147"></NameColumnWidth>
+      <ValueColumnWidth column_width="64"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="22" />
+   <wvobject fp_name="/LC3_tb/dut/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/rst" type="logic">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/PC" type="array">
+      <obj_property name="ElementShortName">PC[15:0]</obj_property>
+      <obj_property name="ObjectShortName">PC[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/Instr_dout" type="array">
+      <obj_property name="ElementShortName">Instr_dout[15:0]</obj_property>
+      <obj_property name="ObjectShortName">Instr_dout[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/IR" type="array">
+      <obj_property name="ElementShortName">IR[15:0]</obj_property>
+      <obj_property name="ObjectShortName">IR[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/IR_Exec" type="array">
+      <obj_property name="ElementShortName">IR_Exec[15:0]</obj_property>
+      <obj_property name="ObjectShortName">IR_Exec[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/f/Imem_rd" type="logic">
+      <obj_property name="ElementShortName">Imem_rd</obj_property>
+      <obj_property name="ObjectShortName">Imem_rd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/complete_data" type="logic">
+      <obj_property name="ElementShortName">complete_data</obj_property>
+      <obj_property name="ObjectShortName">complete_data</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/complete_instr" type="logic">
+      <obj_property name="ElementShortName">complete_instr</obj_property>
+      <obj_property name="ObjectShortName">complete_instr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/enable_updatePC" type="logic">
+      <obj_property name="ElementShortName">enable_updatePC</obj_property>
+      <obj_property name="ObjectShortName">enable_updatePC</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/enable_fetch" type="logic">
+      <obj_property name="ElementShortName">enable_fetch</obj_property>
+      <obj_property name="ObjectShortName">enable_fetch</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/enable_decode" type="logic">
+      <obj_property name="ElementShortName">enable_decode</obj_property>
+      <obj_property name="ObjectShortName">enable_decode</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/enable_execute" type="logic">
+      <obj_property name="ElementShortName">enable_execute</obj_property>
+      <obj_property name="ObjectShortName">enable_execute</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/enable_writeback" type="logic">
+      <obj_property name="ElementShortName">enable_writeback</obj_property>
+      <obj_property name="ObjectShortName">enable_writeback</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/br_taken" type="logic">
+      <obj_property name="ElementShortName">br_taken</obj_property>
+      <obj_property name="ObjectShortName">br_taken</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/f/taddr" type="array">
+      <obj_property name="ElementShortName">taddr[15:0]</obj_property>
+      <obj_property name="ObjectShortName">taddr[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/pcout" type="array">
+      <obj_property name="ElementShortName">pcout[15:0]</obj_property>
+      <obj_property name="ObjectShortName">pcout[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/w/RF/register_files" type="array">
+      <obj_property name="ElementShortName">register_files[7:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">register_files[7:0][15:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/NZP" type="array">
+      <obj_property name="ElementShortName">NZP[2:0]</obj_property>
+      <obj_property name="ObjectShortName">NZP[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/psr" type="array">
+      <obj_property name="ElementShortName">psr[2:0]</obj_property>
+      <obj_property name="ObjectShortName">psr[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/mem_state" type="array">
+      <obj_property name="ElementShortName">mem_state[1:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_state[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/m/DMem_rd" type="logic">
+      <obj_property name="ElementShortName">DMem_rd</obj_property>
+      <obj_property name="ObjectShortName">DMem_rd</obj_property>
+   </wvobject>
+</wave_config>
