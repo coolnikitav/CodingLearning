@@ -168,7 +168,7 @@ class driver extends uvm_driver#(transaction);
     
     task instr();
         @(posedge LC3_vif.clk);
-        LC3_vif.complete_data  <= LC3_vif.Data_rd !== 1'bz;
+        LC3_vif.complete_data  <= (LC3_tb.dut.IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op }) && LC3_tb.dut.mem_state != 0 && LC3_tb.dut.mem_state != 2;  // complete_data shoudl go low after read memory (mem_state = 0) or write memory (mem_state = 2)
         LC3_vif.complete_instr <= 1'b1;
         LC3_vif.Instr_dout     <= (LC3_vif.instrmem_rd === 1'b1) ? instr_mem_vif.instr_mem[LC3_vif.PC] : LC3_vif.Instr_dout;
         `uvm_info("DRV", $sformatf("PC: %04h", LC3_vif.PC), UVM_NONE); 
