@@ -23,7 +23,7 @@ module decode(
     
     always @(posedge clk) begin
         if (rst) begin
-            IR      <= 16'h0;
+            IR      <= 16'h5020;  // AND R0, R0, #0 is the NOP instruction in this project
             npc_out <= 16'h0;
         end else begin
             if (enable_decode) begin

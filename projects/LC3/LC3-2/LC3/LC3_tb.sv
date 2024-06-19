@@ -43,6 +43,8 @@ interface instr_mem_if;
         instr_mem[16'h3002] = 16'h1422;  // ADD // R2 <- R0 + 2
         instr_mem[16'h3003] = 16'h1280;  // ADD // R1 <- R2 + 0)
         instr_mem[16'h3004] = 16'hC180;  // JMP // JMP R6
+        instr_mem[16'h3005] = 16'h5020;  // AND // R0 <- R0 & 0 
+        instr_mem[16'h3006] = 16'h5020;  // AND // R0 <- R0 & 0 
         instr_mem[16'h3008] = 16'h967F;  // NOT // R3 <- ~R1
         instr_mem[16'h3009] = 16'h3600;  // ST  // R3 -> DMem[300A]
         instr_mem[16'h300A] = 16'h1A83;  // ADD // R5 <- R2 + R3
@@ -173,7 +175,7 @@ class driver extends uvm_driver#(transaction);
         LC3_vif.Instr_dout     <= (LC3_vif.instrmem_rd === 1'b1) ? instr_mem_vif.instr_mem[LC3_vif.PC] : LC3_vif.Instr_dout;
         `uvm_info("DRV", $sformatf("PC: %04h", LC3_vif.PC), UVM_NONE); 
         LC3_vif.Data_dout      <= LC3_vif.Data_rd ? data_mem_vif.data_mem[LC3_vif.Data_addr] : 16'h0;
-        print_inputs(); #0.002;
+         print_inputs();
     endtask
     
     task reset();

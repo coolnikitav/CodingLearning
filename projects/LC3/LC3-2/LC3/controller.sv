@@ -45,48 +45,69 @@ module controller(
      */
     always @ (posedge clk) begin
         if (rst) begin
-            enable_updatePC  <= 1'b0;
-            enable_fetch     <= 1'b0;
-            enable_decode    <= 1'b0;
-            enable_execute   <= 1'b0;
-            enable_writeback <= 1'b0;
+            enable_updatePC <= 1'b0;
         end else begin
-            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || 
-                IR[15:12] == ST_op || IR[15:12] == STR_op || IR[15:12] == STI_op) begin
-                enable_updatePC <= 1'b0;
-            end else if (IMem_dout[15:12] == BR_op || IMem_dout[15:12] == JMP_op) begin
-                enable_updatePC <= 1'b0;
-            end else if (IR_Exec[15:12] == BR_op || IR_Exec[15:12] == JMP_op) begin
-                enable_updatePC <= 1'b1;
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op) begin
+                enable_updatePC  <= 1'b0;
             end else begin
-                enable_updatePC <= 1'b1;
-            end       
-            if (IR[15:12] === LD_op || IR[15:12] === LDR_op || IR[15:12] === LDI_op || IR[15:12] === ST_op || IR[15:12] === STR_op || IR[15:12] === STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op) begin
-                enable_fetch <= 1'b0;
+                enable_updatePC  <= 1'b1;
+            end
+        end
+    end
+    
+    always @ (posedge clk) begin
+        if (rst) begin
+            enable_fetch  <= 1'b0;
+        end else begin
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op) begin
+                enable_fetch  <= 1'b0;
             end else begin
-                enable_fetch <= 1'b1;
-            end 
-            if (IR[15:12] === LD_op || IR[15:12] === LDR_op || IR[15:12] === LDI_op || IR[15:12] === ST_op || IR[15:12] === STR_op || IR[15:12] === STI_op) begin
-                enable_decode <= 1'b0;
+                enable_fetch  <= 1'b1;
+            end
+        end
+    end
+    
+    always @ (posedge clk) begin
+        if (rst) begin
+            enable_decode  <= 1'b0;
+        end else begin
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op) begin
+                enable_decode  <= 1'b0;
             end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] === STR_op || IR_Exec[15:12] === STI_op ) begin
                 enable_decode <= 1'b1;
             end else begin
-                enable_decode <= enable_fetch;
+                enable_decode  <= enable_fetch;
             end
-            if (IR[15:12] === LD_op || IR[15:12] === LDR_op || IR[15:12] === LDI_op || IR[15:12] === ST_op || IR[15:12] === STR_op || IR[15:12] === STI_op) begin
-                enable_execute <= 1'b0;
+        end
+    end
+    
+    always @ (posedge clk) begin
+        if (rst) begin
+            enable_execute  <= 1'b0;
+        end else begin
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op) begin
+                enable_execute  <= 1'b0;
             end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] === STR_op || IR_Exec[15:12] === STI_op ) begin
                 enable_execute <= 1'b1;
             end else begin
-                enable_execute <= enable_decode;
-            end
-            if (IR[15:12] === LD_op || IR[15:12] === LDR_op || IR[15:12] === LDI_op || IR[15:12] === ST_op || IR[15:12] === STR_op || IR[15:12] === STI_op || IR[15:12] === BR_op || IR[15:12] === JMP_op) begin
-                enable_writeback <= 1'b0;
-            end else begin
-                enable_writeback <= 1'b1;
+                enable_execute  <= enable_decode;
             end
         end
-    end 
+    end
+    
+    always @ (posedge clk) begin
+        if (rst) begin
+            enable_writeback  <= 1'b0;
+        end else begin
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR[15:12] == STR_op || IR[15:12] == STI_op) begin
+                enable_writeback  <= 1'b0;
+            end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op) begin
+                enable_writeback <= 1'b1;
+            end else begin
+                enable_writeback  <= enable_execute;
+            end
+        end
+    end
     
     /*
      *  br_taken

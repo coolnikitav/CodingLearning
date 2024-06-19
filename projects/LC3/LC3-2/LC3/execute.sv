@@ -124,7 +124,7 @@ module execute(
             M_Data          <= 16'h0;
             dr              <= 3'h0; 
             NZP             <= 3'h0; 
-            IR_Exec         <= 16'h0;         
+            IR_Exec         <= 16'h5020;  // AND R0, R0, #0 is the NOP instruction in this project         
         end else if (enable_execute == 1'b1) begin
             W_Control_out   <= W_Control_in;
             Mem_Control_out <= Mem_Control_in;
