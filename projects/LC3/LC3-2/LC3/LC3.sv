@@ -7,8 +7,8 @@ module LC3(
     input  [15:0] Data_dout,
     output [15:0] PC,
     output        instrmem_rd,
-    output        Data_addr,
-    output        Data_din,
+    output [15:0] Data_addr,
+    output [15:0] Data_din,
     output        Data_rd
 );
 wire        enable_updatePC;
@@ -170,7 +170,7 @@ interface LC3_if;
     logic [15:0] Data_dout;
     logic [15:0] PC;
     logic        instrmem_rd;
-    logic        Data_addr;
-    logic        Data_din;
+    logic [15:0] Data_addr;
+    logic [15:0] Data_din;
     logic        Data_rd;
 endinterface

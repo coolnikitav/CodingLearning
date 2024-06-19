@@ -43,8 +43,6 @@ interface instr_mem_if;
         instr_mem[16'h3002] = 16'h1422;  // ADD // R2 <- R0 + 2
         instr_mem[16'h3003] = 16'h1280;  // ADD // R1 <- R2 + 0)
         instr_mem[16'h3004] = 16'hC180;  // JMP // JMP R6
-        instr_mem[16'h3005] = 16'h5020;  // AND // R0 <- R0 & 0 
-        instr_mem[16'h3006] = 16'h5020;  // AND // R0 <- R0 & 0 
         instr_mem[16'h3008] = 16'h967F;  // NOT // R3 <- ~R1
         instr_mem[16'h3009] = 16'h3600;  // ST  // R3 -> DMem[300A]
         instr_mem[16'h300A] = 16'h1A83;  // ADD // R5 <- R2 + R3
@@ -71,7 +69,7 @@ interface data_mem_if;
         data_mem[16'h300E] = 16'h3010;
         data_mem[16'h3010] = 16'h0015;
         data_mem[16'h301A] = 16'h301B;
-        data_mem[16'h3024] = 16'h3008;
+        data_mem[16'h3023] = 16'h3008;
     end
 endinterface
 

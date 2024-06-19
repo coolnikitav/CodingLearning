@@ -18,7 +18,7 @@ module controller(
     output reg        bypass_alu_2,
     output reg        bypass_mem_1,
     output reg        bypass_mem_2,
-    output reg [2:0]  mem_state
+    output reg [1:0]  mem_state
     );   
     typedef enum bit [3:0] {
         // ALU Operations
@@ -47,7 +47,7 @@ module controller(
         if (rst) begin
             enable_updatePC <= 1'b0;
         end else begin
-            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op) begin
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op || IR[15:12] === BR_op || IR[15:12] === JMP_op) begin
                 enable_updatePC  <= 1'b0;
             end else begin
                 enable_updatePC  <= 1'b1;
@@ -59,7 +59,7 @@ module controller(
         if (rst) begin
             enable_fetch  <= 1'b0;
         end else begin
-            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op) begin
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op || IR[15:12] === BR_op || IR[15:12] === JMP_op) begin
                 enable_fetch  <= 1'b0;
             end else begin
                 enable_fetch  <= 1'b1;
@@ -99,7 +99,7 @@ module controller(
         if (rst) begin
             enable_writeback  <= 1'b0;
         end else begin
-            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR[15:12] == STR_op || IR[15:12] == STI_op) begin
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR[15:12] == STR_op || IR[15:12] == STI_op || IR_Exec[15:12] === BR_op || IR_Exec[15:12] === JMP_op) begin
                 enable_writeback  <= 1'b0;
             end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op) begin
                 enable_writeback <= 1'b1;

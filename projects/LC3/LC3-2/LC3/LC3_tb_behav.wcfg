@@ -14,15 +14,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="215.801 ns"></ZoomEndTime>
-      <Cursor1Time time="55.000 ns"></Cursor1Time>
+      <ZoomStartTime time="34.166 ns"></ZoomStartTime>
+      <ZoomEndTime time="239.167 ns"></ZoomEndTime>
+      <Cursor1Time time="205.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="147"></NameColumnWidth>
-      <ValueColumnWidth column_width="64"></ValueColumnWidth>
+      <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="22" />
+   <WVObjectSize size="28" />
    <wvobject fp_name="/LC3_tb/dut/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -91,10 +91,33 @@
       <obj_property name="ElementShortName">pcout[15:0]</obj_property>
       <obj_property name="ObjectShortName">pcout[15:0]</obj_property>
    </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/memout" type="array">
+      <obj_property name="ElementShortName">memout[15:0]</obj_property>
+      <obj_property name="ObjectShortName">memout[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/w/DR_in" type="array">
+      <obj_property name="ElementShortName">DR_in[15:0]</obj_property>
+      <obj_property name="ObjectShortName">DR_in[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/Data_addr" type="array">
+      <obj_property name="ElementShortName">Data_addr[15:0]</obj_property>
+      <obj_property name="ObjectShortName">Data_addr[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/Data_rd" type="logic">
+      <obj_property name="ElementShortName">Data_rd</obj_property>
+      <obj_property name="ObjectShortName">Data_rd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/W_Control" type="array">
+      <obj_property name="ElementShortName">W_Control[1:0]</obj_property>
+      <obj_property name="ObjectShortName">W_Control[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/W_Control_out" type="array">
+      <obj_property name="ElementShortName">W_Control_out[1:0]</obj_property>
+      <obj_property name="ObjectShortName">W_Control_out[1:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/LC3_tb/dut/w/RF/register_files" type="array">
       <obj_property name="ElementShortName">register_files[7:0][15:0]</obj_property>
       <obj_property name="ObjectShortName">register_files[7:0][15:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="/LC3_tb/dut/NZP" type="array">
       <obj_property name="ElementShortName">NZP[2:0]</obj_property>
