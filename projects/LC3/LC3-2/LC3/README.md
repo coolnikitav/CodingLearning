@@ -15,7 +15,8 @@ Instruction memory:
 - 300A: 1A83 (R5 <- R2 + R3): ADD reg
 - 300B: A802 (R4 <- DMem[3010] = 0015): LDI
 - 300C: 5B01 (R5 <- R4 & R1): AND reg with bypass_mem_1
-- 300D: 0A04 (R4 != 0): BR to 3012  // R5 hasn't been written yet
+- 300D: 1421 (R1 <- R2 + 0): ADD imm
+- 300E: 0A04 (R4 != 0): BR to 3012  // R5 hasn't been written yet
 - 3012: 52A4 (R1 <- R2 + 4): ADD imm
 - 3013: 6F82 (R7 <- DMem[300A]=300B): LDR
 - 3014: EBF8 (R5 <- 300C): LEA
