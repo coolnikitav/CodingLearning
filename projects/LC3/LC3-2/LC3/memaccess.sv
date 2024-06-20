@@ -23,35 +23,35 @@ module memaccess(
         case (mem_state)
             READ_MEM: begin
                 if (M_Control) begin
-                    DMem_addr_reg = DMem_dout;  // Indirect addressing
+                    DMem_addr_reg <= DMem_dout;  // Indirect addressing
                 end else begin
-                    DMem_addr_reg = M_Addr;     // Direct addressing
+                    DMem_addr_reg <= M_Addr;     // Direct addressing
                 end
-                DMem_din_reg = 16'b0;
-                DMem_rd_reg  = 1'b1;
-                memout_reg   = DMem_dout;
+                DMem_din_reg <= 16'b0;
+                DMem_rd_reg  <= 1'b1;
+                memout_reg   <= DMem_dout;
             end
             READ_MEM_INDIR: begin
-                DMem_addr_reg = M_Addr;
-                DMem_din_reg  = 16'b0;
-                DMem_rd_reg   = 1'b1;
-                memout_reg    =  DMem_dout;
+                DMem_addr_reg <= M_Addr;
+                DMem_din_reg  <= 16'b0;
+                DMem_rd_reg   <= 1'b1;
+                memout_reg    <=  DMem_dout;
             end
             WRITE_MEM: begin
                 if (M_Control) begin
-                    DMem_addr_reg = DMem_dout;  // Indirect addressing
+                    DMem_addr_reg <= DMem_dout;  // Indirect addressing
                 end else begin
-                    DMem_addr_reg = M_Addr;     // Direct addressing
+                    DMem_addr_reg <= M_Addr;     // Direct addressing
                 end
-                DMem_din_reg = M_Data;
-                DMem_rd_reg = 1'b0;
-                memout_reg  = 16'b0;
+                DMem_din_reg <= M_Data;
+                DMem_rd_reg  <= 1'b0;
+                memout_reg   <= DMem_dout;
             end
             INIT_STATE: begin
-                DMem_addr_reg = 16'bz;
-                DMem_din_reg  = 16'bz;
-                DMem_rd_reg   = 1'bz;
-                memout_reg    = 16'b0;
+                DMem_addr_reg <= 16'bz;
+                DMem_din_reg  <= 16'bz;
+                DMem_rd_reg   <= 1'bz;
+                memout_reg    <= DMem_dout;
             end
         endcase
     end

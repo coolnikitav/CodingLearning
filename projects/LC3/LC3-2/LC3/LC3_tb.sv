@@ -70,6 +70,7 @@ interface data_mem_if;
         data_mem[16'h3010] = 16'h0015;
         data_mem[16'h301A] = 16'h301B;
         data_mem[16'h3023] = 16'h3008;
+        data_mem[16'hFC22] = 16'h30A8;
     end
 endinterface
 
@@ -170,10 +171,19 @@ class driver extends uvm_driver#(transaction);
         @(posedge LC3_vif.clk);
         LC3_vif.complete_data  <= (LC3_tb.dut.IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, ST_op, STR_op, STI_op }) && LC3_tb.dut.mem_state != 0 && LC3_tb.dut.mem_state != 2;  // complete_data shoudl go low after read memory (mem_state = 0) or write memory (mem_state = 2)
         LC3_vif.complete_instr <= 1'b1;
-        LC3_vif.Instr_dout     <= (LC3_vif.instrmem_rd === 1'b1) ? instr_mem_vif.instr_mem[LC3_vif.PC] : LC3_vif.Instr_dout;
+        if (LC3_vif.instrmem_rd === 1'b1) begin
+            if (LC3_vif.Instr_dout inside { BR_op, JMP_op }) begin
+                LC3_vif.Instr_dout <= LC3_vif.Instr_dout;    
+            end else begin
+                LC3_vif.Instr_dout <= instr_mem_vif.instr_mem[LC3_vif.PC];
+            end
+        end else begin
+            LC3_vif.Instr_dout <= LC3_vif.Instr_dout;
+        end
+        LC3_vif.Data_dout      <= data_mem_vif.data_mem[LC3_vif.Data_addr];
         `uvm_info("DRV", $sformatf("PC: %04h", LC3_vif.PC), UVM_NONE); 
-        LC3_vif.Data_dout      <= LC3_vif.Data_rd ? data_mem_vif.data_mem[LC3_vif.Data_addr] : 16'h0;
-         print_inputs();
+        
+        print_inputs();
     endtask
     
     task reset();
@@ -435,7 +445,7 @@ class test extends uvm_test;
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
         r.start(e.a.seqr);
-        for (int n = 0; n < 16; n++) begin
+        for (int n = 0; n < 25; n++) begin
             i.start(e.a.seqr);
         end
         phase.drop_objection(this);

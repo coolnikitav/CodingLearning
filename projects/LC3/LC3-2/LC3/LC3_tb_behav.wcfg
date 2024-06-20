@@ -14,15 +14,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="34.166 ns"></ZoomStartTime>
+      <ZoomStartTime time="34.167 ns"></ZoomStartTime>
       <ZoomEndTime time="239.167 ns"></ZoomEndTime>
       <Cursor1Time time="205.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="147"></NameColumnWidth>
-      <ValueColumnWidth column_width="60"></ValueColumnWidth>
+      <NameColumnWidth column_width="145"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="28" />
+   <WVObjectSize size="25" />
    <wvobject fp_name="/LC3_tb/dut/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -83,21 +83,13 @@
       <obj_property name="ElementShortName">br_taken</obj_property>
       <obj_property name="ObjectShortName">br_taken</obj_property>
    </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/f/taddr" type="array">
-      <obj_property name="ElementShortName">taddr[15:0]</obj_property>
-      <obj_property name="ObjectShortName">taddr[15:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/LC3_tb/dut/pcout" type="array">
       <obj_property name="ElementShortName">pcout[15:0]</obj_property>
       <obj_property name="ObjectShortName">pcout[15:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/memout" type="array">
-      <obj_property name="ElementShortName">memout[15:0]</obj_property>
-      <obj_property name="ObjectShortName">memout[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/w/DR_in" type="array">
-      <obj_property name="ElementShortName">DR_in[15:0]</obj_property>
-      <obj_property name="ObjectShortName">DR_in[15:0]</obj_property>
+   <wvobject fp_name="/LC3_tb/dut/mem_state" type="array">
+      <obj_property name="ElementShortName">mem_state[1:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_state[1:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/LC3_tb/dut/Data_addr" type="array">
       <obj_property name="ElementShortName">Data_addr[15:0]</obj_property>
@@ -107,32 +99,28 @@
       <obj_property name="ElementShortName">Data_rd</obj_property>
       <obj_property name="ObjectShortName">Data_rd</obj_property>
    </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/W_Control" type="array">
+   <wvobject fp_name="/LC3_tb/dut/Data_dout" type="array">
+      <obj_property name="ElementShortName">Data_dout[15:0]</obj_property>
+      <obj_property name="ObjectShortName">Data_dout[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/memout" type="array">
+      <obj_property name="ElementShortName">memout[15:0]</obj_property>
+      <obj_property name="ObjectShortName">memout[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/dr" type="array">
+      <obj_property name="ElementShortName">dr[2:0]</obj_property>
+      <obj_property name="ObjectShortName">dr[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/w/DR_in" type="array">
+      <obj_property name="ElementShortName">DR_in[15:0]</obj_property>
+      <obj_property name="ObjectShortName">DR_in[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/w/W_Control" type="array">
       <obj_property name="ElementShortName">W_Control[1:0]</obj_property>
       <obj_property name="ObjectShortName">W_Control[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/W_Control_out" type="array">
-      <obj_property name="ElementShortName">W_Control_out[1:0]</obj_property>
-      <obj_property name="ObjectShortName">W_Control_out[1:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/LC3_tb/dut/w/RF/register_files" type="array">
       <obj_property name="ElementShortName">register_files[7:0][15:0]</obj_property>
       <obj_property name="ObjectShortName">register_files[7:0][15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/NZP" type="array">
-      <obj_property name="ElementShortName">NZP[2:0]</obj_property>
-      <obj_property name="ObjectShortName">NZP[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/psr" type="array">
-      <obj_property name="ElementShortName">psr[2:0]</obj_property>
-      <obj_property name="ObjectShortName">psr[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/mem_state" type="array">
-      <obj_property name="ElementShortName">mem_state[1:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_state[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/m/DMem_rd" type="logic">
-      <obj_property name="ElementShortName">DMem_rd</obj_property>
-      <obj_property name="ObjectShortName">DMem_rd</obj_property>
    </wvobject>
 </wave_config>
