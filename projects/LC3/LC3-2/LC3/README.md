@@ -7,12 +7,12 @@
 Instruction memory:
 - 3000: 5020 (R0 <- R0 & 0) AND imm
 - 3001: 2C20 (R6 <- DMem[3023] == 3008): LD
-- 3002: 1422 (R2 <- R0 + 2): ADD imm with bypass_alu_1
-- 3003: 1280 (R1 <- R2 + 0): ADD imm with bypass_alu_2
+- 3002: 1422 (R2 <- R0 + 2): ADD
+- 3003: 1280 (R1 <- R2 + 0): ADD imm with bypass_alu_1
 - 3004: C180 (JMP R6): JMP
 - 3008: 967F (R3 <- ~R1): NOT
 - 3009: 3600 (R3 -> DMem[300B]): ST with bypass_mem_2
-- 300A: 1A83 (R5 <- R2 + R3): ADD reg
+- 300A: 1A83 (R5 <- R2 + R3): ADD reg with bypass_alu_2
 - 300B: A802 (R4 <- DMem[3010] = 0015): LDI
 - 300C: 5B01 (R5 <- R4 & R1): AND reg with bypass_mem_1
 - 300D: 1421 (R1 <- R2 + 0): ADD imm
