@@ -8,7 +8,7 @@ Instruction memory:
 - 3000: 5020 (R0 <- R0 & 0) AND imm
 - 3001: 2C20 (R6 <- DMem[3023] == 3008): LD
 - 3002: 1422 (R2 <- R0 + 2): ADD
-- 3003: 1280 (R1 <- R2 + 1): ADD imm with bypass_alu_1
+- 3003: 1281 (R1 <- R2 + 1): ADD imm with bypass_alu_1
 - 3004: C180 (JMP R6): JMP
 - 3008: 967F (R3 <- ~R1): NOT
 - 3009: 3600 (R3 -> DMem[300B]): ST with bypass_mem_2
