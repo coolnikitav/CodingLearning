@@ -27,7 +27,7 @@ module decode(
             npc_out <= 16'h0;
         end else begin
             if (enable_decode) begin
-                IR <= Instr_dout;
+                IR      <= Instr_dout;
                 npc_out <= npc_in;
             end
         end

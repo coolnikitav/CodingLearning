@@ -40,7 +40,12 @@ module controller(
         JMP_op = 4'b1100
     } op_t;
     
-    int stalls = 0;
+    bit [15:0] prev_IR_Exec;  // helps controller have 2 stalls during LDI and STI
+    
+    always @ (posedge clk) begin
+        prev_IR_Exec <= IR_Exec;
+    end
+    
     /*
      *  Enables
      */
@@ -48,33 +53,23 @@ module controller(
         if (rst) begin
             enable_updatePC <= 1'b0;
         end else begin
-            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op) begin
-                stalls = 1; 
-            end else if (IR[15:12] == LDI_op || IR[15:12] == STI_op) begin
-                stalls = 2;
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op || (IR_Exec[15:12] == LDI_op && prev_IR_Exec[15:12] != LDI_op) || (IR_Exec[15:12] == STI_op && prev_IR_Exec[15:12] != STI_op)) begin
+                enable_updatePC  <= 1'b0;
             end else begin
-                if (stalls > 0) begin
-                    stalls--;
-                end
+                enable_updatePC  <= 1'b1;
             end
-            enable_updatePC <= stalls == 0;
         end
     end
-    
+
     always @ (posedge clk) begin
         if (rst) begin
             enable_fetch  <= 1'b0;
         end else begin
-            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op) begin
-                stalls = 1; 
-            end else if (IR[15:12] == LDI_op || IR[15:12] == STI_op) begin
-                stalls = 2;
+            if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op || IMem_dout[15:12] === BR_op || IMem_dout[15:12] === JMP_op || (IR_Exec[15:12] == LDI_op && prev_IR_Exec[15:12] != LDI_op) || (IR_Exec[15:12] == STI_op && prev_IR_Exec[15:12] != STI_op)) begin
+                enable_fetch  <= 1'b0;
             end else begin
-                if (stalls > 0) begin
-                    stalls--;
-                end
+                enable_fetch  <= 1'b1;
             end
-            enable_fetch <= stalls == 0;
         end
     end
     
@@ -84,7 +79,7 @@ module controller(
         end else begin
             if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op) begin
                 enable_decode  <= 1'b0;
-            end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] === STR_op || IR_Exec[15:12] === STI_op ) begin
+            end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] === STR_op || (IR_Exec[15:12] === LDI_op && prev_IR_Exec[15:12] === LDI_op) || (IR_Exec[15:12] === STI_op || prev_IR_Exec[15:12] === STI_op)) begin
                 enable_decode <= 1'b1;
             end else begin
                 enable_decode  <= enable_fetch;
@@ -98,7 +93,7 @@ module controller(
         end else begin
             if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR_Exec[15:12] == STR_op || IR[15:12] == STI_op) begin
                 enable_execute  <= 1'b0;
-            end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] === STR_op || IR_Exec[15:12] === STI_op ) begin
+            end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] === STR_op || (IR_Exec[15:12] === LDI_op && prev_IR_Exec[15:12] === LDI_op) || (IR_Exec[15:12] === STI_op || prev_IR_Exec[15:12] === STI_op)) begin
                 enable_execute <= 1'b1;
             end else begin
                 enable_execute  <= enable_decode;
@@ -112,7 +107,7 @@ module controller(
         end else begin
             if (IR[15:12] == LD_op || IR[15:12] === LDR_op || IR[15:12] == LDI_op || IR[15:12] == ST_op || IR[15:12] == STR_op || IR[15:12] == STI_op || IR_Exec[15:12] === BR_op || IR_Exec[15:12] === JMP_op) begin
                 enable_writeback  <= 1'b0;
-            end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op) begin
+            end else if (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || (IR_Exec[15:12] === LDI_op && prev_IR_Exec[15:12] === LDI_op)) begin
                 enable_writeback <= 1'b1;
             end else begin
                 enable_writeback  <= enable_execute;
@@ -134,7 +129,7 @@ module controller(
     /*
      *  Bypass
      */
-    always @ (posedge clk) begin
+    always @ (*) begin
         if (rst) begin
             bypass_alu_1 <= 1'b0;
             bypass_alu_2 <= 1'b0;

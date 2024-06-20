@@ -41,14 +41,15 @@ interface instr_mem_if;
         instr_mem[16'h3000] = 16'h5020;  // AND // R0 <- R0 & 0 
         instr_mem[16'h3001] = 16'h2C20;  // LD  // R6 <- DMem[3024]
         instr_mem[16'h3002] = 16'h1422;  // ADD // R2 <- R0 + 2
-        instr_mem[16'h3003] = 16'h1280;  // ADD // R1 <- R2 + 0)
+        instr_mem[16'h3003] = 16'h12A1;  // ADD // R1 <- R2 + 1
         instr_mem[16'h3004] = 16'hC180;  // JMP // JMP R6
         instr_mem[16'h3008] = 16'h967F;  // NOT // R3 <- ~R1
         instr_mem[16'h3009] = 16'h3600;  // ST  // R3 -> DMem[300A]
         instr_mem[16'h300A] = 16'h1A83;  // ADD // R5 <- R2 + R3
         instr_mem[16'h300B] = 16'hA802;  // LDI // R4 <- DMem[3010]
         instr_mem[16'h300C] = 16'h5B01;  // AND // R5 <- R4 & R1
-        instr_mem[16'h300D] = 16'h0A04;  // BR  // R5 != 0
+        instr_mem[16'h300D] = 16'h1421;  // ADD // R2 <- R0 + 1
+        instr_mem[16'h300E] = 16'h0A04;  // BR  // R5 != 0
         instr_mem[16'h3012] = 16'h52A4;  // ADD // R1 <- R2 + 4
         instr_mem[16'h3013] = 16'h6F82;  // LDR // R7 <- DMem[300A]
         instr_mem[16'h3014] = 16'hEBF8;  // LEA // R5 <- 300C
@@ -445,7 +446,7 @@ class test extends uvm_test;
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
         r.start(e.a.seqr);
-        for (int n = 0; n < 25; n++) begin
+        for (int n = 0; n < 35; n++) begin
             i.start(e.a.seqr);
         end
         phase.drop_objection(this);
