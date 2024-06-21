@@ -45,14 +45,44 @@ module controller(
     
     /*
      *  Enables
-     */   
+     *//*   
     always @ (*) begin
         if (rst) begin
             enable_updatePC <= 1'b0;
             enable_fetch    <= 1'b0;
         end else begin
-            enable_updatePC <= stall === 1'b0 && bubble === 1'b0;
-            enable_fetch    <= stall === 1'b0 && bubble === 1'b0;
+            if (!(stall === 1'b0 && bubble === 1'b0)) begin
+                enable_updatePC <= 1'b0;
+                enable_fetch    <= 1'b0;
+            end else begin
+                enable_updatePC <= 1'b1;
+                enable_fetch    <= 1'b1;
+            end            
+        end
+    end*/
+    
+    always @ (*) begin
+        if (rst) begin
+            enable_updatePC <= 1'b0;
+            enable_fetch    <= 1'b0;
+        end else begin
+            if (!(stall === 1'b0 && bubble === 1'b0)) begin
+                enable_updatePC <= 1'b0;
+                enable_fetch    <= 1'b0;
+            end else begin
+                enable_updatePC <= 1'b1;
+            end            
+        end
+    end
+    
+    always @ (negedge rst) begin
+        enable_updatePC <= 1'b1;
+        enable_fetch    <= 1'b1;
+    end
+    
+    always @ (posedge clk) begin
+        if (mem_state == 2'h3) begin
+            enable_fetch <= enable_updatePC;
         end
     end
     
@@ -110,7 +140,7 @@ module controller(
         if (rst) begin
             br_taken <= 1'b0;
         end else begin
-            br_taken <= (IMem_dout[15:12] === JMP_op && IR_Exec[15:12] === JMP_op) ? 1'b1 : (| (NZP & psr));
+            br_taken <= (IR_Exec[15:12] === JMP_op) ? 1'b1 : (| (NZP & psr));
         end
     end 
     
@@ -204,48 +234,6 @@ module controller(
             mem_state <= 2'h3;
         end
     end
-    
-    
-    /*
-    always @ (*) begin
-        if (rst) begin
-            mem_state <= 2'h3;
-        end else begin
-            if (IR_Exec[15:12] inside { LD_op, LDR_op }) begin
-                if (~complete_data) begin
-                    mem_state <= 2'h0;
-                end else if (complete_data) begin
-                    mem_state <= 2'h3;
-                end                
-            end else if (IR_Exec[15:12] inside { LDI_op, STI_op }) begin
-                if (~complete_data) begin
-                    mem_state <= 2'h1;
-                end else if (complete_data) begin
-                    if (IR_Exec[15:12] == LDI_op) begin
-                        if (mem_state == 2'h1) begin
-                            mem_state <= 2'h0;
-                        end else if (mem_state == 2'h0) begin
-                            mem_state <= 2'h3;
-                        end 
-                    end else if (IR_Exec[15:12] == STI_op) begin
-                        if (mem_state == 2'h1) begin
-                                mem_state <= 2'h2;
-                        end else if (mem_state == 2'h2) begin
-                            mem_state <= 2'h3;
-                        end 
-                    end
-                end
-            end else if (IR_Exec[15:12] inside { ST_op, STR_op }) begin
-                if (~complete_data) begin
-                    mem_state <= 2'h2;
-                end else if (complete_data) begin
-                    mem_state <= 2'h3;
-                end  
-            end else begin
-                mem_state <= 2'h3;
-            end
-        end
-    end */
 endmodule
 
 ///////////////////////////////////////////////
