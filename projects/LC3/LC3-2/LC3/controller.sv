@@ -106,11 +106,11 @@ module controller(
     /*
      *  br_taken
      */
-    always @ (posedge clk) begin
+    always @ (*) begin
         if (rst) begin
             br_taken <= 1'b0;
         end else begin
-            br_taken <= IR[15:12] === JMP_op ? 1'b1 : (| (NZP & psr));
+            br_taken <= (IMem_dout[15:12] === JMP_op && IR_Exec[15:12] === JMP_op) ? 1'b1 : (| (NZP & psr));
         end
     end 
     
@@ -128,24 +128,43 @@ module controller(
                 if (IR_Exec[15:12] inside { ADD_op, AND_op, NOT_op }) begin
                     bypass_alu_1 <= IR[8:6] == IR_Exec[11:9];
                     bypass_alu_2 <= IR[2:0] == IR_Exec[11:9] && ~IR[5];        // only ADD, AND register op
-                end else if (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, LEA_op }) begin
+                end else begin
+                    bypass_alu_1 <= 1'b0;
+                    bypass_alu_2 <= 1'b0;
+                end
+                if (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, LEA_op }) begin
                     bypass_mem_1 <= IR[8:6] == IR_Exec[11:9];
                     bypass_mem_2 <= IR[2:0] == IR_Exec[11:9] && ~IR[5];  // only ADD, AND register op
-                end  
+                end else begin
+                    bypass_mem_1 <= 1'b0;
+                    bypass_mem_2 <= 1'b0;
+                end
             end else if (IR[15:12] inside { ST_op, STI_op }) begin
                 if (IR_Exec[15:12] inside { ADD_op, AND_op, NOT_op }) begin
                     bypass_alu_2 <= IR[11:9] == IR_Exec[11:9];
-                end else if (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, LEA_op }) begin
+                end else begin
+                    bypass_alu_2 <= 1'b0;
+                end
+                if (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, LEA_op }) begin
                     bypass_mem_2 <= IR[11:9] == IR_Exec[11:9] && ~IR[5];
+                end else begin
+                    bypass_mem_2 <= 1'b0;
                 end
             end else if (IR[15:12] inside { STR_op }) begin
                 if (IR_Exec[15:12] inside { ADD_op, AND_op, NOT_op }) begin
                     bypass_alu_1 <= IR[8:6]  == IR_Exec[11:9];
                     bypass_alu_2 <= IR[11:9] == IR_Exec;
-                end else if (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, LEA_op }) begin
+                end else begin
+                    bypass_alu_1 <= 1'b0;
+                    bypass_alu_2 <= 1'b0;
+                end
+                if (IR_Exec[15:12] inside { LD_op, LDR_op, LDI_op, LEA_op }) begin
                     bypass_mem_1 <= IR[8:6]  == IR_Exec[11:9];
                     bypass_mem_2 <= IR[11:9] == IR_Exec[11:9];
-                end 
+                end else begin
+                    bypass_mem_1 <= 1'b0;
+                    bypass_mem_2 <= 1'b0;
+                end
             end else begin
                 bypass_alu_1 <= 1'b0;
                 bypass_alu_2 <= 1'b0;
@@ -158,6 +177,36 @@ module controller(
     /*
      *  mem_state
      */
+    always @ (*) begin
+        if (rst) begin
+            mem_state <= 2'h3;
+        end
+    end 
+    
+    always @ (*) begin
+        if (IR_Exec[15:12] inside { LD_op, LDR_op }) begin
+            if (~complete_data) begin
+                mem_state <= 2'h0;
+            end 
+        end else if (IR_Exec[15:12] inside { ST_op, STR_op }) begin
+            mem_state <= 2'h2;
+        end else if (IR_Exec[15:12] inside { LDI_op, STI_op }) begin
+            if (~complete_data) begin
+                mem_state <= 2'h1;
+            end else begin
+                if (IR_Exec[15:12] === LDI_op) begin
+                    mem_state <= 2'h0;
+                end else if (IR_Exec[15:12] === STI_op) begin
+                    mem_state <= 2'h2;
+                end
+            end
+        end else begin
+            mem_state <= 2'h3;
+        end
+    end
+    
+    
+    /*
     always @ (*) begin
         if (rst) begin
             mem_state <= 2'h3;
@@ -196,7 +245,7 @@ module controller(
                 mem_state <= 2'h3;
             end
         end
-    end 
+    end */
 endmodule
 
 ///////////////////////////////////////////////
