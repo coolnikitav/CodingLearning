@@ -12,7 +12,7 @@ Instruction memory:
 - 3004: 5A81 (R5 <- R2 & R1): AND reg with bypass_alu_2
 - 3005: C180 (JMP R6): JMP
 - 3008: 967F (R3 <- ~R1): NOT
-- 3009: 3600 (R3 -> DMem[300B]): ST with bypass_mem_2
+- 3009: 3600 (R3 -> DMem[300B]): ST with bypass_alu_2
 - 300A: 1A83 (R5 <- R2 + R3): ADD reg
 - 300B: A802 (R4 <- DMem[3010] = 0015): LDI
 - 300C: 5B01 (R5 <- R4 & R1): AND reg with bypass_mem_1
