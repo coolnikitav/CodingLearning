@@ -9,7 +9,8 @@ Instruction memory:
 - 3001: 2C20 (R6 <- DMem[3023] == 3008): LD
 - 3002: 1422 (R2 <- R0 + 2): ADD imm
 - 3003: 12A1 (R1 <- R2 + 1): ADD imm with bypass_alu_1
-- 3004: C180 (JMP R6): JMP
+- 3004: 14A1 (R5 <- R2 & R1): AND reg with bypass_alu_2
+- 3005: C180 (JMP R6): JMP
 - 3008: 967F (R3 <- ~R1): NOT
 - 3009: 3600 (R3 -> DMem[300B]): ST with bypass_mem_2
 - 300A: 1A83 (R5 <- R2 + R3): ADD reg
