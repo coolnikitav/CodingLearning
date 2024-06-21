@@ -14,7 +14,7 @@ Instruction memory:
 - 3008: 967F (R3 <- ~R1): NOT
 - 3009: 3600 (R3 -> DMem[300B]): ST with bypass_alu_2
 - 300A: 1AA5 (R5 <- R2 + 5): ADD imm
-- 300B: A802 (R4 <- DMem[3010] = 0015): LDI
+- 300B: A802 (R4 <- DMem[DMem[300F]=3011] = 0016): LDI
 - 300C: 5B01 (R5 <- R4 & R1): AND reg with bypass_mem_1
 - 300D: 1421 (R1 <- R2 + 0): ADD imm
 - 300E: 0A04 (R4 != 0): BR to 3012  // R5 hasn't been written yet
