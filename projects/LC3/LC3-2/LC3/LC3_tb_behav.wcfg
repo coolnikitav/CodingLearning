@@ -14,15 +14,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="219.001 ns"></ZoomEndTime>
-      <Cursor1Time time="95.000 ns"></Cursor1Time>
+      <ZoomStartTime time="27.977 ns"></ZoomStartTime>
+      <ZoomEndTime time="250.978 ns"></ZoomEndTime>
+      <Cursor1Time time="235.777 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="137"></NameColumnWidth>
+      <NameColumnWidth column_width="117"></NameColumnWidth>
       <ValueColumnWidth column_width="58"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="28" />
+   <WVObjectSize size="17" />
    <wvobject fp_name="/LC3_tb/dut/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -46,6 +46,14 @@
    <wvobject fp_name="/LC3_tb/dut/IR_Exec" type="array">
       <obj_property name="ElementShortName">IR_Exec[15:0]</obj_property>
       <obj_property name="ObjectShortName">IR_Exec[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/c/bubble" type="logic">
+      <obj_property name="ElementShortName">bubble</obj_property>
+      <obj_property name="ObjectShortName">bubble</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/c/stall" type="logic">
+      <obj_property name="ElementShortName">stall</obj_property>
+      <obj_property name="ObjectShortName">stall</obj_property>
    </wvobject>
    <wvobject fp_name="/LC3_tb/dut/f/Imem_rd" type="logic">
       <obj_property name="ElementShortName">Imem_rd</obj_property>
@@ -79,61 +87,8 @@
       <obj_property name="ElementShortName">enable_writeback</obj_property>
       <obj_property name="ObjectShortName">enable_writeback</obj_property>
    </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/br_taken" type="logic">
-      <obj_property name="ElementShortName">br_taken</obj_property>
-      <obj_property name="ObjectShortName">br_taken</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/NZP" type="array">
-      <obj_property name="ElementShortName">NZP[2:0]</obj_property>
-      <obj_property name="ObjectShortName">NZP[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/psr" type="array">
-      <obj_property name="ElementShortName">psr[2:0]</obj_property>
-      <obj_property name="ObjectShortName">psr[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/e/a/aluin1" type="array">
-      <obj_property name="ElementShortName">aluin1[15:0]</obj_property>
-      <obj_property name="ObjectShortName">aluin1[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/e/a/aluin2" type="array">
-      <obj_property name="ElementShortName">aluin2[15:0]</obj_property>
-      <obj_property name="ObjectShortName">aluin2[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/aluout" type="array">
-      <obj_property name="ElementShortName">aluout[15:0]</obj_property>
-      <obj_property name="ObjectShortName">aluout[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/e/Mem_Bypass_val" type="array">
-      <obj_property name="ElementShortName">Mem_Bypass_val[15:0]</obj_property>
-      <obj_property name="ObjectShortName">Mem_Bypass_val[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/e/VSR1" type="array">
-      <obj_property name="ElementShortName">VSR1[15:0]</obj_property>
-      <obj_property name="ObjectShortName">VSR1[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/w/DR_in" type="array">
-      <obj_property name="ElementShortName">DR_in[15:0]</obj_property>
-      <obj_property name="ObjectShortName">DR_in[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/w/RF/register_files" type="array">
-      <obj_property name="ElementShortName">register_files[7:0][15:0]</obj_property>
-      <obj_property name="ObjectShortName">register_files[7:0][15:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/bypass_alu_1" type="logic">
-      <obj_property name="ElementShortName">bypass_alu_1</obj_property>
-      <obj_property name="ObjectShortName">bypass_alu_1</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/bypass_alu_2" type="logic">
-      <obj_property name="ElementShortName">bypass_alu_2</obj_property>
-      <obj_property name="ObjectShortName">bypass_alu_2</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/e/op2select" type="logic">
-      <obj_property name="ElementShortName">op2select</obj_property>
-      <obj_property name="ObjectShortName">op2select</obj_property>
-   </wvobject>
-   <wvobject fp_name="/LC3_tb/dut/e/imm5" type="array">
-      <obj_property name="ElementShortName">imm5[15:0]</obj_property>
-      <obj_property name="ObjectShortName">imm5[15:0]</obj_property>
+   <wvobject fp_name="/LC3_tb/dut/mem_state" type="array">
+      <obj_property name="ElementShortName">mem_state[1:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_state[1:0]</obj_property>
    </wvobject>
 </wave_config>

@@ -40,11 +40,8 @@ module controller(
         JMP_op = 4'b1100
     } op_t;
     
-    bit [15:0] prev_IR_Exec;  // helps controller have 2 stalls during LDI and STI
-    
-    always @ (posedge clk) begin
-        prev_IR_Exec <= IR_Exec;
-    end
+    wire bubble = (IMem_dout[15:12] === BR_op && IR_Exec[15:12] !== BR_op) || (IMem_dout[15:12] === JMP_op && IR_Exec[15:12] !== JMP_op);
+    wire stall  = (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] ===  STR_op || IR_Exec[15:12] === STI_op) && (mem_state !== 2'h3);
     
     /*
      *  Enables
@@ -52,15 +49,10 @@ module controller(
     always @ (*) begin
         if (rst) begin
             enable_updatePC <= 1'b0;
-            enable_fetch <= 1'b0;
+            enable_fetch    <= 1'b0;
         end else begin
-            if (IR_Exec[15:12] === ADD_op || IR_Exec[15:12] === AND_op || IR_Exec[15:12] === NOT_op || IR_Exec[15:12] === BR_op || IR_Exec[15:12] === JMP_op) begin
-                enable_updatePC <= 1'b1;
-                enable_fetch <= 1'b1;
-            end else if (IMem_dout[15:12] == BR_op || IMem_dout[15:12] == JMP_op) begin
-                enable_updatePC <= 1'b0;
-                enable_fetch <= 1'b0; 
-            end
+            enable_updatePC <= stall === 1'b0 && bubble === 1'b0;
+            enable_fetch    <= stall === 1'b0 && bubble === 1'b0;
         end
     end
     
@@ -167,7 +159,6 @@ module controller(
      *  mem_state
      */
     always @ (*) begin
-        $display("Time: %0t, IR_Exec: %0h, mem_state: %0h, complete_data: %0b", $time, IR_Exec, mem_state, complete_data);
         if (rst) begin
             mem_state <= 2'h3;
         end else begin
@@ -184,11 +175,15 @@ module controller(
                     if (IR_Exec[15:12] == LDI_op) begin
                         if (mem_state == 2'h1) begin
                             mem_state <= 2'h0;
-                        end
+                        end else if (mem_state == 2'h0) begin
+                            mem_state <= 2'h3;
+                        end 
                     end else if (IR_Exec[15:12] == STI_op) begin
                         if (mem_state == 2'h1) begin
-                            mem_state <= 2'h2;
-                        end
+                                mem_state <= 2'h2;
+                        end else if (mem_state == 2'h2) begin
+                            mem_state <= 2'h3;
+                        end 
                     end
                 end
             end else if (IR_Exec[15:12] inside { ST_op, STR_op }) begin
