@@ -446,7 +446,7 @@ class test extends uvm_test;
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
         r.start(e.a.seqr);
-        for (int n = 0; n < 35; n++) begin
+        for (int n = 0; n < 32; n++) begin
             i.start(e.a.seqr);
         end
         phase.drop_objection(this);

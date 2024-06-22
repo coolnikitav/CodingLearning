@@ -42,7 +42,17 @@ module controller(
     
     wire bubble = (IMem_dout[15:12] === BR_op && IR_Exec[15:12] !== BR_op) || (IMem_dout[15:12] === JMP_op && IR_Exec[15:12] !== JMP_op);
     wire stall  = (IR_Exec[15:12] === LD_op || IR_Exec[15:12] === LDR_op || IR_Exec[15:12] === LDI_op || IR_Exec[15:12] === ST_op || IR_Exec[15:12] ===  STR_op || IR_Exec[15:12] === STI_op) && (mem_state !== 2'h3);
+    reg [15:0] prev_IR;
+    int repeated_IR_count = 1;
     
+    always @ (posedge clk) begin
+        prev_IR <= IR;
+        if (prev_IR === IR) begin
+            repeated_IR_count++;
+        end else begin
+            repeated_IR_count = 1;
+        end
+    end
     /*
      *  Enables
      *//*   
@@ -140,7 +150,7 @@ module controller(
         if (rst) begin
             br_taken <= 1'b0;
         end else begin
-            br_taken <= (IR_Exec[15:12] === JMP_op) ? 1'b1 : (| (NZP & psr));
+            br_taken <= (IR_Exec[15:12] === JMP_op && repeated_IR_count == 1) ? 1'b1 : (| (NZP & psr));
         end
     end 
     

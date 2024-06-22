@@ -14,15 +14,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="27.977 ns"></ZoomStartTime>
-      <ZoomEndTime time="250.978 ns"></ZoomEndTime>
-      <Cursor1Time time="235.777 ns"></Cursor1Time>
+      <ZoomStartTime time="193.336 ns"></ZoomStartTime>
+      <ZoomEndTime time="417.937 ns"></ZoomEndTime>
+      <Cursor1Time time="0.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="117"></NameColumnWidth>
+      <NameColumnWidth column_width="109"></NameColumnWidth>
       <ValueColumnWidth column_width="58"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="17" />
+   <WVObjectSize size="18" />
    <wvobject fp_name="/LC3_tb/dut/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -46,6 +46,10 @@
    <wvobject fp_name="/LC3_tb/dut/IR_Exec" type="array">
       <obj_property name="ElementShortName">IR_Exec[15:0]</obj_property>
       <obj_property name="ObjectShortName">IR_Exec[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/LC3_tb/dut/br_taken" type="logic">
+      <obj_property name="ElementShortName">br_taken</obj_property>
+      <obj_property name="ObjectShortName">br_taken</obj_property>
    </wvobject>
    <wvobject fp_name="/LC3_tb/dut/c/bubble" type="logic">
       <obj_property name="ElementShortName">bubble</obj_property>
