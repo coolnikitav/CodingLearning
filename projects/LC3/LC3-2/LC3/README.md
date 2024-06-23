@@ -22,11 +22,12 @@ Instruction memory:
 - 3015: 6F82 (R7 <- DMem[300A]=300B): LDR
 - 3016: 1207 (R1 <- R0 + R7): ADD reg with bypass_mem_2
 - 3017: EBF8 (R5 <- 3011): LEA
-- 3018: B804 (R4 -> DMem[301B]): STI 
+- 3018: B804 (R4 -> DMem[DMem[301e]=3020]): STI 
 - 3019: 7545 (R2 -> DMem[[R5]=3011] + 5]): STR
 
 Data memory:
 - 300A: 300B
 - 300F: 3011
 - 3011: 0016
+- 301e: 3020
 - 3023: 3008
