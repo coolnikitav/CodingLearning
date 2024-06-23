@@ -135,11 +135,13 @@ module controller(
     
     always @ (posedge clk) begin
         if (mem_state == 0 || mem_state == 2) begin
-            enable_updatePC <= 1'b1;
-            enable_fetch  <= 1'b1;
-            enable_decode  <= 1'b1;
-            enable_execute  <= 1'b1;
-            enable_writeback  <= 1'b1;
+            enable_updatePC  <= 1'b1;
+            enable_fetch     <= 1'b1;
+            enable_decode    <= 1'b1;
+            enable_execute   <= 1'b1;
+        end
+        if (mem_state == 0) begin
+            enable_writeback <= 1'b1;  // there should be no writeback for stores
         end
     end
     

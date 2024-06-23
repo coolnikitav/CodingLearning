@@ -97,10 +97,14 @@ module execute(
         end else if (bypass_mem_2) begin
             src2_val = Mem_Bypass_val;
         end else begin
-            case (op2select)
-                1'h0: src2_val = imm5;
-                1'h1: src2_val = VSR2;
-            endcase
+            if (IR[15:12] === 16'h0001 || IR[15:12] === 16'h0101 || IR[15:12] === 16'h1001) begin  // ADD, AND, NOT
+                case (op2select)
+                    1'h0: src2_val = imm5;
+                    1'h1: src2_val = VSR2;
+                endcase
+            end else begin
+                src2_val = VSR2;
+            end            
         end
     end
     
@@ -128,8 +132,8 @@ module execute(
         end else if (enable_execute == 1'b1) begin
             W_Control_out   <= W_Control_in;
             Mem_Control_out <= Mem_Control_in;
-            if (IR[15:12] == 4'b0011 || IR[15:12] == 4'b0011 || IR[15:12] == 4'b0011) begin  // ST,STR,STI
-                M_Data      <= src1_val;
+            if (IR[15:12] === 4'b0011 || IR[15:12] === 4'b0111 || IR[15:12] === 4'b1011) begin  // ST,STR,STI
+                M_Data      <= src2_val;
             end else begin
                 M_Data      <= 0;
             end
@@ -138,7 +142,7 @@ module execute(
             end else begin
                 NZP         <= 3'h0; 
             end
-            if (IR[15:12] == 4'b0001 || IR[15:12] == 4'b0101 || IR[15:12] == 4'b1001 || IR[15:12] == 4'b0010 || IR[15:12] == 4'b0110 || IR[15:12] == 4'b1010 || IR[15:12] == 4'b1110) begin
+            if (IR[15:12] === 4'b0001 || IR[15:12] === 4'b0101 || IR[15:12] === 4'b1001 || IR[15:12] === 4'b0010 || IR[15:12] === 4'b0110 || IR[15:12] === 4'b1010 || IR[15:12] === 4'b1110) begin
                 dr          <= IR[11:9]; 
             end else begin
                 dr          <= 3'b0;
@@ -150,7 +154,7 @@ module execute(
     end
     
     assign sr1 = IR[8:6];
-    assign sr2 = (IR[15:12] == 4'b0001 || IR[15:12] == 4'b0101 || IR[15:12] == 4'b1001) ? IR[2:0] : ((IR[15:12] == 4'b0011 || IR[15:12] == 4'b0011 || IR[15:12] == 4'b0011) ? IR[11:9] : 3'b0);  // ALU, STORE
+    assign sr2 = (IR[15:12] === 4'b0001 || IR[15:12] === 4'b0101 || IR[15:12] === 4'b1001) ? IR[2:0] : ((IR[15:12] == 4'b0011 || IR[15:12] === 4'b0111 || IR[15:12] === 4'b1011) ? IR[11:9] : 3'b0);  // ALU, STORE
 endmodule
 
 ///////////////////////////////////////////////
