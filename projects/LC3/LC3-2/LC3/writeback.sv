@@ -13,19 +13,6 @@ module writeback(
     input  [2:0]  sr2,
     output [2:0]  psr
     );
-    
-    reg_file rf(
-        .clk(clk),
-        .rst(rst),
-        .en(enable_writeback),
-        .dr(dr),
-        .sr1(sr1),
-        .sr2(sr2),
-        .DR_in(DR_in),
-        .VSR1(VSR1),
-        .VSR2(VSR2)
-    );
-    
     /*
      *  DR_in control
      */ 
@@ -38,6 +25,18 @@ module writeback(
             2'h2: DR_in = pcout;
         endcase
     end
+    
+    reg_file rf(
+        .clk(clk),
+        .rst(rst),
+        .en(enable_writeback),
+        .dr(dr),
+        .sr1(sr1),
+        .sr2(sr2),
+        .DR_in(DR_in),
+        .VSR1(VSR1),
+        .VSR2(VSR2)
+    );
     
     /*
      *   psr control
