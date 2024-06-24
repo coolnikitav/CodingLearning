@@ -1,3 +1,7 @@
+## Week of June 24
+- Monday:
+  - In LC3_tb, figure out how to determine if a branch is predicted in the scoreboard.
+
 ## Week of June 10
 - Thursday:
   - Improve the way mem_state is determined in controller. Maybe use a state machine
