@@ -14,7 +14,7 @@ module writeback(
     output [2:0]  psr
     );
     
-    reg_file RF(
+    reg_file rf(
         .clk(clk),
         .rst(rst),
         .en(enable_writeback),

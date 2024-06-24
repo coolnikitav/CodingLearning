@@ -13,11 +13,11 @@ module reg_file(
     reg [15:0] register_files [7:0];
     
     always @ (posedge clk) begin
-        if (rst == 1'b1) begin
+        if (rst) begin
             for (integer i = 0; i < 8; i=i+1) begin
                 register_files[i] <= 16'hx;
             end
-        end else if (en == 1'b1) begin
+        end else if (en) begin
             register_files[dr] <= DR_in;
         end
     end

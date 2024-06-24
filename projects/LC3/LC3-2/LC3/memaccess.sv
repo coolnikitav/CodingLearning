@@ -9,10 +9,10 @@ module memaccess(
     output [15:0] DMem_din,
     output [15:0] memout
     );
-    localparam READ_MEM = 2'h0,
+    localparam READ_MEM       = 2'h0,
                READ_MEM_INDIR = 2'h1,
-               WRITE_MEM = 2'h2,
-               INIT_STATE = 2'h3;
+               WRITE_MEM      = 2'h2,
+               INIT_STATE     = 2'h3;
     
     reg [15:0] DMem_addr_reg, 
                DMem_rd_reg, 

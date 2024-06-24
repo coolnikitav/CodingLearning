@@ -9,9 +9,9 @@ module alu(
     );
     
     always @ (posedge clk) begin
-        if (rst == 1'b1) begin
+        if (rst) begin
             aluout <= 16'h0;
-        end else if (enable == 1'b1) begin
+        end else if (enable) begin
             case (alu_control)
                 2'h0: aluout <= aluin1 + aluin2;
                 2'h1: aluout <= aluin1 & aluin2;
