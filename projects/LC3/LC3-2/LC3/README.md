@@ -19,9 +19,9 @@ Instruction memory:
 - 300D: 1421 (R2 <- R0 + 1): ADD imm
 - 300E: 0A04 (R4 != 0): BR to 3012  // R5 hasn't been written yet
 - 3014: 12A4 (R1 <- R2 + 4): ADD imm
-- 3015: 6F82 (R7 <- DMem[[R6]=300A]=300B): LDR
-- 3016: 1207 (R1 <- R0 + R7): ADD reg with bypass_mem_2
-- 3017: EBF8 (R5 <- 3011): LEA
+- 3015: EBF8 (R5 <- 3011): LEA
+- 3016: 6F82 (R7 <- DMem[[R6]=300A]=300B): LDR
+- 3017: 1207 (R1 <- R0 + R7): ADD reg with bypass_mem_2
 - 3018: B804 (R4 -> DMem[DMem[301e]=3020]): STI 
 - 3019: 7545 (R2 -> DMem[[R5]=3011] + 5]): STR
 
