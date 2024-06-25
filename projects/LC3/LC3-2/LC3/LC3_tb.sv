@@ -52,9 +52,9 @@ interface instr_mem_if;
         instr_mem[16'h300D] = 16'h1421;  // ADD // R2 <- R0 + 1
         instr_mem[16'h300E] = 16'h0A04;  // BR  // R5 != 0
         instr_mem[16'h3014] = 16'h12A4;  // ADD // R1 <- R2 + 4
-        instr_mem[16'h3015] = 16'h6F82;  // LDR // R7 <- DMem[300A]
-        instr_mem[16'h3016] = 16'h1207;  // LEA // R5 <- 300C
-        instr_mem[16'h3017] = 16'hEBF8;  // LEA // R5 <- 300C
+        instr_mem[16'h3015] = 16'hEBF8;  // LEA // R5 <- 300C
+        instr_mem[16'h3016] = 16'h6F82;  // LDR // R7 <- DMem[300A]
+        instr_mem[16'h3017] = 16'h1207;  // ADD // R1 <- R0 + R7
         instr_mem[16'h3018] = 16'hB804;  // STI // R4 -> DMem[301B]
         instr_mem[16'h3019] = 16'h7545;  // STR // R2 -> DMem[3011]
     end
@@ -274,9 +274,11 @@ class scoreboard extends uvm_scoreboard;
                  instr3 = 16'h5020, 
                  instr4 = 16'h5020, 
                  instr5 = 16'h5020;  // 5020: R0 <- R0 & 0 is NOP instr in this processor
-    logic instrmem_rd_queue[$] = '{1'b1,1'b1};
+    logic instrmem_rd_queue[$] = '{1'b1, 1'b1};
     logic prev_instrmem_rd, instrmem_rd;
-    bit [15:0] Data_addr_queue[$];                 
+    logic [15:0] Data_addr_queue[$];     
+    logic [2:0]  Data_din_sr_queue[$];  
+    logic        Data_rd_queue[$] = {1'bz, 1'bz};        
     
     function new(input string inst = "scoreboard", uvm_component parent = null);
         super.new(inst, parent);
@@ -293,9 +295,9 @@ class scoreboard extends uvm_scoreboard;
     function void verify_PC(transaction tr, logic [15:0] instr1, instr2, instr3, instr4, instr5);
         if (tr.op == reset_op) begin
             if (tr.PC == 16'h3000) begin
-                `uvm_info("SCO", "PC MATCH", UVM_NONE);                
+                `uvm_info("SCO", "PC          MATCH", UVM_NONE);                
             end else begin
-                `uvm_error("SCO", "PC MISMATCH");
+                `uvm_error("SCO", "PC          MISMATCH");
             end
         end else if (tr.op == instr_op) begin
             if (instr1[15:12] === BR_op && instr2[15:12] === BR_op && instr3[15:12] === BR_op && instr4[15:12] === BR_op) begin
@@ -352,48 +354,90 @@ class scoreboard extends uvm_scoreboard;
     endfunction
     
     function void verify_Data_addr(transaction tr);
-        if (tr.op == reset_op) begin
-            if (tr.Data_addr === 16'bzzzz) begin
-                `uvm_info("SCO", "Data_addr MATCH", UVM_NONE);
-            end else begin
-                `uvm_error("SCO", "Data_addr MISMATCH");
+        if (tr.op == instr_op) begin
+            if (instrmem_rd === 1'b1) begin
+                case(tr.Instr_dout[15:12])
+                    LD_op:  add_LD_ST_Data_addr(tr);
+                    ST_op:  add_LD_ST_Data_addr(tr);
+                    LDR_op: add_LDR_STR_Data_addr(tr);
+                    STR_op: add_LDR_STR_Data_addr(tr);
+                    LDI_op: add_LDI_STI_Data_addr(tr);
+                    STI_op: add_LDI_STI_Data_addr(tr);
+                endcase
             end
-        end else if (tr.op == instr_op) begin
-            case(tr.Instr_dout[15:12])
-                (LD_op  || ST_op):  Data_addr_queue.push_back(calc_LD_ST_Data_addr(tr));
-                (LDR_op || STR_op): Data_addr_queue.push_back(calc_LDR_STR_Data_addr(tr));
-                (LDI_op || STI_op): Data_addr_queue.push_back(calc_LDI_STI_Data_addr(tr));
-                BR_op:              Data_addr_queue.push_back(calc_BR_Data_addr(tr));
-                JMP_op:             Data_addr_queue.push_back(calc_JMP_Data_addr(tr));
-            endcase
-            if (instrmem_rd === 1'bz) begin
+            if (instrmem_rd === 1'bz && tr.Instr_dout[15:12] !== BR_op && tr.Instr_dout[15:12] !== JMP_op) begin
                 if (tr.Data_addr === Data_addr_queue.pop_front()) begin
-                    `uvm_info("SCO", "Data_addr MATCH", UVM_NONE);
+                    `uvm_info("SCO", "Data_addr   MATCH", UVM_NONE);
                 end else begin
-                    `uvm_error("SCO", "Data_addr MISMATCH");
+                    `uvm_error("SCO", "Data_addr   MISMATCH");
                 end
             end
         end
     endfunction
     
-    function bit [15:0] calc_LD_ST_Data_addr(transaction tr);
-        return PC + { {7{tr.Instr_dout[8]}}, tr.Instr_dout[8:0] };
+    function void add_LD_ST_Data_addr(transaction tr);
+        Data_addr_queue.push_back(PC + 1 + { {7{tr.Instr_dout[8]}}, tr.Instr_dout[8:0] });
     endfunction
     
-    function bit [15:0] calc_LDR_STR_Data_addr(transaction tr);
-        return LC3_tb.dut.w.rf.register_files[tr.Instr_dout[8:6]] + { {10{tr.Instr_dout[5]}}, tr.Instr_dout[5:0] };
+    function void add_LDR_STR_Data_addr(transaction tr);
+        Data_addr_queue.push_back(LC3_tb.dut.w.rf.register_files[tr.Instr_dout[8:6]] + { {10{tr.Instr_dout[5]}}, tr.Instr_dout[5:0] });
     endfunction
     
-    function bit [15:0] calc_LDI_STI_Data_addr(transaction tr);
-        return data_mem_vif.data_mem[PC + { {7{tr.Instr_dout[8]}}, tr.Instr_dout[8:0] }];
+    function void add_LDI_STI_Data_addr(transaction tr);
+        Data_addr_queue.push_back(PC + 1 + { {7{tr.Instr_dout[8]}}, tr.Instr_dout[8:0] });
+        Data_addr_queue.push_back(data_mem_vif.data_mem[PC + 1 + { {7{tr.Instr_dout[8]}}, tr.Instr_dout[8:0] }]);
     endfunction
     
-    function bit [15:0] calc_BR_Data_addr(transaction tr);
-        
+    function void verify_Data_din(transaction tr);
+        if (tr.op == instr_op) begin
+            if (tr.Instr_dout[15:12] inside { ST_op, STR_op, STI_op } && instrmem_rd === 1'b1) begin
+                Data_din_sr_queue.push_back(tr.Instr_dout[11:9]);  // registers are not written at this point, so SR is saved to be checked later
+            end
+            if (instrmem_rd === 1'bz) begin 
+                if (Data_rd_queue[0] === 1'b0) begin
+                    if (tr.Data_din === LC3_tb.dut.w.rf.register_files[Data_din_sr_queue.pop_front()]) begin
+                        `uvm_info("SCO", "Data_din    MATCH", UVM_NONE);
+                    end else begin
+                        `uvm_error("SCO", "Data_din    MISMATCH");
+                    end
+                end else if (Data_rd_queue[0] === 1'b1) begin
+                    if (tr.Data_din === 16'h0) begin
+                        `uvm_info("SCO", "Data_din    MATCH", UVM_NONE);
+                    end else begin
+                        `uvm_error("SCO", "Data_din    MISMATCH");
+                    end
+                end
+            end
+         end
     endfunction
     
-    function bit [15:0] calc_JMP_Data_addr(transaction tr);
-        return LC3_tb.dut.w.rf.register_files[tr.Instr_dout[8:6]];
+    function void verify_Data_rd(transaction tr);
+        if (tr.op == instr_op) begin
+            if (tr.Instr_dout[15:12] inside { ADD_op, AND_op, NOT_op, LEA_op } && instrmem_rd === 1'b1) begin
+                Data_rd_queue.push_back(1'bz);
+            end else if (tr.Instr_dout[15:12] inside { LD_op, LDR_op } && instrmem_rd === 1'b1) begin
+                Data_rd_queue.push_back(1'b1);
+                Data_rd_queue.push_back(1'b1);
+            end else if (tr.Instr_dout[15:12] inside { ST_op, STR_op } && instrmem_rd === 1'b1) begin
+                Data_rd_queue.push_back(1'b0);
+                Data_rd_queue.push_back(1'b0);
+            end else if (tr.Instr_dout[15:12] inside { LDI_op } && instrmem_rd === 1'b1) begin
+                Data_rd_queue.push_back(1'b1);
+                Data_rd_queue.push_back(1'b1);
+                Data_rd_queue.push_back(1'b1);
+            end else if (tr.Instr_dout[15:12] inside { STI_op } && instrmem_rd === 1'b1) begin
+                Data_rd_queue.push_back(1'b1);
+                Data_rd_queue.push_back(1'b0);
+                Data_rd_queue.push_back(1'b0);
+            end else if (tr.Instr_dout[15:12] inside { BR_op, JMP_op }) begin
+                Data_rd_queue = '{1'bz, 1'bz, 1'bz};
+            end      
+            if (tr.Data_rd === Data_rd_queue.pop_front()) begin
+                `uvm_info("SCO", "Data_rd     MATCH", UVM_NONE);
+            end else begin
+                `uvm_error("SCO", "Data_rd     MISMATCH");
+            end        
+        end
     endfunction
     
     virtual function void write(transaction tr);
@@ -405,6 +449,8 @@ class scoreboard extends uvm_scoreboard;
         verify_PC(tr, instr1, instr2, instr3, instr4, instr5);
         verify_instrmem_rd(tr, instr1, instr2, instr3, instr4, instr5);
         verify_Data_addr(tr);
+        verify_Data_din(tr);
+        verify_Data_rd(tr);
         $display("---------------------------------------------");
     endfunction    
 endclass
@@ -482,7 +528,7 @@ class test extends uvm_test;
     virtual task run_phase(uvm_phase phase);
         phase.raise_objection(this);
         r.start(e.a.seqr);
-        for (int n = 0; n < 37; n++) begin
+        for (int n = 0; n < 36; n++) begin
             i.start(e.a.seqr);
         end
         phase.drop_objection(this);
