@@ -1,3 +1,23 @@
+## Set 5
+10. Illustrate the side effect of leaving an input port unconnected that influences a logic to an output port.
+    - The unconnected ports will have a value of X. This could potentially drive logic in an unexpected way.
+9. Illustrate the side effect of not connecting all the ports during instantiation.
+    - The unconnected ports will not be driver.
+8. What is a parameter in Verilog?
+   - It behaves like a constant.
+7. What is the purpose of DPI? Give an example.
+   - DPI - dynamic programming interface. It allows us to write C functions and then import them into our design.
+6. Explain what happens when width of state registers is not increased as more states gets added in a state machine.
+   - If truncates the added states to the width of the register, making it overlap with another state.
+5. Illustrate the side effect of an implicit 1 bit wire declaration of a multi-bit port during instantiation
+   - The other wires of the port are in an unknown state.
+4. Same variable used in two loops running simultaneously
+   - Race conditions
+3. Illustrate the side effects of mulitple processes writing to the same variable
+   - Race conditions
+2. Illustrate the side effect of specifying delays in assing statements.
+1. Illustrate a few important considerations in Verilog simulation regressions.
+
 ## Set 4
 10. What is PLI?
     - Programming Language Interface. It allows software developers to access and control simulation data within a simulation environment.
