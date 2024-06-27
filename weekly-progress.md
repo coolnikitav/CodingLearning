@@ -1,4 +1,6 @@
 ## Week of June 24
+- Thursday:
+  - VER: 00-5
 - Monday:
   - In LC3_tb, figure out how to determine if a branch is predicted in the scoreboard.
   - Find a way to verify the last couple of instructions.
