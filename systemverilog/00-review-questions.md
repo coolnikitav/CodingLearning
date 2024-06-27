@@ -1,3 +1,29 @@
+## Set 3
+10. How can you establish communication between monitor and scoreboard in SystemVerilog?
+    - By creating a mailbox that you put stuff in in the monitor and get stuff from in the scoreboard.
+9. What are parameterized classes?
+    - Classes with parameters that can be used for variables and functions inside.
+8. Write a constraint to have a variable divisible by 5.
+   ```
+   constraint a_div_5 {
+      a % 5 == 0;
+   }
+   ```
+7. Differences between integer and int.
+   - Both are 32 bit signed int. But int can take on values of 0,1, while integer can take on values of (0,1,x,z)
+6. Explain bidirectional constraints.
+   - Multiple constraints that are active at the same time.
+5. Difference between while and do while.
+   - While checks condition and then does something. do while does something and then checks the condition.
+4. Why do we need randomization in SystemVerilog?
+   - So we can apply random stimulus and improve our testing procedures.
+3. Difference between virtual and pure virtual function
+   
+2. Difference between static and dynamic casting
+   - dynamic used $cast, while static uses newDataType'(variable)
+1. What is a virtual function?
+   - Virtual function is a function that is defined outside of where it is being used.
+
 ## Set 2
 10. Difference between structure and class.
    - By default, a structure is public and a class is private.
