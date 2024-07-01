@@ -1,6 +1,17 @@
 ## Set 6
+10. What are teh different looping constructs in Verilog?
+    - for, while, foreach?
+9. Implement XOR gate using 2:1 MUX
+    ```
+    module XOR(
+       input a,b,
+       output c
+    );
+       assign c = (a != b);
+    endmodule
+    ```
 8. Difference between mealy and moore FSM.
-   - Moore only depends on inputs. Mealy depends on inputs and outputs.
+   - Mealy output depends on the input only. Moore output depends on input and destination.
 7. What are some ways a race condition can get created and how can these race conditions be avoided?
    - Race conditions can be created in combinational blocks if some of the inputs and outputs are the same. Example:
      ```
