@@ -1,3 +1,7 @@
+## Week of July 1
+- Monday:
+  - VER: 00-6
+
 ## Week of June 24
 - Thursday:
   - VER: 00-5
