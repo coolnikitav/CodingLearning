@@ -1,5 +1,25 @@
 # Review
 
+## Set 2
+2. What does a sequence normally contain?
+   - It typically contains inputs that will be applied to the DUT as well as some metadata that will help us determien what to apply.
+1. Write pseudo code for implementing an AHB-Lite driver.
+   ```
+   class ahb_driver extends uvm_driver;
+      `uvm_component_utils(ahb_driver)
+
+      function void build_phase(string path);
+         super.new(ahb_driver, path);
+      endfunction
+   
+      virtual task run_phase()
+         forever() begin
+            # send signal to slave
+         end
+      endtask
+   endclass
+   ```
+
 ## Set 1
 1. What is a UVM RAL mode? Why is it required?
    - RAL is register abstraction layer. It is used to write to the registers of the DUT. Without it, a transaction would need to be created and passed to the DUT, resulting in a cumbersome process.
