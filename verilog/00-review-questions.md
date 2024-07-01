@@ -1,3 +1,38 @@
+## Set 6
+8. Difference between mealy and moore FSM.
+   - Moore only depends on inputs. Mealy depends on inputs and outputs.
+7. What are some ways a race condition can get created and how can these race conditions be avoided?
+   - Race conditions can be created in combinational blocks if some of the inputs and outputs are the same. Example:
+     ```
+     always @ (a)
+         a = ~a;
+     ```
+     They can be avoided by making sure inputs and outputs are not the same.
+6. Give examples of Verilog code that synthesizes into a latch and flipflop
+   - FF:
+     ```
+        always @ (posedge clk)
+           out <= in;
+     ```
+   - Latch:
+     ```
+        always @ (*)
+           out = in;
+     ```
+5. Give some guidelines on how combinational and sequential logic should be coded in Verilog.
+   - Sequential logic should be coded with always @ (posedge or negedge clk) because it depends on the clock.
+   - Combinational logic can be coded in a couple of ways:
+     - always @ (*) triggers on any input change inside of the always statement
+     - assign connects inputs to outputs through combinational logic
+4. What does RTL mean?
+   - Register transfer level. 
+3. What software is used to simulate Verilog code?
+   - I used Vivado. I've also used ModelSim. I suppose any Verilog compiler/simulator.
+2. What is Verilog used for?
+   - Verilog is used to model digital hardware by writing code.
+1. What are the main data types in Verilog?
+   - Wire, reg
+
 ## Set 5
 10. Illustrate the side effect of leaving an input port unconnected that influences a logic to an output port.
     - The unconnected ports will have a value of X. This could potentially drive logic in an unexpected way.
