@@ -2,6 +2,7 @@
 - Monday:
   - VER: 00-6
   - SV: 00-4
+  - UVM: 00-2
 
 ## Week of June 24
 - Thursday:
