@@ -3,6 +3,7 @@
   - VER: 00-6
   - SV: 00-4
   - UVM: 00-2
+  - EDA Playground: UVM1 Getting Started
 
 ## Week of June 24
 - Thursday:
