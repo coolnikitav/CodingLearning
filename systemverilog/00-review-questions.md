@@ -1,3 +1,31 @@
+## Set 4
+10. What is the purpose of this pointer in SystemVerilog?
+   - To indicate that its pointing to the variable in this class when name of a parameter is the same.
+9. What is polymorphism and its advantage?
+   - Objects can be changed with functions from other classes. Its advantage is that everything can be more modularized and instead of chaning the original function, you can extend it with new functionality.
+8. What are teh default values of variables in the SystemVerilog?
+   - logic/reg/wire: x, bit/int: 0
+7. Difference between initial and final block.
+   - I know that initial executes in the beginning of the simulation.
+   - I am assuming final executes in the end after everything has been executed.
+6. What are pass-by-value and pass-by-reference method.
+   - Pass-by-value operates with a shallow copy, which is a simple copy of the value of variable. Changes to the shallow copy do not change the original variable
+   - Pass-by-reference operates with a deep copy. Changes to the deep copy will change the original variable
+5. Give an example of a function call inside a constraint.
+   ```
+    constraint a_cntrl {
+        a inside [calc_lower_bound(a):calc_upper_bound(a)];
+    }
+   ``
+4. How to find indices associated with associative array items?
+   - I am assuming something like array.keys()
+3. What are the types of assertions?
+   - I only know assert
+2. What will be your approach if functional coverage is 100% but code coverage is too low?
+   - I will try to remove the code that is not being used.
+1. Is it possible to override existing constraints?
+   - You can turn off existing constraints and turn other ones on. I am not sure about override.
+
 ## Set 3
 10. How can you establish communication between monitor and scoreboard in SystemVerilog?
     - By creating a mailbox that you put stuff in in the monitor and get stuff from in the scoreboard.
