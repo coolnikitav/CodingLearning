@@ -69,3 +69,59 @@ function Check-And-Install-PS2EXE {
 
 # Example usage
 Check-And-Install-PS2EXE
+
+
+
+
+
+
+
+
+
+
+
+function Check-And-Install-PS2EXE {
+    function Show-MessageBox {
+        param (
+            [string]$message,
+            [string]$caption
+        )
+
+        Add-Type -AssemblyName PresentationFramework
+        $result = [System.Windows.MessageBox]::Show($message, $caption, [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Question)
+        return $result
+    }
+
+    function Get-PS2EXEPath {
+        # Get the path to the PS2EXE module in the current user's profile
+        return Join-Path -Path $env:USERPROFILE -ChildPath "Documents\WindowsPowerShell\Modules\PS2EXE"
+    }
+
+    $ps2exePath = Get-PS2EXEPath
+
+    if (-Not (Test-Path -Path $ps2exePath)) {
+        $message = "PS2EXE is not installed. Would you like to install it now?"
+        $caption = "Install PS2EXE"
+        $result = Show-MessageBox -message $message -caption $caption
+
+        if ($result -eq [System.Windows.MessageBoxResult]::Yes) {
+            try {
+                Write-Output "Installing PS2EXE..."
+                Install-Module -Name PS2EXE -Scope CurrentUser -Force -AllowClobber
+                Write-Output "PS2EXE installed successfully."
+            } catch {
+                Write-Output "Failed to install PS2EXE: $_"
+                exit 1
+            }
+        } else {
+            Write-Output "PS2EXE installation declined by user. Exiting script."
+            exit 1
+        }
+    } else {
+        Write-Output "PS2EXE is already installed."
+    }
+}
+
+# Example usage
+Check-And-Install-PS2EXE
+
