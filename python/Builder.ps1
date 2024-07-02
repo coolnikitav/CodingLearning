@@ -298,7 +298,7 @@ function Build-Selftest {
 	Check-CopiedFiles -fromFolder ".\TCMSelfTestCS\TCMSelfTestCS\bin\release" -toFolder "$TCMSelfTestInstallersAddress\TCMSelfTest_$selfTestVersion\TCMSelfTest\Code"
 	Create-iniFile -selfTestVersion $selfTestVersion -requiredAcromagIntegrationVersion $requiredAcromagIntegrationVersion -destination "$TCMSelfTestInstallersAddress\TCMSelfTest_$selfTestVersion\TCMSelfTest"
 	Create-ZipFile -folderAddress "$TCMSelfTestInstallersAddress\TCMSelfTest_$selfTestVersion"
-	#Create-ExeFromZip -zipName "TCMSelfTest_$selfTestVersion" -exeName ("TCMSelfTest_" + $selfTestVersion + "_installer") -zipPath $TCMSelfTestInstallersAddress -destination "C:\ETASData\G5HIL"
+	Create-Exe
 }
 
 Build-Selftest
