@@ -40,17 +40,19 @@
 7. Differences between integer and int.
    - Both are 32 bit signed int. But int can take on values of 0,1, while integer can take on values of (0,1,x,z)
 6. Explain bidirectional constraints.
-   - Multiple constraints that are active at the same time.
+   - Bidirectional constraints are used to specify one variable's dependance on another.
 5. Difference between while and do while.
    - While checks condition and then does something. do while does something and then checks the condition.
 4. Why do we need randomization in SystemVerilog?
    - So we can apply random stimulus and improve our testing procedures.
 3. Difference between virtual and pure virtual function
-   
+   - Virtual function is a function that is defined in the base class and can be overwritten in the derived class.
+   - Pure virtual function is a function that is instantiated, but not defined in the base class. It must be defined in the derived class.
 2. Difference between static and dynamic casting
-   - dynamic used $cast, while static uses newDataType'(variable)
+   - dynamic used $cast and is a run-time operation. It is more complex and less efficient than static, but it is safer and handles errors.
+   - static uses newDataType'(variable) and is compile-time operation
 1. What is a virtual function?
-   - Virtual function is a function that is defined outside of where it is being used.
+   - Virtual function is a function that can be overwritten in a derived class.
 
 ## Set 2
 10. Difference between structure and class.
