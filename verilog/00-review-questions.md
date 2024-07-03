@@ -46,23 +46,32 @@
 
 ## Set 5
 10. Illustrate the side effect of leaving an input port unconnected that influences a logic to an output port.
-    - The unconnected ports will have a value of X. This could potentially drive logic in an unexpected way.
+    - The unconnected ports will have a value of Z. Synthesis tools will optimize it away.
 9. Illustrate the side effect of not connecting all the ports during instantiation.
-    - The unconnected ports will not be driver.
+    - The unconnected ports will be dangling ports and take on a value of high-impedance Z. == statements would evaluate to false. It could lead to excessive power consumption and timing issues.
 8. What is a parameter in Verilog?
    - It behaves like a constant.
 7. What is the purpose of DPI? Give an example.
-   - DPI - dynamic programming interface. It allows us to write C functions and then import them into our design.
+   - DPI - direct programming interface. It allows hardware to communicate to external software applications.
 6. Explain what happens when width of state registers is not increased as more states gets added in a state machine.
    - If truncates the added states to the width of the register, making it overlap with another state.
 5. Illustrate the side effect of an implicit 1 bit wire declaration of a multi-bit port during instantiation
    - The other wires of the port are in an unknown state.
 4. Same variable used in two loops running simultaneously
    - Race conditions
+   - Deadlock
 3. Illustrate the side effects of mulitple processes writing to the same variable
    - Race conditions
-2. Illustrate the side effect of specifying delays in assing statements.
-1. Illustrate a few important considerations in Verilog simulation regressions.
+   - Multiple processes trying to access the same variable
+   - A process taking a couple steps to modify the variable and another process trying to access it during that time
+   - Deadlock
+2 - Illustrate the side effect of specifying delays in assing statements.
+    - Delays are not synthesizable. If the functionality depends on them, there will be a mismatch between the simulation and the model.
+1 - Illustrate a few important considerations in Verilog simulation regressions.
+    - Test coverage
+    - Scalability
+    - Debugging
+    - Simulation accuracy
 
 ## Set 4
 10. What is PLI?
