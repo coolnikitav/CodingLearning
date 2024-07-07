@@ -44,3 +44,5 @@ Library exchange format - has the layout view of all the cells
 Q: What are the 2 main groups of constraints? What types of constraints does each of these groups have?
 
 Design rule constraints and optimization constraints.
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/8d8b859f-2212-41ce-aadf-8bfe02d2eb92)
