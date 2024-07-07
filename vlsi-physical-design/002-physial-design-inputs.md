@@ -11,3 +11,36 @@ Netlist defines logical functionality and connectivity of the design. File exten
 Unsynthesized netlist is also called as RTL code.
 
 Unsynthesized netlist is technology independent. Synthesized netlist is technology dependent.
+
+# Timing library
+Q: How do we know the delay through a gate in a logic path?
+Q: What does NLDM stand for? What does NLDM propagation delay depend on?
+Q: What does CCS propagation delay depend on?
+
+We know the delay from the library.
+
+NLDM = non linear delay model
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/53d7e48d-766b-404b-9c91-207c378eba55)
+
+NLDM propagation delay depends on transition time and load capacitance.
+
+CCS propagation delay depends on transition time, load capacitance, and time at which you are sampling the data.
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/cd50f3a5-b88f-44a6-81e1-af9f201aa04f)
+
+# LEF File
+Q: What does LEF stand for? What does it hold?
+
+CMOS Inverter Layout:
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/bf4fb243-5fc7-4060-b52c-5d5e68c4a0dc)
+
+Library exchange format - has the layout view of all the cells
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/6796080f-d484-49cb-8016-bbda9500f091)
+
+# Constraints file
+Q: What are the 2 main groups of constraints? What types of constraints does each of these groups have?
+
+Design rule constraints and optimization constraints.
