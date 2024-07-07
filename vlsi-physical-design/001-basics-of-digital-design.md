@@ -33,3 +33,20 @@ We bias the substrate to keep Vsb = 0V. If we do not bias it, then when it spike
 ![image](https://github.com/coolnikitav/learning/assets/30304422/8133ca11-433b-46f8-8979-8d84ad3c52a4)
 
 ![image](https://github.com/coolnikitav/learning/assets/30304422/b09ab2d5-f10c-4a8b-a246-ed04405919ec)
+
+# Logic Gate Conversion
+Q: How to create an AND gate from a 2 to 1 MUX? Y is output, A and B are inputs.
+Q: What about an OR gate?
+Q: What about an XOR gate? You can use 2 MUXes
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/a596f68c-17d0-43b8-aab8-3d8e8d30ce33)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/16bf4eee-1138-40ab-8ec0-e522bee0f75c)
+
+# CMOS Basics Part 4
+Q: Draw a diagram for a CMOS inverter?
+Q: Explain inverter characteristics.
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/c187697a-a954-4f3a-81f0-41a2ba31eeb2)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/1d63b19b-0139-475e-a51e-ef0dba102270)
