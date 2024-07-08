@@ -31,3 +31,35 @@ NDR - non default rule. Clock usually doesnt use default spacing because it swit
 Blockages block empty area without ports, so ports arent applied there.
 
 ![image](https://github.com/coolnikitav/learning/assets/30304422/51bb0e99-123e-49e3-af64-f9a5f4af5a50)
+
+# Marco Placement and Floor-Planning
+Q: What are macros?
+Q: What are the macro placement tips?
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/e57289f6-d4ae-4d2a-a8fe-c053030af824)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/55d174cf-9812-48df-8657-91e3b587f177)
+
+DFM - design for manufacturability
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/addb8282-ca56-458d-82fd-58e1eb09c897)
+
+# Macro placement guidelines and floor-planning
+Q: What are some more macro placement guidelines?
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/5ec76f7c-f3c9-4d44-bf5b-dc86f96c9a26)
+
+Criss cross of nets is not preferred, more straight lines means better placement
+
+# Macro channel spacing estimation and floor-planning
+Q: How to calculate channel length between 2 macros?
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/28d92083-c489-41d7-b157-25730a3606cf)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/0acd6cab-d179-4b9b-9ef6-3ef6ab4d6b4c)
+
+If there are 6 routing layers, we only count 3 because we will either use vertical or horizontal layers.
+
+We also need to account for 1 more ground and 1 more power pin, additing more to channel length.
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/9c07124d-4311-4bfd-b69c-43de393a3e41)
