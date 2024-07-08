@@ -100,3 +100,27 @@ Q: What are the 2 types of resources?
 There are the horizontal and vertical resources.
 
 ![image](https://github.com/coolnikitav/learning/assets/30304422/495cf350-f15e-4348-8403-97a4f851bb1f)
+
+# Physical Only Cells
+Q: What are physical only cells? What is their purpose?
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/402f1daa-ce21-4df6-81b0-b7ed59f1ee19)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/6cd0ca52-08e0-4773-82bc-bae4dd8c5046)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/e7e2a062-5752-4d66-9db8-6e5e23aa198f)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/7f41d74a-ba95-489a-bd75-b84b3f851b90)
+
+# Sanity Checks
+Q: What are the 4 categories of sanity checks? Give example check for each.
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/fcb2a360-8c9b-415a-a76c-71e2faf17abd)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/9217bcf9-d999-42c2-ab83-2c215bc0617c)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/69478b88-d908-4a3f-ac7a-0a2757bbecca)
+
+*avoid combinational feedback
+
+SDC Related checks:
