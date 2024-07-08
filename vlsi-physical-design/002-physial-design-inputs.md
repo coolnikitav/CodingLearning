@@ -46,3 +46,14 @@ Q: What are the 2 main groups of constraints? What types of constraints does eac
 Design rule constraints and optimization constraints.
 
 ![image](https://github.com/coolnikitav/learning/assets/30304422/8d8b859f-2212-41ce-aadf-8bfe02d2eb92)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/785ff48d-edd5-44b9-ade1-ccca53e9ca74)
+
+# Technology File
+Q: What does the technology file have in it?
+
+tech file is technology dependent
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/08a9a853-02c3-4044-806e-bcd5cd2103b5)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/3ddf59c0-6bc6-4bb8-b1d4-95b1a781a8e9)
