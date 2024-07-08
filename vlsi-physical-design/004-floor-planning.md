@@ -63,3 +63,40 @@ If there are 6 routing layers, we only count 3 because we will either use vertic
 We also need to account for 1 more ground and 1 more power pin, additing more to channel length.
 
 ![image](https://github.com/coolnikitav/learning/assets/30304422/9c07124d-4311-4bfd-b69c-43de393a3e41)
+
+# Macro placement guidelines and floor planning
+Q: What are notches? Why are they usually cause? How do we deal with them?
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/2c5834a1-ec99-4cf3-b5b2-c246a8a3ff79)
+
+Notch area leads to routing congestion. Notches happen due to irregular shape of macros. You can deal with them by using blockages.
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/3525ff06-dc10-4958-af2e-51f68c4ac8e3)
+
+# Blockages and Keep-out Margin
+Q: What is the difference between the keep-out margin and placement blockage?
+Q: WHat is Halo? It's the same as the keep-out margin.
+
+Keep-out margin is logical and is not present in the physical layout of the design.
+
+create_placement_blockage -type<>-coordinates
+
+type: hard, soft, partial
+
+create_keepout_margin_type {outer/inner}
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/d9618410-9b2a-4fd3-bd10-3a49c749af64)
+
+# Macro placement issues
+Q: Name the congestion issues and examples of them.
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/e83541d5-fab8-4d46-b817-6374e2b78bff)
+
+# Power planning and power mesh creation
+Q: What are the 2 types of resources?
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/8c5810eb-6b50-41e5-b1b3-77bb84632e8b)
+
+There are the horizontal and vertical resources.
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/495cf350-f15e-4348-8403-97a4f851bb1f)
