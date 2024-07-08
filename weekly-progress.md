@@ -1,4 +1,6 @@
 ## Week of July 1
+- Sunday:
+  - PD: 001
 - Monday:
   - VER: 00-6
   - SV: 00-4
