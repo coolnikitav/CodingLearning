@@ -45,3 +45,29 @@ Which cahce is likely to have a shorter access time? Why?
 - Speedup = 1/(0.75 + 0.25/2) = 1/0.875 = 8/7
 
 --------------------------------------------------------------------
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/53304ac9-f417-4f89-bf41-3031c09f0642)
+- P.A.S.: 32 bits
+- Cache size = 8KB = 2^13B
+- Block size = 16B = 2^4B => 4 bits for block offset
+- No. of sets = 2^13 / 2^4 / 2^2 = 2^7 => 7 bits for set index
+- 32 - 7 - 4 = 21 bits for tag
+
+--------------------------------------------------------------------
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/7944126a-75ba-4b8c-9b63-0e6907f31a2e)
+- r3 RAW btw 2-1
+- r5 RAW btw 3-2
+- r7 RAW btw 4-3
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/3c7b1bd8-8316-4453-b155-de2ef9263275)
+
+--------------------------------------------------------------------
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/a3002f44-195b-4773-bf9b-3f967cfb2dcf)
+- Speedup = 1/(0.6/1.4 + 0.4/2.5) = 1/(3/7 + 4/25) = 1.7
+
+--------------------------------------------------------------------
+![image](https://github.com/coolnikitav/learning/assets/30304422/da667a9f-a48d-4403-afed-2b57d89b8aa9)
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/f7a6e7e2-9e66-49d3-822c-7fdcecd0dd61)
