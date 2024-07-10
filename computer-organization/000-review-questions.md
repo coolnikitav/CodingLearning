@@ -71,3 +71,12 @@ Which cahce is likely to have a shorter access time? Why?
 ![image](https://github.com/coolnikitav/learning/assets/30304422/da667a9f-a48d-4403-afed-2b57d89b8aa9)
 
 ![image](https://github.com/coolnikitav/learning/assets/30304422/f7a6e7e2-9e66-49d3-822c-7fdcecd0dd61)
+
+--------------------------------------------------------------------
+![image](https://github.com/coolnikitav/learning/assets/30304422/72f3434e-4e0b-4ed6-8c1c-1777fa8e7a95)
+
+--------------------------------------------------------------------
+![image](https://github.com/coolnikitav/learning/assets/30304422/996eca36-2479-4f20-98ff-90b5c97f06cf)
+- 256B = 2^8B => 8 bits for block offset
+
+![image](https://github.com/coolnikitav/learning/assets/30304422/8265c7ed-21a8-4284-814f-d25fda59ac67)
