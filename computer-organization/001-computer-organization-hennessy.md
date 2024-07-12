@@ -1,3 +1,25 @@
+
+
+
+
+
+1.6 Consider two different implementations of the same instruction
+set architecture. The instructions can be divided into four classes according to
+their CPI (classes A, B, C, and D). P1 with a clock rate of 2.5GHz and CPIs of 1, 2,
+3, and 3, and P2 with a clock rate of 3GHz and CPIs of 2, 2, 2, and 2.
+Given a program with a dynamic instruction count of 1.0E6 instructions divided
+into classes as follows: 10% class A, 20% class B, 50% class C, and 20% class D,
+which is faster: P1 or P2?
+a. What is the global CPI for each implementation?
+b. Find the clock cycles required in both cases.
+- a: P1: 0.1 * 1 + 0.2 * 2 + 0.5 * 3 + 0.2 * 3 = 2.6 CPI
+- P2: 2 CPI
+- b. clock cycles P1 = 1 * 10^6 * 2.6 = 2.6 * 10^6 cc
+- clock cycles P2 = 2 * 10^6 cc
+
+
+
+
 1.5 Consider three different processors P1, P2, and P3 executing
 the same instruction set. P1 has a 3GHz clock rate and a CPI of 1.5. P2 has a
 2.5GHz clock rate and a CPI of 1.0. P3 has a 4.0GHz clock rate and has a CPI
@@ -11,7 +33,13 @@ of 20% in the CPI. What clock rate should we have to get this time reduction?
 - instr/sec(P1) = 1/1.5 * 3 = 2G-instr/sec
 - instr/sec(P2) = 1 * 2.5 = 2.5 G-instr/sec
 - instr/sec(P3) = 1/2.2 * 4 = 1.82 G-insr/sec
-- 
+- b. instr(P1) = 2 * 10 = 20G-instr, cycles(P1) = 3 * 10 = 30 G cycles
+- instr(P2) = 2.5 * 10 = 25 G-instr, cycles(P2) = 2.5 * 10 = 25 G cycles
+- instr(P3) = 1.82 * 10 = 18.2 G-instr, cycles(P3) = 4 * 10 = 40 G cycles
+- c. time/program = instructions/program * clock cycles/instruction * sec/clock cycles
+- P1: 7 = 20G-instr * 1.2*1.5 * 1/f => f = 20G-instr * 1.2 * 1.5 / 7 = 5.14GHz
+- P2: 25G-instr * 1.2 * 1 / 7 = 4.28 GHz
+- P3: 18.2 G-instr * 1.2 * 2.2 / 7 = 6.75 GHz
 
 
 
