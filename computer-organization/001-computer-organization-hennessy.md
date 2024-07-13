@@ -1,4 +1,57 @@
+1.8 The Pentium 4 Prescott processor, released in 2004, had a clock rate of
+3.6GHz and voltage of 1.25V. Assume that, on average, it consumed 10W of static
+power and 90W of dynamic power.
+The Core i5 Ivy Bridge, released in 2012, has a clock rate of 3.4GHz and voltage
+of 0.9V. Assume that, on average, it consumed 30W of static power and 40W of
+dynamic power.
 
+1.8.1 For each processor find the average capacitive loads.
+- DP = 1/2 * Capacitive load * voltage^2 * frequency
+- C(P4) = 90/(0.5 * 1.25^2 * 3.6 * 10^9) = 90/(2.8125 * 10^9) = 32 * 10^-9 F
+- C(i5) = 40/(0.5 * 0.9^2 * 3.4 * 10^9) = 40/(1.377 * 10^9) = 29.05 * 10^-9 F
+
+1.8.2 Find the percentage of the total dissipated power comprised by
+static power and the ratio of static power to dynamic power for each technology.
+- SP(P4) = 10%, SP/DP = 1/9
+- SP(i5) = 30/70, SP/DP = 30/40
+
+1.8.3 If the total dissipated power is to be reduced by 10%, how much
+should the voltage be reduced to maintain the same leakage current? Note: power
+is defined as the product of voltage and current.
+- DP = 0/5 * C * V^2 * F, SP = V*I
+- (SPnew + DPnew)/(SPold + DPold) = 0.9
+- DPnew = 0.5 * C * Vnew^2 * F = 0.9 * (SPold + DPold) - SPnew
+- Vnew = (2 * DPnew / (C * F))^1/2 = (2 * (0.9 * (SPold + DPold) - SPnew) / (C * F))^1/2
+- SPnew = Vnew * I
+- SPold = Vold * I
+- SPnew = Vnew * SPold / Vold
+- Vnew = (2 * (0.9 * (SPold + DPold) - Vnew * SPold / Vold) / (C * F))^1/2
+
+
+
+1.7 Compilers can have a profound impact on the performance
+of an application. Assume that for a program, compiler A results in a dynamic
+instruction count of 1.0E9 and has an execution time of 1.1 s, while compiler B
+results in a dynamic instruction count of 1.2E9 and an execution time of 1.5 s.
+a. Find the average CPI for each program given that the processor has a clock cycle
+time of 1ns.
+b. Assume the compiled programs run on two different processors. If the execution
+times on the two processors are the same, how much faster is the clock of the
+processor running compiler A’s code versus the clock of the processor running
+compiler B’s code?
+c. A new compiler is developed that uses only 6.0E8 instructions and has an
+average CPI of 1.1. What is the speedup of using this new compiler versus using
+compiler A or B on the original processor?
+- a. time/program = inst/program * clock cycles/instr * sec/clock cycle
+- CPIA = 1.1/(10^9 * 10^-9) = 1.1 cc/instr
+- CPIB = 1.5/(1.2*10^9 * 10^-9) = 1.25 cc/instr
+- b. clock cycles/sec = instr/program * clock cycles/instr / time/program
+- clock cycles/sec of A = 10^9 * 1.1 / x
+- clock cycles/sec of B = 1.2 * 10^9 * 1.25 / x
+- f(b)/f(a) = 1.2*1.25/1.1 = 1.37
+- c. time/program = 6 * 10^8 * 1.1 * 10^-9 = 0.66s
+- speedupA = 1.1/0.66 = 1.67
+- speedupB = 1.5/0.66 = 2.27
 
 
 
