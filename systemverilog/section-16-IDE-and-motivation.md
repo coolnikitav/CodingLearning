@@ -1,5 +1,5 @@
 # IDE and Motivation
-
+- Q: Write the run.do file. It should set up vsim, run all lines, save coverage to a default file, make the report generatr in cov.txt file, then run it.
 run.do
 ```
 vsim +access+r;
