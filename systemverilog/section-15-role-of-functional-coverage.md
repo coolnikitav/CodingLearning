@@ -18,4 +18,3 @@ Dynamic analysis:
 ![image](https://github.com/user-attachments/assets/78ac5b85-fc62-4878-838d-09939a0d8614)
 
 ![image](https://github.com/user-attachments/assets/7c046f25-095b-4636-a918-ff94e50dabba)
-
