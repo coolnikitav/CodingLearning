@@ -16,6 +16,51 @@
   - Program can contain class
 - A: Module can contain class, program can contain package, program can contain class
 
+- Q: Can a wire variable have multiple drivers?
+- A: Yes
+
+- Q: What will be the output of code below?
+```
+module tb;
+  class abc;
+    int sum;
+    function int calc(input int a, input int b);
+      this.sum = a + b;
+      return sum;
+    endfunction
+  endclass
+  
+  initial begin
+    abc obj1, obj2;
+    obj1 = new();
+    obj2 = new();
+        
+    obj1.sum = obj1.calc(10, 20);
+    obj2.sum = obj2.calc(30, 40);
+    
+    $display("obj1 sum = %0d, obj2 sum = %0d", obj1.sum, obj2.sum);
+  end
+endmodule
+```
+  - obj1 sum = 70, obj2 sum = 70
+  - obj1 sum = 30, obj2 sum = 70
+  - obj1 sum = 0, obj2 sum = 0
+  - obj1 sum = 70, obj2 sum = 30
+- A: obj1 sum = 70, obj2 sum = 70
+
+- Q: array[4][8] this array declaration is,
+  - Compact declaration
+  - Verbose declaration
+  - Single dimension array declaration
+  - None of the above
+- A: Verbose declaration
+
+- Q: Which of the following is suitable for asynchronous signals
+  - Modport
+  - Either modport or clocking block
+  - Clocking block
+  - Both modport and clocking block
+
 ## Set 4
 10. What is the purpose of this pointer in SystemVerilog?
    - To indicate that its pointing to the variable in this class when name of a parameter is the same.
