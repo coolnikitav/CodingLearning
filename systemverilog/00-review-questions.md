@@ -1,3 +1,21 @@
+## Questions
+- Q: In systemverilog, class can be defined inside:
+  - Program
+  - Module
+  - Package
+  - All the above
+- A: All the above
+
+- Q: Can a logic variable have multiple drivers?
+- A: No
+
+- Q: Which of the following are true,
+  - Interface can contain module instance
+  - Module can contain class
+  - Program can contain package
+  - Program can contain class
+- A: Module can contain class, program can contain package, program can contain class
+
 ## Set 4
 10. What is the purpose of this pointer in SystemVerilog?
    - To indicate that its pointing to the variable in this class when name of a parameter is the same.
