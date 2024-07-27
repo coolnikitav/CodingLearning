@@ -7,3 +7,19 @@
 
 ![image](https://github.com/user-attachments/assets/a0b43965-2976-4da4-b26d-842d9386228e)
 
+## Explicit bins
+- Q: How to specify the bins to a single number? What about a range?
+  
+Implicit bins are created by the simulator and it tries to divide them evenly.
+
+```
+covergroup cvr_a;
+  option.per_instance = 1;
+  coverpoint a {
+    bins zero = {0};
+    bins one = {1};
+    bins two = {2};
+    bins three = {3};
+  }
+endgroup
+```
