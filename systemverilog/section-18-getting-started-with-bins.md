@@ -149,3 +149,156 @@ endmodule
 ```
 
 ## Working With a Simple FSM in Verilog
+- Q: Write design code for this FSM:
+- ![image](https://github.com/user-attachments/assets/ec5cad54-31ff-4bf6-a3b0-823761b9d4c1)
+- Then write a testbench that shows state coverage. Make the testbench run like this:
+```
+  initial begin
+    rst = 1;
+    #30;
+    rst = 0;
+    #40;
+    din = 1;
+  end
+```
+
+```
+module fsm(
+  input      clk,
+  input      rst,
+  input      din,
+  output reg dout
+);
+  reg state, next_state;
+  
+  parameter s0=0, s1=1;  // verilog uses parameter for this
+  
+  always @ (posedge clk or posedge rst)
+    if (rst)
+      state <= s0;
+  	else
+      state <= next_state;
+  
+  always @ (state or din) begin
+    case (state)
+      s0: begin
+        if (din) begin
+          dout = 1;
+          next_state = s1;
+        end else begin
+          dout = 0;
+          next_state = s0;
+        end
+      end
+      s1: begin
+        if (din) begin
+          dout = 1;
+          next_state = s0;
+        end else begin
+          dout = 0;
+          next_state = s1;
+        end
+      end
+      default: begin
+        dout = 0;
+        next_state = s0;
+      end
+    endcase
+  end
+endmodule
+```
+```
+module tb;
+  reg clk = 0;
+  reg rst = 0;
+  reg din = 0;
+  wire dout;
+  
+  covergroup cvr_state;
+    option.per_instance = 1;
+    coverpoint dut.state;
+  endgroup
+  
+  fsm dut (.clk(clk), .rst(rst), .din(din), .dout(dout));
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    rst = 1;
+    #30;
+    rst = 0;
+    #40;
+    din = 1;
+  end
+  
+  cvr_state ci;
+  
+  initial begin
+    ci = new();
+    forever begin
+      @(posedge clk);
+      ci.sample();
+    end
+  end
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+    #200;
+    $finish();
+  end
+endmodule
+```
+## Working with Simple FSM in SystemVerilog
+- Q: How are states declared in SystemVerilog compared to Verilog?
+
+```
+module state_mach(
+input rst,clk,
+input din,
+output logic dout
+);
+ 
+typedef enum {s0,s1} state_type;
+state_type state = s0;
+state_type next_state = s0;
+ 
+/////////////Reset Logic
+always_ff @(posedge clk) begin
+	if(rst == 1'b1)
+		state <= s0;
+	else
+		state <= next_state;
+	end
+ 
+///////////////Next state Decoder Logic
+always_comb begin
+	case(state)
+		s0: begin
+			if(din == 1'b1)
+				next_state = s1;
+			else
+				next_state = s0;
+			end 
+		s1: begin
+			if(din == 1'b1)
+				next_state = s0;
+			else
+				next_state = s1;
+			end 
+		default : next_state = s0;
+	endcase
+end
+ 
+///////////////Output Logic
+ 
+always_comb begin
+	case(state)
+		s0: dout = 1'b0;
+		s1: dout = 1'b1;
+		default : dout = 1'b0;
+	endcase
+end
+endmodule
+
+```
