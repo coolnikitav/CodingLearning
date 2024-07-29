@@ -26,4 +26,8 @@ Stop-ServiceByName -serviceName "ATI Logging ETAS Usage Service"
 # To stop service on a remote computer, specify the computer name
 # Stop-ServiceByName -serviceName "ATI Logging ETAS Usage Service" -computerName "RemoteComputerName"
 
+I tried stopping the service on another computer and getting the following error:
+
 Failed to stop ATI Logging ETAS Usage Service service on USCED2UA81121M2, error: [USCED2UA81121M2] Connecting to remote server USCED2UA81121M2 failed with the following error message : The client cannot connect to the destination specified in the request. Verify that the service on the destination is running and is accepting requests. Consult the logs and documentation for the WS-Management service running on the destination, most commonly IIS or WinRM. If the destination is the WinRM service, run the following command on the destination to analyze and configure the WinRM service: "winrm quickconfig". For more information, see the about_Remote_Troubleshooting Help topic.
+
+FYI, the computer is on the network. I can access its files by typing in \\USCED2UA81121M2\c$ in file explorer.
