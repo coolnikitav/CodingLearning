@@ -28,6 +28,7 @@ Stop-ServiceByName -serviceName "ATI Logging ETAS Usage Service"
 
 I tried stopping the service on another computer and getting the following error:
 
+
 Failed to stop ATI Logging ETAS Usage Service service on USCED2UA81121M2, error: [USCED2UA81121M2] Connecting to remote server USCED2UA81121M2 failed with the following error message : The client cannot connect to the destination specified in the request. Verify that the service on the destination is running and is accepting requests. Consult the logs and documentation for the WS-Management service running on the destination, most commonly IIS or WinRM. If the destination is the WinRM service, run the following command on the destination to analyze and configure the WinRM service: "winrm quickconfig". For more information, see the about_Remote_Troubleshooting Help topic.
 
 FYI, the computer is on the network. I can access its files by typing in \\USCED2UA81121M2\c$ in file explorer.
@@ -43,3 +44,17 @@ At line:1 char:1
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : InvalidOperation: (USCED2UA81121M2:String) [Test-WSMan], InvalidOperationException
     + FullyQualifiedErrorId : WsManError,Microsoft.WSMan.Management.TestWSManCommand
+
+$computers = @("Computer1", "Computer2", "Computer3")
+$serviceName = "ATI Logging ETAS Usage Service"
+
+foreach ($computer in $computers) {
+    try {
+        $service = Get-WmiObject -Class Win32_Service -ComputerName $computer -Filter "Name='$serviceName'"
+        $service.StopService()
+        Write-Host "Stopped service '$serviceName' on $computer."
+    }
+    catch {
+        Write-Host "Failed to stop service '$serviceName' on $computer. Error: $_" -ForegroundColor Red
+    }
+}
