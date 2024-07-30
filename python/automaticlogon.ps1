@@ -58,3 +58,25 @@ foreach ($computer in $computers) {
         Write-Host "Failed to stop service '$serviceName' on $computer. Error: $_" -ForegroundColor Red
     }
 }
+
+__GENUS          : 2                                                                                                    __CLASS          : __PARAMETERS                                                                                         __SUPERCLASS     :                                                                                                      __DYNASTY        : __PARAMETERS                                                                                         __RELPATH        :
+__PROPERTY_COUNT : 1
+__DERIVATION     : {}
+__SERVER         :
+__NAMESPACE      :
+__PATH           :
+ReturnValue      : 0
+PSComputerName   :
+
+__GENUS          : 2
+__CLASS          : __PARAMETERS
+__SUPERCLASS     :
+__DYNASTY        : __PARAMETERS
+__RELPATH        :
+__PROPERTY_COUNT : 1
+__DERIVATION     : {}
+__SERVER         :
+__NAMESPACE      :
+__PATH           :
+ReturnValue      : 0
+PSComputerName   :
