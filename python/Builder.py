@@ -1,30 +1,42 @@
-class Solution:
-    def subsets(self, nums: List[int]) -> List[List[int]]:
-        comb = [[]]
+function Copy-FilesFromFolder {  # This doesn't create the toDestination folder, just moves the files
+	param (
+		[string] $fromDestination,
+		[string] $toDestination
+	)
+	if (Test-Path -Path $fromDestination) {
+		Copy-item -Path "$fromDestination\*" -Destination $toDestination -Recurse
+		if (-not (Compare-Folders -fromFolder $fromDestination -toFolder $toDestination)) {
+			Write-Host "Files failed to copy to $toDestination" -ForegroundColor Red
+			Read-Host -Prompt "Press Enter to exit"
+			exit
+		}
+	} else {
+		Write-Host "Failed to find files in $fromDestination" -ForegroundColor Red
+		Read-Host -Prompt "Press Enter to exit"
+		exit
+	}
+}
 
-        def combinations(i: int, curr: List[int]):
-            if i == len(nums):
-                return
-
-            if len(curr) > 0:
-                comb.append(curr)
-                combinations(i+1, curr)
-
-            curr.append[nums[i]]
-            comb.append(curr)
-            combinations(i+1, curr)
-
-        combinations(0, [])
-        return comb
-
-TypeError: 'builtin_function_or_method' object is not subscriptable
-    ~~~~~~~~~~~^^^^^^^^^
-    curr.append[nums[i]]
-Line 13 in combinations (Solution.py)
-    combinations(0, [])
-Line 17 in subsets (Solution.py)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ret = Solution().subsets(param_1)
-Line 37 in _driver (Solution.py)
-    _driver()
-Line 48 in <module> (Solution.py)
+function Compare-Folders {
+    param (
+        [string] $fromFolder,
+        [string] $toFolder
+    )
+    $fromFiles = Get-ChildItem -Path $fromFolder -File -Recurse | 
+                 ForEach-Object { $_.FullName.Substring($fromFolder.Length).TrimStart("\") }
+    
+    $toFiles = Get-ChildItem -Path $toFolder -File -Recurse | 
+               ForEach-Object { $_.FullName.Substring($toFolder.Length).TrimStart("\") }
+    
+    $differences = Compare-Object -ReferenceObject $fromFiles -DifferenceObject $toFiles
+    
+    if ($differences) {
+        Write-Host "Differences found:" -ForegroundColor Red
+        $differences | ForEach-Object {
+            Write-Host "$($_.InputObject) - SideIndicator: $($_.SideIndicator)"
+        }
+        return $false
+    } else {
+        return $true
+    }
+}
