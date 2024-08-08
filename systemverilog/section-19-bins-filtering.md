@@ -136,3 +136,5 @@ endmodule
 #     | bin bdiv5[100]           |        7 |        1 | Covered |
 #     ============================================================
 ```
+
+## Understanding illegal_bins
