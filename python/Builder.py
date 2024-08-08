@@ -1,18 +1,35 @@
-function Copy-FilesFromFolder {  # This doesn't create the toDestination folder, just moves the files
-	param (
-		[string] $fromDestination,
-		[string] $toDestination
-	)
+function Copy-FilesFromFolder {  
+    param (
+        [string] $fromDestination,
+        [string] $toDestination
+    )
+    
     if (Test-Path -Path $fromDestination) {
-        $files = Get-ChildItem -Path "$fromDestination\*" -Recurse
-        $totalItems = $files.Count
+        $items = Get-ChildItem -Path "$fromDestination\*" -Recurse
+        $totalItems = $items.Count
         $counter = 0
         
-        foreach ($item in $files) {
+        foreach ($item in $items) {
             $counter++
+            
+            # Calculate relative path to maintain directory structure
+            $relativePath = $item.FullName.Substring($fromDestination.Length).TrimStart("\")
+            $destinationPath = Join-Path -Path $toDestination -ChildPath $relativePath
+            
+            # Update the progress bar
             $percentComplete = ($counter / $totalItems) * 100
             Write-Progress -Activity "Copying files..." -Status "Copying $($item.Name)" -PercentComplete $percentComplete
-            Copy-Item -Path $item.FullName -Destination $toDestination -Recurse
+            
+            # Copy the item, maintaining the directory structure
+            if ($item.PSIsContainer) {
+                # Create the directory in the destination if it doesn't exist
+                if (-not (Test-Path -Path $destinationPath)) {
+                    New-Item -ItemType Directory -Path $destinationPath -Force
+                }
+            } else {
+                # Copy the file
+                Copy-Item -Path $item.FullName -Destination $destinationPath -Force
+            }
         }
         
         # Perform the folder comparison after copying
@@ -51,3 +68,4 @@ function Compare-Folders {
         return $true
     }
 }
+
