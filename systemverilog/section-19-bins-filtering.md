@@ -138,3 +138,78 @@ endmodule
 ```
 
 ## Understanding illegal_bins
+Values of 6 and 7 should be excluded:
+```
+module tb;
+  reg [2:0] opcode;
+  reg [2:0] a,b;
+  reg [3:0] res;
+  integer i = 0;
+  
+  always_comb begin
+    case (opcode)
+      0: res = a + b;
+      1: res = a - b;
+      2: res = a;
+      3: res = b;
+      4: res = a & b;
+      5: res = a | b;    
+      default: res = 0;
+    endcase
+  end
+  
+  covergroup c;
+    option.per_instance = 1;
+    coverpoint opcode {
+      bins valid_opcode[] = {[0:5]};
+      illegal_bins invalid_opcode[] = {[6:7]};
+    }
+  endgroup
+  
+  c ci;
+  
+  initial begin
+    ci = new();
+    
+    for (i = 0; i < 50; i++) begin
+      opcode = $urandom();      
+      ci.sample();
+    end
+  end
+endmodule
+
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[7]' was hit with value '7' at iteration #1 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[6]' was hit with value '6' at iteration #6 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[6]' was hit with value '6' at iteration #9 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[7]' was hit with value '7' at iteration #12 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[7]' was hit with value '7' at iteration #22 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[7]' was hit with value '7' at iteration #23 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[6]' was hit with value '6' at iteration #24 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[7]' was hit with value '7' at iteration #26 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[6]' was hit with value '6' at iteration #34 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[6]' was hit with value '6' at iteration #44 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# ACDB: Error: ACDB_0012 testbench.sv (23): Illegal bin 'invalid_opcode[7]' was hit with value '7' at iteration #45 of covergroup sampling. It will have no impact on the coverage statistics. HDL instance: "/tb". Covergroup type: "c", covergroup instance: "<UNNAMED1>", coverpoint: "opcode".
+# KERNEL: Simulation has finished. There are no more test vectors to simulate.
+
+COVERGROUP COVERAGE
+#     ==================================================================
+#     |          Covergroup           |   Hits   |  Goal /  |  Status  |
+#     |                               |          | At Least |          |
+#     ==================================================================
+#     | TYPE /tb/c                    | 100.000% | 100.000% | Covered  |
+#     ==================================================================
+#     | INSTANCE <UNNAMED1>           | 100.000% | 100.000% | Covered  |
+#     |-------------------------------|----------|----------|----------|
+#     | COVERPOINT <UNNAMED1>::opcode | 100.000% | 100.000% | Covered  |
+#     |-------------------------------|----------|----------|----------|
+#     | bin valid_opcode[0]           |        6 |        1 | Covered  |
+#     | bin valid_opcode[1]           |       11 |        1 | Covered  |
+#     | bin valid_opcode[2]           |        5 |        1 | Covered  |
+#     | bin valid_opcode[3]           |        6 |        1 | Covered  |
+#     | bin valid_opcode[4]           |        9 |        1 | Covered  |
+#     | bin valid_opcode[5]           |        2 |        1 | Covered  |
+#     | illegal bin invalid_opcode[6] |        5 |    -     | Occurred |
+#     | illegal bin invalid_opcode[7] |        6 |    -     | Occurred |
+#     ==================================================================
+# 
+```
