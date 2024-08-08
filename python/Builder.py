@@ -1,20 +1,38 @@
-function Copy-FilesFromFolder {  # This doesn't create the toDestination folder, just moves the files
-	param (
-		[string] $fromDestination,
-		[string] $toDestination
-	)
-	if (Test-Path -Path $fromDestination) {
-		Copy-item -Path "$fromDestination\*" -Destination $toDestination -Recurse
-		if (-not (Compare-Folders -fromFolder $fromDestination -toFolder $toDestination)) {
-			Write-Host "Files failed to copy to $toDestination" -ForegroundColor Red
-			Read-Host -Prompt "Press Enter to exit"
-			exit
-		}
-	} else {
-		Write-Host "Failed to find files in $fromDestination" -ForegroundColor Red
-		Read-Host -Prompt "Press Enter to exit"
-		exit
-	}
+function Copy-FilesFromFolder {
+    param (
+        [string] $fromDestination,
+        [string] $toDestination
+    )
+    
+    if (Test-Path -Path $fromDestination) {
+        # Get all files to be copied
+        $files = Get-ChildItem -Path "$fromDestination\*" -Recurse
+        $totalItems = $files.Count
+        $counter = 0
+        
+        # Loop through the files and folders while copying and updating the progress bar
+        foreach ($item in $files) {
+            $counter++
+            
+            # Update progress bar
+            $percentComplete = ($counter / $totalItems) * 100
+            Write-Progress -Activity "Copying files..." -Status "Copying $($item.Name)" -PercentComplete $percentComplete
+            
+            # Copy item (file or folder)
+            Copy-Item -Path $item.FullName -Destination $toDestination -Recurse
+        }
+        
+        # Perform the folder comparison after copying
+        if (-not (Compare-Folders -fromFolder $fromDestination -toFolder $toDestination)) {
+            Write-Host "Files failed to copy to $toDestination" -ForegroundColor Red
+            Read-Host -Prompt "Press Enter to exit"
+            exit
+        }
+    } else {
+        Write-Host "Failed to find files in $fromDestination" -ForegroundColor Red
+        Read-Host -Prompt "Press Enter to exit"
+        exit
+    }
 }
 
 function Compare-Folders {
@@ -40,3 +58,6 @@ function Compare-Folders {
         return $true
     }
 }
+
+# Example usage
+Copy-FilesFromFolder -fromDestination "C:\SourceFolder" -toDestination "D:\DestinationFolder"
