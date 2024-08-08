@@ -72,3 +72,67 @@ module tb;
   
 endmodule
 ```
+```
+module tb;
+  reg [3:0] a; 
+  reg [6:0] btemp;
+  integer i = 0;
+  int b;
+  
+  covergroup c;
+  	option.per_instance = 1;
+    coverpoint b {
+      bins zero = {0};
+      bins bdiv5[] =  {[1:100]} with (item % 5 == 0);
+    }
+  endgroup
+  
+  c ci;
+  
+  initial begin
+    ci = new();
+    
+    for (int i = 0; i < 1000; i++) begin
+      btemp = $urandom();  // most values generated will be much greater than 100
+      b = btemp;
+      $display("Value of b : %0d", b);
+      ci.sample();
+    end
+  end
+  
+endmodule
+
+#     COVERGROUP COVERAGE
+#     ============================================================
+#     |        Covergroup        |   Hits   |  Goal /  | Status  |
+#     |                          |          | At Least |         |
+#     ============================================================
+#     | TYPE /tb/c               | 100.000% | 100.000% | Covered |
+#     ============================================================
+#     | INSTANCE <UNNAMED1>      | 100.000% | 100.000% | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::b | 100.000% | 100.000% | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | bin zero                 |        8 |        1 | Covered |
+#     | bin bdiv5[5]             |       11 |        1 | Covered |
+#     | bin bdiv5[10]            |        6 |        1 | Covered |
+#     | bin bdiv5[15]            |       11 |        1 | Covered |
+#     | bin bdiv5[20]            |       12 |        1 | Covered |
+#     | bin bdiv5[25]            |        3 |        1 | Covered |
+#     | bin bdiv5[30]            |        7 |        1 | Covered |
+#     | bin bdiv5[35]            |        7 |        1 | Covered |
+#     | bin bdiv5[40]            |       12 |        1 | Covered |
+#     | bin bdiv5[45]            |        7 |        1 | Covered |
+#     | bin bdiv5[50]            |        8 |        1 | Covered |
+#     | bin bdiv5[55]            |        6 |        1 | Covered |
+#     | bin bdiv5[60]            |       10 |        1 | Covered |
+#     | bin bdiv5[65]            |       10 |        1 | Covered |
+#     | bin bdiv5[70]            |       10 |        1 | Covered |
+#     | bin bdiv5[75]            |        5 |        1 | Covered |
+#     | bin bdiv5[80]            |        9 |        1 | Covered |
+#     | bin bdiv5[85]            |        7 |        1 | Covered |
+#     | bin bdiv5[90]            |       11 |        1 | Covered |
+#     | bin bdiv5[95]            |       12 |        1 | Covered |
+#     | bin bdiv5[100]           |        7 |        1 | Covered |
+#     ============================================================
+```
