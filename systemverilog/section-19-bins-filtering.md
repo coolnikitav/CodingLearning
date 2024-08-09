@@ -213,3 +213,37 @@ COVERGROUP COVERAGE
 #     ==================================================================
 # 
 ```
+
+## Understanding ignore bins
+```
+covergroup c;
+    option.per_instance = 1;
+    coverpoint opcode {
+      bins valid_opcode[] = {[0:5]};
+      ignore_bins invalid_opcode[] = {[6:7]};
+    }
+  endgroup
+```
+
+## Advantages of ignore_bins
+```
+covergroup c;
+    option.per_instance = 1;
+    coverpoint a {
+      bins value_a[] = {[1:100]};
+      ignore_bins unused_a = {23,45,67,89,93};
+    }
+  endgroup
+```
+
+## Ignoring range of values from coverage
+```
+covergroup c;
+    option.per_instance = 1;
+    coverpoint a {
+      ignore_bins unused_range[] = {[3:7],[32:36],[47:50],[61:64]};
+    }
+  endgroup
+```
+
+## Ignore vs Illegal Bins
