@@ -246,4 +246,5 @@ covergroup c;
   endgroup
 ```
 
-## Ignore vs Illegal Bins
+## Wildcard bins
+
