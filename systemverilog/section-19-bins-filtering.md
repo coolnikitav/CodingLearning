@@ -247,4 +247,75 @@ covergroup c;
 ```
 
 ## Wildcard bins
+```
+module priority_encoder(
+  input [3:0] a,
+  output reg [1:0] y
+);
+  always @ (a) begin
+    casez(a)
+      4'b0001: y = 2'b00;
+      4'b001?: y = 2'b01;
+      4'b01??: y = 2'b10;
+      4'b1???: y = 2'b11;
+      default: y = 2'bzz;
+    endcase
+  end
+endmodule
 
+module tb;
+  reg [3:0] a;
+  wire [1:0] y;
+  
+  priority_encoder dut(.a(a), .y(y));
+  
+  covergroup c;
+    option.per_instance = 1;
+    coverpoint a {
+      bins zz = {4'b0001};
+      wildcard bins zo = {4'b001?};
+      wildcard bins oz = {4'b01??};
+      wildcard bins oo = {4'b1???};
+    }
+    coverpoint y;
+  endgroup
+  
+  c ci;
+  
+  initial begin
+    ci = new();
+    for (int i = 0; i < 1000; i++) begin
+      a = $urandom();
+      ci.sample();
+      #5;
+    end
+  end
+endmodule
+
+#     COVERGROUP COVERAGE
+#     ============================================================
+#     |        Covergroup        |   Hits   |  Goal /  | Status  |
+#     |                          |          | At Least |         |
+#     ============================================================
+#     | TYPE /tb/c               | 100.000% | 100.000% | Covered |
+#     ============================================================
+#     | INSTANCE <UNNAMED1>      | 100.000% | 100.000% | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::a | 100.000% | 100.000% | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | bin zz                   |       68 |        1 | Covered |
+#     | bin zo                   |      141 |        1 | Covered |
+#     | bin oz                   |      245 |        1 | Covered |
+#     | bin oo                   |      482 |        1 | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::y | 100.000% | 100.000% | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | bin auto[0]              |       68 |        1 | Covered |
+#     | bin auto[1]              |      140 |        1 | Covered |
+#     | bin auto[2]              |      245 |        1 | Covered |
+#     | bin auto[3]              |      482 |        1 | Covered |
+#     ============================================================
+```
+
+## Handling presence of 'X' or 'Z' in values
+These undefined values are not captured by default.
