@@ -133,3 +133,192 @@ endmodule
 #     | ignore bin rsl_high              |        8 |    -     | Occurred |
 #     =====================================================================
 ```
+
+## Consecutive Repetition Transition
+```
+module tb;
+  reg clk = 0;
+  reg data[] = {1,1,1,1,1,0,1,0,0};
+  reg state = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    for (int i = 0; i < 9; i++) begin
+      @(posedge clk);
+      state = data[i];
+    end
+  end
+  
+  covergroup c @(posedge clk);
+    option.per_instance = 1;
+    coverpoint state {
+      bins trans_0_1 = (1[*4]); // 4 consecutive ones
+    }
+  endgroup
+  
+  initial begin
+    c ci = new();
+    #100;
+    $finish();
+  end
+endmodule
+
+#     COVERGROUP COVERAGE
+#     ================================================================
+#     |          Covergroup          |   Hits   |  Goal /  | Status  |
+#     |                              |          | At Least |         |
+#     ================================================================
+#     | TYPE /tb/c                   | 100.000% | 100.000% | Covered |
+#     ================================================================
+#     | INSTANCE <UNNAMED1>          | 100.000% | 100.000% | Covered |
+#     |------------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::state | 100.000% | 100.000% | Covered |
+#     |------------------------------|----------|----------|---------|
+#     | bin trans_0_1                |        2 |        1 | Covered |
+#     ================================================================
+```
+```
+module tb;
+  reg clk = 0;
+  reg data[] = {1,1,1,1,0,1,1,1,1,0,1,0,0};
+  reg state = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    for (int i = 0; i < 9; i++) begin
+      @(posedge clk);
+      state = data[i];
+    end
+  end
+  
+  covergroup c @(posedge clk);
+    option.per_instance = 1;
+    coverpoint state {
+      bins trans_0_1 = (0=>1[*4]); // 4 consecutive ones that transitioned from zero
+    }
+  endgroup
+  
+  initial begin
+    c ci = new();
+    #100;
+    $finish();
+  end
+endmodule
+
+#     COVERGROUP COVERAGE
+#     ================================================================
+#     |          Covergroup          |   Hits   |  Goal /  | Status  |
+#     |                              |          | At Least |         |
+#     ================================================================
+#     | TYPE /tb/c                   | 100.000% | 100.000% | Covered |
+#     ================================================================
+#     | INSTANCE <UNNAMED1>          | 100.000% | 100.000% | Covered |
+#     |------------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::state | 100.000% | 100.000% | Covered |
+#     |------------------------------|----------|----------|---------|
+#     | bin trans_0_1                |        2 |        1 | Covered |
+#     ================================================================
+```
+
+## Non-consecutive Transition
+```
+module tb;
+  reg clk = 0;
+  reg data[] = {0,0,0,1,1,0,0,1,0,1,0,1,1,1,0};
+  reg state = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    for (int i = 0; i < 15; i++) begin
+      @(posedge clk);
+      state = data[i];
+    end
+  end
+  
+  covergroup c @(posedge clk);
+    option.per_instance = 1;
+    coverpoint state {
+      bins trans_0_1 = (1[=5]);  // non-consecutive
+    }
+  endgroup
+  
+  initial begin
+    c ci = new();
+    #150;
+    $finish();
+  end
+endmodule
+
+#     COVERGROUP COVERAGE
+#     ================================================================
+#     |          Covergroup          |   Hits   |  Goal /  | Status  |
+#     |                              |          | At Least |         |
+#     ================================================================
+#     | TYPE /tb/c                   | 100.000% | 100.000% | Covered |
+#     ================================================================
+#     | INSTANCE <UNNAMED1>          | 100.000% | 100.000% | Covered |
+#     |------------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::state | 100.000% | 100.000% | Covered |
+#     |------------------------------|----------|----------|---------|
+#     | bin trans_0_1                |        3 |        1 | Covered |
+#     ================================================================
+```
+```
+covergroup c @(posedge clk);
+    option.per_instance = 1;
+    coverpoint state {
+      bins trans_0_1 = (1[=5]);  // non-consecutive
+    }
+  endgroup
+```
+```
+module tb;
+  reg clk = 0;
+  reg data[] = {0,0,0,1,1,0,0,1,0,1,0,1,1,1,0};
+  reg state = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    for (int i = 0; i < 15; i++) begin
+      @(posedge clk);
+      state = data[i];
+    end
+  end
+  
+  covergroup c @(posedge clk);
+    option.per_instance = 1;
+    coverpoint state {
+      bins trans_0_1 = (0=>1[->5]=>0);  // non-consecutive
+    }
+  endgroup
+  
+  initial begin
+    c ci = new();
+    #250;
+    $finish();
+  end
+endmodule
+
+#     COVERGROUP COVERAGE
+#     ================================================================
+#     |          Covergroup          |   Hits   |  Goal /  | Status  |
+#     |                              |          | At Least |         |
+#     ================================================================
+#     | TYPE /tb/c                   | 100.000% | 100.000% | Covered |
+#     ================================================================
+#     | INSTANCE <UNNAMED1>          | 100.000% | 100.000% | Covered |
+#     |------------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::state | 100.000% | 100.000% | Covered |
+#     |------------------------------|----------|----------|---------|
+#     | bin trans_0_1                |        1 |        1 | Covered |
+#     ================================================================
+```
+
+## Summary
+- [*n] - consecutive
+- [=n] - non-consecutive repetition
+- [->n] - allows us to match an expression
