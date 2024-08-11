@@ -219,3 +219,327 @@ endmodule
 #     | ignore bin sel_other          |       45 |    -     | Occurred |
 #     ==================================================================
 ```
+
+## Priority Encoder
+```
+module penc(
+  input [7:0] y,
+  output reg [2:0] a
+);
+  always @(y) begin
+    casez(y)
+      8'b0000_0001: a = 3'b000;
+      8'b0000_001?: a = 3'b001;
+      8'b0000_01??: a = 3'b010;
+      8'b0000_1???: a = 3'b011;
+      8'b0001_????: a = 3'b100;
+      8'b001?_????: a = 3'b101;
+      8'b01??_????: a = 3'b110;
+      8'b1???_????: a = 3'b111;
+      default: a = 3'bzzz;
+    endcase
+  end
+endmodule
+
+module tb;
+  reg [7:0] y;
+  wire [2:0] a;
+  
+  penc dut (y, a);
+  
+  covergroup c;
+    option.per_instance = 1;
+    coverpoint y {
+      bins zero = {8'b0000_0001};
+      wildcard bins one   = {8'b0000_001?};
+      wildcard bins two   = {8'b0000_01??};
+      wildcard bins three = {8'b0000_1???};
+      wildcard bins four  = {8'b0001_????};
+      wildcard bins five  = {8'b001?_????};
+      wildcard bins six   = {8'b01??_????};
+      wildcard bins seven = {8'b1???_????};
+    }
+    coverpoint a;
+  endgroup
+  
+  initial begin
+    c ci = new();
+    
+    for (int i = 0; i < 500; i++) begin
+      y = $urandom();
+      ci.sample();
+      #5;
+    end
+  end
+endmodule
+
+#     COVERGROUP COVERAGE
+#     ============================================================
+#     |        Covergroup        |   Hits   |  Goal /  | Status  |
+#     |                          |          | At Least |         |
+#     ============================================================
+#     | TYPE /tb/c               | 100.000% | 100.000% | Covered |
+#     ============================================================
+#     | INSTANCE <UNNAMED1>      | 100.000% | 100.000% | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::y | 100.000% | 100.000% | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | bin zero                 |        1 |        1 | Covered |
+#     | bin one                  |        4 |        1 | Covered |
+#     | bin two                  |       12 |        1 | Covered |
+#     | bin three                |       19 |        1 | Covered |
+#     | bin four                 |       25 |        1 | Covered |
+#     | bin five                 |       64 |        1 | Covered |
+#     | bin six                  |      130 |        1 | Covered |
+#     | bin seven                |      243 |        1 | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::a | 100.000% | 100.000% | Covered |
+#     |--------------------------|----------|----------|---------|
+#     | bin auto[0]              |        1 |        1 | Covered |
+#     | bin auto[1]              |        4 |        1 | Covered |
+#     | bin auto[2]              |       12 |        1 | Covered |
+#     | bin auto[3]              |       19 |        1 | Covered |
+#     | bin auto[4]              |       25 |        1 | Covered |
+#     | bin auto[5]              |       64 |        1 | Covered |
+#     | bin auto[6]              |      130 |        1 | Covered |
+#     | bin auto[7]              |      242 |        1 | Covered |
+#     ============================================================
+```
+
+## FIFO
+![image](https://github.com/user-attachments/assets/4e4ec591-99b1-48e5-9183-a1ff71326fb2)
+
+```
+module FIFO(
+  input clk, rst, wr, rd,
+  input [7:0] din,
+  output reg [7:0] dout,
+  output empty, full
+);
+  reg [3:0] wptr = 0, rptr = 0;
+  reg [4:0] cnt = 0;
+  reg [7:0] mem [15:0];
+  
+  always @(posedge clk) begin
+    if (rst == 1'b1) begin
+      wptr 		<= 0;
+      rptr 		<= 0;
+      cnt  		<= 0;
+    end else if (wr && !full) begin
+      mem[wptr] <= din;
+      wptr	    <= wptr + 1;
+      cnt  	    <= cnt + 1;
+    end else if (rd && !empty) begin
+      dout 		<= mem[rptr];
+      rptr 		<= rptr + 1;
+      cnt  		<= cnt - 1;
+    end
+  end
+  
+  assign empty = (cnt == 0);
+  assign full  = (cnt == 16);
+endmodule
+
+module tb;
+  reg        clk  = 0;
+  reg        wr   = 0;
+  reg        rd   = 0;
+  reg        rst  = 0;
+  reg  [7:0] din = 0;
+  wire [7:0] dout;
+  wire       empty;
+  wire       full;
+  
+  FIFO dut (clk, rst, wr, rd, din, dout, empty, full);
+  
+  always #5 clk = ~clk;
+  
+  task write();
+    for (int i = 0; i < 20; i++) begin
+      wr = 1'b1;
+      rd = 1'b0;
+      din = $urandom();
+      @(posedge clk);
+      $display("wr: %0d, addr: %0d, din: %0d, full: %0d", wr, i, din, full);
+      wr = 1'b0;
+      @(posedge clk);
+    end
+  endtask
+  
+  task read();
+    for (int i = 0; i < 20; i++) begin
+      wr = 1'b0;
+      rd = 1'b1;
+      din = 0;
+      @(posedge clk);
+      rd = 1'b0;
+      @(posedge clk);
+      $display("rd: %0d, addr: %0d, dout: %0d, empty: %0d", rd, i, dout, empty);
+    end
+  endtask
+  
+  initial begin
+    rst = 1;
+    wr = 0;
+    rd = 0;
+    repeat(5) @(posedge clk);
+    rst = 0;
+    write();
+    read();
+  end
+  
+  covergroup c @(posedge clk);
+    option.per_instance = 1;
+    coverpoint empty {
+      bins empty_l = {0};
+      bins empty_h = {1};
+    }
+    coverpoint full {
+      bins full_l = {0};
+      bins full_h = {1};
+    }
+    coverpoint rst {
+      bins rst_l = {0};
+      bins rst_h = {1};
+    }
+    coverpoint wr {
+      bins wr_l = {0};
+      bins wr_h = {1};
+    }
+    coverpoint rd {
+      bins rd_l = {0};
+      bins rd_h = {1};
+    }
+    coverpoint din {
+      bins lower = {[0:84]};
+      bins mid   = {[85:169]};
+      bins high  = {[170:255]};
+    }
+    coverpoint dout {
+      bins lower = {[0:84]};
+      bins mid   = {[85:169]};
+      bins high  = {[170:255]};
+    }
+    cross_rst_wr: cross rst, wr {
+      ignore_bins unused_rst   = binsof(rst)   intersect {1};
+      ignore_bins unused_wr    = binsof(wr)    intersect {0};
+    }
+    cross_rst_rd: cross rst, rd {  
+      ignore_bins unused_rst   = binsof(rst)   intersect {1};
+      ignore_bins unused_rd    = binsof(rd)    intersect {0};
+    }
+    cross_wr_din: cross rst, wr, din {
+      ignore_bins unused_rst   = binsof(rst)   intersect {1};
+      ignore_bins unused_wr    = binsof(wr)    intersect {0};
+    }
+    cross_rd_dout: cross rst, rd, dout {
+      ignore_bins unused_rst   = binsof(rst)   intersect {1};
+      ignore_bins unused_rd    = binsof(rd)    intersect {0};
+    }
+    cross_wr_full: cross rst, wr, full {
+      ignore_bins unused_rst   = binsof(rst)   intersect {1};
+      ignore_bins unused_wr    = binsof(wr)    intersect {0};
+      ignore_bins unused_full  = binsof(full)  intersect {0};
+    }
+    cross_rd_empty: cross rst, rd, empty {
+      ignore_bins unused_rst   = binsof(rst)   intersect {1};
+      ignore_bins unused_rd    = binsof(rd)    intersect {0};
+      ignore_bins unused_empty = binsof(empty) intersect {0};
+    }
+  endgroup
+  
+  initial begin
+    c ci = new();
+    #1200;
+    $finish();
+  end
+endmodule
+
+#     COVERGROUP COVERAGE
+#     =====================================================================
+#     |            Covergroup            |   Hits   |  Goal /  |  Status  |
+#     |                                  |          | At Least |          |
+#     =====================================================================
+#     | TYPE /tb/c                       | 100.000% | 100.000% | Covered  |
+#     =====================================================================
+#     | INSTANCE <UNNAMED1>              | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | COVERPOINT <UNNAMED1>::empty     | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin empty_l                      |       70 |        1 | Covered  |
+#     | bin empty_h                      |       50 |        1 | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | COVERPOINT <UNNAMED1>::full      | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin full_l                       |      110 |        1 | Covered  |
+#     | bin full_h                       |       10 |        1 | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | COVERPOINT <UNNAMED1>::rst       | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin rst_l                        |      115 |        1 | Covered  |
+#     | bin rst_h                        |        5 |        1 | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | COVERPOINT <UNNAMED1>::wr        | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin wr_l                         |      100 |        1 | Covered  |
+#     | bin wr_h                         |       20 |        1 | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | COVERPOINT <UNNAMED1>::rd        | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin rd_l                         |      100 |        1 | Covered  |
+#     | bin rd_h                         |       20 |        1 | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | COVERPOINT <UNNAMED1>::din       | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin lower                        |       96 |        1 | Covered  |
+#     | bin mid                          |        8 |        1 | Covered  |
+#     | bin high                         |       16 |        1 | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | COVERPOINT <UNNAMED1>::dout      | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin lower                        |       14 |        1 | Covered  |
+#     | bin mid                          |        4 |        1 | Covered  |
+#     | bin high                         |       56 |        1 | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | CROSS <UNNAMED1>::cross_rst_wr   | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin <rst_l,wr_h>                 |       20 |        1 | Covered  |
+#     | ignore bin unused_rst            |        5 |    -     | Occurred |
+#     | ignore bin unused_wr             |      100 |    -     | Occurred |
+#     |----------------------------------|----------|----------|----------|
+#     | CROSS <UNNAMED1>::cross_rst_rd   | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin <rst_l,rd_h>                 |       20 |        1 | Covered  |
+#     | ignore bin unused_rst            |        5 |    -     | Occurred |
+#     | ignore bin unused_rd             |      100 |    -     | Occurred |
+#     |----------------------------------|----------|----------|----------|
+#     | CROSS <UNNAMED1>::cross_wr_din   | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin <rst_l,wr_h,lower>           |        8 |        1 | Covered  |
+#     | bin <rst_l,wr_h,mid>             |        4 |        1 | Covered  |
+#     | bin <rst_l,wr_h,high>            |        8 |        1 | Covered  |
+#     | ignore bin unused_rst            |        5 |    -     | Occurred |
+#     | ignore bin unused_wr             |      100 |    -     | Occurred |
+#     |----------------------------------|----------|----------|----------|
+#     | CROSS <UNNAMED1>::cross_rd_dout  | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin <rst_l,rd_h,lower>           |        7 |        1 | Covered  |
+#     | bin <rst_l,rd_h,mid>             |        2 |        1 | Covered  |
+#     | bin <rst_l,rd_h,high>            |       10 |        1 | Covered  |
+#     | ignore bin unused_rd             |       55 |    -     | Occurred |
+#     |----------------------------------|----------|----------|----------|
+#     | CROSS <UNNAMED1>::cross_wr_full  | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin <rst_l,wr_h,full_h>          |        4 |        1 | Covered  |
+#     | ignore bin unused_rst            |        5 |    -     | Occurred |
+#     | ignore bin unused_wr             |      100 |    -     | Occurred |
+#     | ignore bin unused_full           |      110 |    -     | Occurred |
+#     |----------------------------------|----------|----------|----------|
+#     | CROSS <UNNAMED1>::cross_rd_empty | 100.000% | 100.000% | Covered  |
+#     |----------------------------------|----------|----------|----------|
+#     | bin <rst_l,rd_h,empty_h>         |        4 |        1 | Covered  |
+#     | ignore bin unused_rst            |        5 |    -     | Occurred |
+#     | ignore bin unused_rd             |      100 |    -     | Occurred |
+#     | ignore bin unused_empty          |       70 |    -     | Occurred |
+#     =====================================================================
+```
