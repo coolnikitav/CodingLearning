@@ -543,3 +543,133 @@ endmodule
 #     | ignore bin unused_empty          |       70 |    -     | Occurred |
 #     =====================================================================
 ```
+
+## Usage of Transition Bins: Serial Peripheral Interface
+![image](https://github.com/user-attachments/assets/10b96bea-1fae-481c-919c-79356139f092)
+
+```
+module dac(input clk,
+  input [11:0] din,
+  input start,
+  output reg mosi, cs
+);
+  
+typedef enum {idle = 0, init = 1, send = 3, data_gen = 2, cont= 4} state_type;
+state_type state;
+ 
+reg [31:0] setup   = 32'h08000001;
+reg [31:0] dac_data = 32'h00000000;
+integer count = 0;
+ 
+  always@(posedge clk) begin
+	case(state)  
+      idle: begin
+        cs   <= 1'b1;
+        mosi <= 1'b0;
+        if(start)
+        	state <= init;
+        else
+        	state <= idle;
+      end
+      init: begin
+        if(count < 32) begin
+          count <= count + 1;
+          mosi  <= setup[31 - count];
+          cs    <= 1'b0;
+          state <= init;
+        end else begin
+          cs    <= 1'b1;
+          count <= 0;
+          state <= data_gen;
+        end
+      end 
+      data_gen: begin
+        dac_data <= {12'h030,din,8'h00};
+        state    <= send;
+      end 
+      send: begin
+        if(count < 32) begin
+          count <= count + 1;
+          mosi  <= dac_data[31 - count];
+          cs    <= 1'b0;
+          state <= send;
+        end else begin
+          cs    <= 1'b1;
+          count <= 0;
+          state <= cont;
+        end
+      end 
+      cont: begin
+        if(start)
+        	state <= data_gen;
+        else
+        	state <= idle;
+      end
+	endcase
+  end
+endmodule
+
+module tb;
+  reg clk = 0;
+  reg start = 0;
+  reg [11:0] din;
+  wire mosi;
+  wire cs;
+  
+  dac dut (clk, din, start, mosi, cs);
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    #20;
+    start = 1;
+    #1000;
+    start = 0;
+  end
+  
+  initial begin
+    for (int i = 0; i < 200; i++) begin
+      @(posedge clk);
+      din = $urandom();
+    end
+  end
+  
+  covergroup c @(posedge clk);
+    option.per_instance = 1;
+    coverpoint dut.state {
+      bins out_of_idle = (dut.idle => dut.init);
+      bins setup_data_send = (dut.idle => dut.init[*33] => dut.data_gen);
+      bins user_data_sned = (dut.data_gen => dut.send[*33] => dut.cont);
+      bins stay_send_33 = (dut.send[*33]);
+      bins stay_int_33 = (dut.init[*33]);
+      bins start_deassert = (dut.send => dut.cont => dut.idle);
+    }
+  endgroup
+  
+  initial begin
+    c ci = new();
+    #2000;
+    $finish();
+  end
+
+endmodule
+
+#     COVERGROUP COVERAGE
+#     ====================================================================
+#     |            Covergroup            |   Hits   |  Goal /  | Status  |
+#     |                                  |          | At Least |         |
+#     ====================================================================
+#     | TYPE /tb/c                       | 100.000% | 100.000% | Covered |
+#     ====================================================================
+#     | INSTANCE <UNNAMED1>              | 100.000% | 100.000% | Covered |
+#     |----------------------------------|----------|----------|---------|
+#     | COVERPOINT <UNNAMED1>::dut.state | 100.000% | 100.000% | Covered |
+#     |----------------------------------|----------|----------|---------|
+#     | bin out_of_idle                  |        1 |        1 | Covered |
+#     | bin setup_data_send              |        1 |        1 | Covered |
+#     | bin user_data_sned               |        2 |        1 | Covered |
+#     | bin stay_send_33                 |        2 |        1 | Covered |
+#     | bin stay_int_33                  |        1 |        1 | Covered |
+#     | bin start_deassert               |        1 |        1 | Covered |
+#     ====================================================================
+```
