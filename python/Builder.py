@@ -8,36 +8,18 @@ function Unzip-ZipFile {
 
     # Check if the zip file exists
     if (Test-Path -Path "$zipLocation\$zipName") {
-        Add-Type -AssemblyName 'System.IO.Compression.FileSystem'
-        $zip = [System.IO.Compression.ZipFile]::OpenRead("$zipLocation\$zipName")
-        
-        foreach ($entry in $zip.Entries) {
-            $exclude = $false
+        # Use Expand-Archive to unzip the entire file
+        Expand-Archive -Path "$zipLocation\$zipName" -DestinationPath $destination -Force
 
-            # Check if the current entry is in one of the excluded folders
-            foreach ($folder in $excludeFolders) {
-                if ($entry.FullName -like "$folder/*" -or $entry.FullName -like "$folder/") {
-                    $exclude = $true
-                    break
-                }
-            }
-
-            # Extract only if the entry is not in an excluded folder
-            if (-not $exclude) {
-                $entryPath = Join-Path $destination $entry.FullName
-                $entryDir = Split-Path $entryPath -Parent
-
-                if (-not (Test-Path $entryDir)) {
-                    New-Item -ItemType Directory -Path $entryDir | Out-Null
-                }
-                
-                $entry.ExtractToFile($entryPath, $true)
+        # Remove the excluded folders
+        foreach ($folder in $excludeFolders) {
+            $folderPath = Join-Path $destination $folder
+            if (Test-Path -Path $folderPath) {
+                Remove-Item -Path $folderPath -Recurse -Force
             }
         }
 
-        $zip.Dispose()
-        
-        # Delete zipFile after unzipping it
+        # Optionally, delete the original zip file after extraction
         Remove-Item -Path "$zipLocation\$zipName" -Force
     } else {
         Write-Host "$zipName is not found" -ForegroundColor Red
