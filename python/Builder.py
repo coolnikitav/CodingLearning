@@ -1,18 +1,17 @@
-function Create-iniFile {
+function Unzip-ZipFile {
 	param (
-        [string] $addonsVersion,
+		[string] $zipName,
+		[string] $zipLocation,
 		[string] $destination
 	)
-	#	AddonsVersion.ini holds the version number
-    $iniContent = @"
-VERSION=$addonsVersion
-"@
-
-    Set-Content "$destination\Addons.ini" -Value $iniContent
-
-    if (-not (Test-Path -Path "$destination\Addons.ini")) {
-        Write-Host "ini file failed to create" -ForegroundColor Red
+	if (Test-Path -Path "$zipLocation\$zipName") {
+		Expand-Archive -Path "$zipLocation\$zipName" -DestinationPath $destination -Force
+	} else {
+		Write-Host "$zipName is not found" -ForegroundColor Red
 		Read-Host -Prompt "Press Enter to exit"
 		exit
-    }
+	}
+	
+	# Delete zipFile after unzipping it
+	Remove-Item -Path "$destination\$zipName" -Force
 }
