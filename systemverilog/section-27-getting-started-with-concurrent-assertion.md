@@ -152,5 +152,46 @@ endmodule
 
 ## Disabling Concurrent Assertion
 ```
+module tb;
+  reg clk = 0;
+  reg req = 0;
+  reg ack = 0;
+  reg rst = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    rst = 1;
+    #50;
+    rst = 0;
+  end
+  
+  initial begin
+    #30;
+    req = 1;
+    #10;
+    req = 0;
+    #30;
+    req = 1;
+    #10;
+    req = 0;
+    ack = 1;
+    #10;
+    ack = 0;
+  end
+  
+  // Ways to disable check for concurrent assertions
+  A2: assert property ( @(posedge clk) disable iff(rst) req |=> ack) $info("Suc at %0t", $time);
+    
+  initial begin
+    #100;
+    $finish();
+  end
+endmodule
 
+# KERNEL: Info: testbench.sv (30): Suc at 55
+# KERNEL: Info: testbench.sv (30): Suc at 65
+# KERNEL: Info: testbench.sv (30): Suc at 85
+# KERNEL: Info: testbench.sv (30): Suc at 85
+# KERNEL: Info: testbench.sv (30): Suc at 95
 ```
