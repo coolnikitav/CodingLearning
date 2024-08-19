@@ -442,3 +442,213 @@ endmodule
 ```
 
 ## $onehot + $onehot0
+```
+module tb;
+  reg [3:0] a = 4'b0000;
+  reg clk = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    for (int i = 0; i < 40; i++) begin
+      a = $urandom_range(0,4);
+      $display("a: %0b $onehot: %0d and $onehot0: %0d @ %0t", a, $onehot(a), $onehot0(a), $time);
+      $display("------------------------------------------");
+      @(negedge clk);
+    end
+  end
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+    #120;
+    $finish();
+  end
+endmodule
+
+# KERNEL: a: 0 $onehot: 0 and $onehot0: 1 @ 0
+# KERNEL: ------------------------------------------
+# KERNEL: a: 1 $onehot: 1 and $onehot0: 1 @ 10
+# KERNEL: ------------------------------------------
+# KERNEL: a: 1 $onehot: 1 and $onehot0: 1 @ 20
+# KERNEL: ------------------------------------------
+# KERNEL: a: 10 $onehot: 1 and $onehot0: 1 @ 30
+# KERNEL: ------------------------------------------
+# KERNEL: a: 11 $onehot: 0 and $onehot0: 0 @ 40
+# KERNEL: ------------------------------------------
+# KERNEL: a: 10 $onehot: 1 and $onehot0: 1 @ 50
+# KERNEL: ------------------------------------------
+# KERNEL: a: 1 $onehot: 1 and $onehot0: 1 @ 60
+# KERNEL: ------------------------------------------
+# KERNEL: a: 0 $onehot: 0 and $onehot0: 1 @ 70
+# KERNEL: ------------------------------------------
+# KERNEL: a: 0 $onehot: 0 and $onehot0: 1 @ 80
+# KERNEL: ------------------------------------------
+# KERNEL: a: 100 $onehot: 1 and $onehot0: 1 @ 90
+# KERNEL: ------------------------------------------
+# KERNEL: a: 0 $onehot: 0 and $onehot0: 1 @ 100
+# KERNEL: ------------------------------------------
+# KERNEL: a: 11 $onehot: 0 and $onehot0: 0 @ 110
+# KERNEL: ------------------------------------------
+```
+
+## $onecold
+```
+module tb;
+  reg [3:0] a = 4'b0000;
+  reg clk = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    for (int i = 0; i < 40; i++) begin
+      a = $urandom_range(0,15);
+      $display("a: %4b $onecold: %0d @ %0t", a, $onehot(~a), $time);
+      $display("------------------------------------------");
+      @(negedge clk);
+    end
+  end
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+    #120;
+    $finish();
+  end
+endmodule
+
+# KERNEL: a: 0011 $onecold: 0 @ 0
+# KERNEL: ------------------------------------------
+# KERNEL: a: 1111 $onecold: 0 @ 10
+# KERNEL: ------------------------------------------
+# KERNEL: a: 0000 $onecold: 0 @ 20
+# KERNEL: ------------------------------------------
+# KERNEL: a: 1010 $onecold: 0 @ 30
+# KERNEL: ------------------------------------------
+# KERNEL: a: 0000 $onecold: 0 @ 40
+# KERNEL: ------------------------------------------
+# KERNEL: a: 0101 $onecold: 0 @ 50
+# KERNEL: ------------------------------------------
+# KERNEL: a: 1110 $onecold: 1 @ 60
+# KERNEL: ------------------------------------------
+# KERNEL: a: 1100 $onecold: 0 @ 70
+# KERNEL: ------------------------------------------
+# KERNEL: a: 1101 $onecold: 1 @ 80
+# KERNEL: ------------------------------------------
+# KERNEL: a: 0110 $onecold: 0 @ 90
+# KERNEL: ------------------------------------------
+# KERNEL: a: 1100 $onecold: 0 @ 100
+# KERNEL: ------------------------------------------
+# KERNEL: a: 0001 $onecold: 0 @ 110
+# KERNEL: ------------------------------------------
+```
+
+## $isunknown
+```
+module tb;
+  reg [3:0] a;
+  reg clk = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    #4;
+    a = 4'b0001;
+    #10;
+    a = 4'b000z;
+    #10;
+    a = 4'b1111;
+    #10;
+    a = 4'b000z;
+    #10;
+    a = 4'b0000;
+    #10;
+    a = 4'bzxxx;
+  end
+  
+  initial begin
+    #70;
+    $finish();
+  end
+  
+  always @(posedge clk) begin
+    $display("Value of a: %4b, $isunknown: %0b @ time: %0t", $sampled(a), $isunknown(a), $time);
+  end
+endmodule
+
+# KERNEL: Value of a: 0001, $isunknown: 0 @ time: 5
+# KERNEL: Value of a: 000z, $isunknown: 1 @ time: 15
+# KERNEL: Value of a: 1111, $isunknown: 0 @ time: 25
+# KERNEL: Value of a: 000z, $isunknown: 1 @ time: 35
+# KERNEL: Value of a: 0000, $isunknown: 0 @ time: 45
+# KERNEL: Value of a: zxxx, $isunknown: 1 @ time: 55
+# KERNEL: Value of a: zxxx, $isunknown: 1 @ time: 65
+```
+
+## $countbits
+```
+module tb;
+  reg [3:0] a;
+  reg clk = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    #4;
+    a = 4'b0001;
+    #10;
+    a = 4'b000z;
+    #10;
+    a = 4'b1111;
+    #10;
+    a = 4'b000z;
+    #10;
+    a = 4'b0000;
+    #10;
+    a = 4'bzzxx;
+  end
+  
+  initial begin
+    #70;
+    $finish();
+  end
+  
+  always @(posedge clk) begin
+    $display("Value of a: %4b, $countbits: %0d @ time: %0t", $sampled(a), $countbits(a, 1'bz), $time);
+  end
+endmodule
+
+# KERNEL: Value of a: 0001, $countbits: 0 @ time: 5
+# KERNEL: Value of a: 000z, $countbits: 1 @ time: 15
+# KERNEL: Value of a: 1111, $countbits: 0 @ time: 25
+# KERNEL: Value of a: 000z, $countbits: 1 @ time: 35
+# KERNEL: Value of a: 0000, $countbits: 0 @ time: 45
+# KERNEL: Value of a: zzxx, $countbits: 2 @ time: 55
+# KERNEL: Value of a: zzxx, $countbits: 2 @ time: 65
+```
+
+## $countones
+```
+always @(posedge clk) begin
+  $display("Value of a: %4b, $countones: %0d @ time: %0t", $sampled(a), $countones(a), $time);
+end
+
+# KERNEL: Value of a: 0001, $countones: 1 @ time: 5
+# KERNEL: Value of a: 000z, $countones: 0 @ time: 15
+# KERNEL: Value of a: 1111, $countones: 4 @ time: 25
+# KERNEL: Value of a: 000z, $countones: 0 @ time: 35
+# KERNEL: Value of a: 0000, $countones: 0 @ time: 45
+# KERNEL: Value of a: zzxx, $countones: 0 @ time: 55
+# KERNEL: Value of a: zzxx, $countones: 0 @ time: 65
+```
+
+## Summary
+- $rose - detect rising edge of signal
+- $fell - detect falling edge of signal
+- $past = aceess past values of signal
+- $onehot/$onehot0 - signal is one hot encoded or ont
+- $isunknown - any bit of signal has x/z value
+- $countones - return number of ones in signal
+- $countbits - return number of bits with matching value
+- $changed - signal value has changed as comparted to previous clock tick
+- $stable - signal value remain same as compared to previous clock tick
