@@ -440,3 +440,5 @@ endmodule
 # KERNEL: [95]: Value of a: 0 $changed(a): 1 $stable(a): 0
 # KERNEL: ----------------------------------------
 ```
+
+## $onehot + $onehot0
