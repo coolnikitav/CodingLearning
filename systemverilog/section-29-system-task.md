@@ -390,3 +390,53 @@ end
   - $fell(CE) |=> (out == $past(out));
 - in TFF, if CE assert output must toggle
   - $rose(CE) |=> (out != $past(out));
+
+## $changed + $stable
+```
+module tb;
+  reg a = 0;
+  reg clk = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    for (int i = 0; i < 15; i++) begin
+      a = $urandom_range(0,1);
+      @(posedge clk);
+    end
+  end
+  
+  always @(posedge clk) begin
+    $display("[%0t]: Value of a: %0b $changed(a): %0b $stable(a): %0b", $time, a, $changed(a), $stable(a));
+    $display("----------------------------------------");
+  end
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+    #100;
+    $finish;
+  end
+endmodule
+
+# KERNEL: [5]: Value of a: 1 $changed(a): 1 $stable(a): 0
+# KERNEL: ----------------------------------------
+# KERNEL: [15]: Value of a: 1 $changed(a): 0 $stable(a): 1
+# KERNEL: ----------------------------------------
+# KERNEL: [25]: Value of a: 0 $changed(a): 1 $stable(a): 0
+# KERNEL: ----------------------------------------
+# KERNEL: [35]: Value of a: 0 $changed(a): 0 $stable(a): 1
+# KERNEL: ----------------------------------------
+# KERNEL: [45]: Value of a: 0 $changed(a): 0 $stable(a): 1
+# KERNEL: ----------------------------------------
+# KERNEL: [55]: Value of a: 1 $changed(a): 1 $stable(a): 0
+# KERNEL: ----------------------------------------
+# KERNEL: [65]: Value of a: 0 $changed(a): 1 $stable(a): 0
+# KERNEL: ----------------------------------------
+# KERNEL: [75]: Value of a: 0 $changed(a): 0 $stable(a): 1
+# KERNEL: ----------------------------------------
+# KERNEL: [85]: Value of a: 1 $changed(a): 1 $stable(a): 0
+# KERNEL: ----------------------------------------
+# KERNEL: [95]: Value of a: 0 $changed(a): 1 $stable(a): 0
+# KERNEL: ----------------------------------------
+```
