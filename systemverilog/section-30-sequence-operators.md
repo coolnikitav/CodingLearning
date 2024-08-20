@@ -164,3 +164,20 @@ A1: assert property (@(posedge clk) $rose(req) |-> strong(##[1:$] $rose(ack))) $
 # ASSERT: Error: ASRT_0005 testbench.sv(22): Assertion "A1" FAILED at time: 140ns, scope: tb, start-time: 5ns
 ```
 
+- ##[*] = ##[0:$]
+- ##[+] = ##[1:$]
+
+## Repetition Operator
+- Consecutive (*)
+- Non-consecutive (=) + Goto (->)
+
+## Consecutive Operator with Constant Count
+```
+// 3 consecutive
+A1: assert property (@(posedge clk) $rose(rd) |-> rd[*3]) $info("Con rep Suc @ %0t", $time);
+```
+
+## Consectuve Repitition Operator with Range
+```
+A1: assert property (@(posedge clk) $rose(a) |-> b[*2:4]) $info("Suc @ %0t", $time);
+```
