@@ -242,27 +242,84 @@ endmodule
 
 ## Consecutive Repetition Operator with Unbounded Range
 ```
-// psel should stay high for at least a cycle and then go low when penable falls
-A1: assert property (@(posedge clk) $rose(psel) |-> psel[*1:$] ##1 $fell(penable)) $info("Suc @ %0t", $time);
-```
-
-## Use Cases
-Check system behavior during the write operation by performing at least five write cycles when reset is disabled
-```
-assert property (@(posedge clk) $fell(rst) |-> wr[*5:$]);
-```
-
-Check system behavior during the read operation by performing at least five read cycles when reset is disabled
-```
-assert property (@(posedge clk) $fell(rst) |-> rd[*5:$]);
-```
-
-During the reading operation, rd signal must remain high for exactly two clock ticks
-```
-assert property (@(posedge clk) $rose(rd) |-> rd[*2] ##1 !rd);
-```
-
-Both rd and wr should remain low after completion of five write and read transactions
-```
-assert property (@(posedge clk) (wr[*5] && rd[*5]) |-> (!rd[*0:$] && !wr[*0:$]));
+module tb;
+  reg clk = 0;
+  
+  reg rd = 0;
+  reg wr = 0;
+  reg rst = 0;
+  
+  reg done = 0;
+  
+  int delayW, delayR;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    rst = 1;
+    #20;
+    rst = 0;
+  end
+  
+  task write();
+    for (int i = 0; i < 5; i++) begin
+      @(negedge clk);
+      delayW = $urandom_range(1,3);
+      wr = 1;
+      @(posedge clk);
+      wr = 0;
+      repeat(delayW) @(posedge clk);
+    end
+  endtask
+  
+  task read();
+    for (int i = 0; i < 5; i++) begin
+      @(negedge clk);
+      delayR = $urandom_range(1,3);
+      repeat(delayR) @(posedge clk);
+      rd = 1;
+      repeat(2) @(posedge clk);
+      rd = 0;
+    end
+  endtask
+  
+  initial begin
+    #20;
+    fork
+      write();
+      read();
+    join
+  end
+  
+  initial begin
+    #20;
+    done = 1;
+    #10;
+    done = 0;
+  end
+  
+  // consecutive repetition operator
+  // rd goes high, stays high for 2 CC, then goes low
+  A1: assert property (@(posedge clk) $rose(rd) |-> rd[*2] ##1 !rd) $info("[%0t]: RD high for 2 CC", $time);
+    
+  // Non-consecutive rep
+  // rst goes low, wr has 5 high CC (non-consecutive permitted)
+  // rst goes low, 5 non-consecutive rising edge of rd
+  A2: assert property (@(posedge clk) $fell(rst) |-> wr[=5]) $info("[%0t]: 5 WR cycles success", $time);
+  A3: assert property (@(posedge clk) $fell(rst) |-> $rose(rd)[=5]) $info("[%0t]: 5 RD cycles success", $time);
+    
+  // Goto operator
+  // rst goes low, 5 rising edge of wr, wr stays zero until done is high
+  // rst goes low, 5 rising edge of rd, rd stays zero until done is high
+  A4: assert property (@(posedge clk) $fell(rst) |-> $rose(wr)[->5] ##1 !wr[*1:$] ##1 $rose(done)) $info("[%0t]: WR zero after 5 cycles", $time);
+  A5: assert property (@(posedge clk) $fell(rst) |-> $rose(rd)[->5] ##2 !rd[*1:$] ##1 $rose(done)) $info("[%0t]: RD zero after 5 cycles", $time);
+    
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+    $assertvacuousoff(0);
+    #310;
+    $finish();
+  end
+endmodule
 ```
