@@ -257,9 +257,9 @@ Check system behavior during the read operation by performing at least five read
 assert property (@(posedge clk) $fell(rst) |-> rd[*5:$]);
 ```
 
-During the reading operation, rd signal must remain high for two clock ticks
+During the reading operation, rd signal must remain high for exactly two clock ticks
 ```
-assert property (@(posedge clk) $rose(rd) |-> rd[*2]);
+assert property (@(posedge clk) $rose(rd) |-> rd[*2] ##1 !rd);
 ```
 
 Both rd and wr should remain low after completion of five write and read transactions
