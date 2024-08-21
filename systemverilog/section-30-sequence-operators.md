@@ -239,3 +239,30 @@ endmodule
 # KERNEL: Info: testbench.sv (33): req1 rep suc @ 185
 # KERNEL: Info: testbench.sv (36): req2 rep suc @ 225
 ```
+
+## Consecutive Repetition Operator with Unbounded Range
+```
+// psel should stay high for at least a cycle and then go low when penable falls
+A1: assert property (@(posedge clk) $rose(psel) |-> psel[*1:$] ##1 $fell(penable)) $info("Suc @ %0t", $time);
+```
+
+## Use Cases
+Check system behavior during the write operation by performing at least five write cycles when reset is disabled
+```
+assert property (@(posedge clk) $fell(rst) |-> wr[*5:$]);
+```
+
+Check system behavior during the read operation by performing at least five read cycles when reset is disabled
+```
+assert property (@(posedge clk) $fell(rst) |-> rd[*5:$]);
+```
+
+During the reading operation, rd signal must remain high for two clock ticks
+```
+assert property (@(posedge clk) $rose(rd) |-> rd[*2]);
+```
+
+Both rd and wr should remain low after completion of five write and read transactions
+```
+assert property (@(posedge clk) (wr[*5] && rd[*5]) |-> (!rd[*0:$] && !wr[*0:$]));
+```
