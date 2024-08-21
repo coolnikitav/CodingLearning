@@ -29,3 +29,35 @@ module top;
   end
 endmodule
 ```
+
+### 213. What is the difference between a struct and a union in SystemVerilog?
+- A struct is a structure that can have elements of different data types. The memory needed for a struct is equal to the sum of the elements.
+- A union is a structure that can have elements of different data types, except they share the same memory location. The memory needed for a union is the largest memory that any of the elements require. Unions can be useful when we want to model a hardware resource that can store values, like a register.
+
+```
+module union_example;
+  typedef union {
+    bit[15:0] salary;
+    integer id;
+  } employee;
+    
+  initial begin
+    employee emp;
+    emp.salary = 'h800;
+    $display("salary updated for EMP: %p", emp);
+    emp.id     = 'd1234;
+    $display("ID updated for EMP: %p", emp); //Note: Salary information will be lost
+  end
+endmodule
+```
+
+### 214. What is the concept of "ref" and "const ref" argument in SystemVerilog function or task?
+- ref is used when we want to pass by reference (pass the variables address) instead of making a copy of it. Making a copy of a large array is resource intensive.
+- const is added if we don't want the user to be able to modify the variable in the function or task.
+
+### 215. What would be the direction of arguments a and b in the following:
+```
+task sticky(ref int array[50], int a, b);
+```
+- a and b are ref
+- there are 4 types of arguments: input, output, inout, ref. The default is input
