@@ -391,3 +391,76 @@ endmodule
 # ASSERT: Error: ASRT_0005 testbench.sv(41): Assertion "A1" FAILED at time: 200ns, scope: tb, start-time: 25ns
 # ASSERT: Error: ASRT_0005 testbench.sv(42): Assertion "A2" FAILED at time: 200ns, scope: tb, start-time: 25ns
 ```
+
+## Non-Consecutive Repetition Operator with Range
+```
+module tb;
+ reg clk = 0;
+ 
+ reg a = 0;
+ reg b = 0;
+ reg c = 0;
+ 
+ reg temp = 0;
+ 
+ 
+ always #5 clk = ~clk;
+ 
+ initial begin
+   #15;
+   a = 1;
+   #10;
+   a = 0;
+ end
+ 
+ initial begin
+   temp = 1;
+   #185;
+   temp = 0;
+ end
+ 
+ initial begin
+   #20;
+   b = 1;
+   repeat(3) @(posedge clk); 
+   b = 0; 
+ end
+ 
+ initial begin
+   #94;
+   c = 1;
+   #10;
+   c = 0;
+ end
+  
+ // Need strong, otherwise it will not print failure during failure because its waiting for the 3 instances
+ A1: assert property (@(posedge clk) $rose(a) |-> strong(b[=3:5])) $info("Non-con suc @ %0t", $time);
+ A2: assert property (@(posedge clk) $rose(a) |-> strong(b[->3:5])) $info("GOTO suc @ %0t", $time);
+    
+ initial begin 
+   $dumpfile("dump.vcd");
+   $dumpvars;
+   $assertvacuousoff(0);
+   #200;
+   $finish();
+ end
+endmodule
+
+# KERNEL: Info: testbench.sv (41): Non-con suc @ 45
+# KERNEL: Info: testbench.sv (42): GOTO suc @ 45
+```
+
+## Summary
+- repetition operator
+  - consecutive [*]
+    - pass - no. of repetition = or > repetition count of operator
+    - fail - no. of repetition < repetition count
+    - to restrict specific count: add tail expression: a[*3] ##1 !a
+  - repetition with range [*x:y] min:max
+    - pass - no. of repetition = min count specified
+    - fail - no. of repetition < min specified count
+    - fail - if tail expression do not hold within the max specified count a[*1:3] ##1 !a
+  - non-consecutive [=]
+    - pass - no. of repetition = specified count
+    - fail + strong (rep. must occur) - no. of repetition < specified count
+    - fail + tail expression (restrict repetition) - tail expression hold after repetition
