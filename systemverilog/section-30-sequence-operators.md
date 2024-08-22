@@ -464,3 +464,85 @@ endmodule
     - pass - no. of repetition = specified count
     - fail + strong (rep. must occur) - no. of repetition < specified count
     - fail + tail expression (restrict repetition) - tail expression hold after repetition
+  - range
+    - pass - rep count = min count
+    - fail - fail count < min count
+    - fail + tail expression - tail expression do not hold after max rep count reached
+
+## GOTO vs Non-consecutive Insights
+- a[->2] = !a[*0:$] ##1 a ##1 !a[*0:$] ##1 a (sequence ends)
+- a[=2] = !a[*0:$] ##1 a ##1 !a[*0:$] ##1 a (match) ##!a[*0:$]
+
+- a[->3] ##1 a; // ##1 a must happen immediately after the a[->3] sequence for a match
+- a[=3] ##1 a; // ##1 there can be delay after after a[=3]
+
+```
+module tb;
+   reg clk = 0;
+ 
+   reg a = 0;
+   reg b = 0;
+
+   always #5 clk = ~clk;
+
+   initial begin
+     #15;
+     a = 1;
+     #10;
+     a = 0;
+   end
+
+   initial begin
+     #20;
+     b = 1;
+     repeat(3) @(posedge clk); 
+     b = 0; 
+     #50;
+     b = 1;
+     #10;
+     b = 0;
+   end
+
+   A1: assert property (@(posedge clk) $rose(a) |-> b[=3] ##1 b) $info("Non-con suc @ %0t", $time);
+   A2: assert property (@(posedge clk) $rose(a) |-> b[->3] ##1 b) $info("GOTO suc @ %0t", $time);
+    
+   initial begin 
+     $dumpfile("dump.vcd");
+     $dumpvars;
+     $assertvacuousoff(0);
+     #150;
+     $finish();
+   end
+endmodule
+
+# ASSERT: Error: ASRT_0005 testbench.sv(28): Assertion "A2" FAILED at time: 55ns, scope: tb, start-time: 25ns
+# KERNEL: Info: testbench.sv (27): Non-con suc @ 105
+```
+
+## Use Cases
+- Write request must be followed by read request. If read do not assert before timeout then system should reset
+  - (!rst[*1:$] ##1 timeout) |-> rst;
+- Write request must be followed by read request
+  - $rose(wr) |-> ##1 $rose(rd);
+- If a assert, b must assert in 5 CC
+  - $rose(a) |-> ##5 $rose(b);
+- If rst deassert then CE must assert within 1 to 3 CC
+  - $fell(rst) |-> ##[1:3] $rose(CE);
+- If req assert and ack not received in the 3 CC then req must reassert
+  - $rose(req) ##1 !ack[*3] |-> $rose(req);
+- If a assert, a must remain high for 3 CC
+  - $rose(a) |-> a[*3];
+- System operation must start with rst asserted for 3 consecutive CC
+  - initial A1: assert property(@(posedge clk) rst[*3]);
+- CE must assert somewhere during simulation if reset deasserts
+  - $fell(rst) |-> ##[1:$] $rose(CE);
+- Transaction start with CE become high and ends with CE become low. Each transaction must contain at least one read and write request.
+  - $rose(CE) |-> (rd[->1] && wr[->1]) ##1 !CE;
+- If CE assert somewhere after rst deassert then we must received at least one write request
+  - $fell(rst) ##[1:$] $rose(CE) |-> wr[->1];
+- a must assert twice during simulation
+  - a[=2];
+- If a becomes high somewhere then b must become high in the immediate next clock tick
+  - $rose(a) |=> $rose(b);
+- If req is received and all the data is sent to slave indicated by done signal then ready must be high in the next CC
+  - $rose(req) ##1 done[->1] |-> ##1 ready;
