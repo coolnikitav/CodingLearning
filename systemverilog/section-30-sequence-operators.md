@@ -520,6 +520,7 @@ endmodule
 ```
 
 ## Use Cases
+```
 - Write request must be followed by read request. If read do not assert before timeout then system should reset
   - (!rst[*1:$] ##1 timeout) |-> rst;
 - Write request must be followed by read request
@@ -546,3 +547,4 @@ endmodule
   - $rose(a) |=> $rose(b);
 - If req is received and all the data is sent to slave indicated by done signal then ready must be high in the next CC
   - $rose(req) ##1 done[->1] |-> ##1 ready;
+```
