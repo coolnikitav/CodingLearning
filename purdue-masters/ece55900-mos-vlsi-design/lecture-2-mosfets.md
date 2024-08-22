@@ -21,4 +21,24 @@
 ![image](https://github.com/user-attachments/assets/08254a91-80a4-4638-a8b3-5559aae26dc2)
 - The leakage current increases due to DIBL.
 
-We want the gate voltage to lower the barrier when the device is turned on.
+We want the gate voltage to lower the barrier when the device is turned on:
+
+![image](https://github.com/user-attachments/assets/041de298-006c-4520-85ba-37c40117c49a)
+
+- Q1: Where does the fermi level move when you dope a semiconductor with holes to make it p-type? n-type?
+- Q2: What are we looking at? What do the lines mean? What does the rectangle/rhombus mean?
+![image](https://github.com/user-attachments/assets/2f551778-bb1e-4807-a9f6-d8304586b346)
+
+- A1: Fermi level will move closer to the valence band. n-type is the opposite: towards the conduction band.
+
+- Q: What happens to the previous band diagram when Vgs > 0? Does it become more n-type or p-type? Why?
+
+![image](https://github.com/user-attachments/assets/41f5b444-a74a-412e-b7cf-e573bf9ebb12)
+
+![image](https://github.com/user-attachments/assets/4314428e-c283-42d4-91cf-32db1d1e91a4)
+
+## Threshold Voltage (Vth)
+- Q: At Vgs = Vth, what is the relationship between surface and bulk?
+- Q: At threshold, what is the relationship between psi S and psi B?
+  
+![image](https://github.com/user-attachments/assets/a3f1ae80-d374-4d7e-9e1d-0c5d81b035d8)
