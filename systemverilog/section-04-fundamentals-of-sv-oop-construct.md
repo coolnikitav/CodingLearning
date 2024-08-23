@@ -344,6 +344,8 @@ endmodule
 ```
 
 ## Pass by Reference
+- Q: Why do we need to use automatic?
+  
 Changes to variables are propagated to the variables in the testbench.
 ```
 module tb;
@@ -383,6 +385,7 @@ task automatic swap (const ref bit [1:0] a, ref bit [1:0] b); // cannot change v
     
   endtask
 ```
+- A: Automatic ensures that each invocation of the function has its own copy of the variables. This makes sure that variables do not persist between calls. If a task is static all of its variables will be shared between different invocations of the function.
 
 ## Using array in function
 ```
