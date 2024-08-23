@@ -61,3 +61,7 @@ task sticky(ref int array[50], int a, b);
 ```
 - a and b are ref
 - there are 4 types of arguments: input, output, inout, ref. The default is input
+
+### 216. What is the difference between a packed array and an unpacked array?
+- packed: bit [7:0] mem;  Packed array represents a contiguous set of bits. Packed arrays can be made of only the single bit data types (bit, logic, reg), or enumerated types.
+- unpacked: bit mem [7:0]; Doesn't need to be represented as a contiguous set of bits. Unpacked array can be made of any data type. If you want to perform operations on multiple bits, you have to do them one by one. You cant use a range like arr[7:4] = 4'b1010 or arr = ~arr
