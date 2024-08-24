@@ -31,3 +31,17 @@
 
 ### SPECmark
 ![image](https://github.com/user-attachments/assets/5a51f386-6249-4f30-ae83-c5dbefdef0b9)
+
+## Iron Law of CPU Performance
+- Q: What is the iron law? latency = ?
+- Q: What does instructions/program depend on?
+- Q: What does cycles/instruction depend on?
+- Q: What does seconds/cycle depend on?
+![image](https://github.com/user-attachments/assets/dab1415f-6b8b-4cdd-b953-505fb38cc64a)
+
+## Danger: Partial Performance Metrics
+![image](https://github.com/user-attachments/assets/8127ed66-272b-453b-8496-295afbeee5ee)
+
+## MIPS and MFLOPS (MegaFLOPS)
+![image](https://github.com/user-attachments/assets/0345c241-ef8e-4ff2-a373-301196bf6ab3)
+
