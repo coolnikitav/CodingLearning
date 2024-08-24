@@ -32,7 +32,7 @@
 ### SPECmark
 ![image](https://github.com/user-attachments/assets/5a51f386-6249-4f30-ae83-c5dbefdef0b9)
 
-## Iron Law of CPU Performance
+## 1.4 Iron Law of CPU Performance
 - Q: What is the iron law? latency = ?
 - Q: What does instructions/program depend on?
 - Q: What does cycles/instruction depend on?
@@ -45,7 +45,7 @@
 ### MIPS and MFLOPS (MegaFLOPS)
 ![image](https://github.com/user-attachments/assets/0345c241-ef8e-4ff2-a373-301196bf6ab3)
 
-## Applying the Iron law (with examples)
+## 1.5 Applying the Iron law (with examples)
 ### Danger: Partial Performance Metrics 2
 ![image](https://github.com/user-attachments/assets/461d13ac-2c12-480a-8382-900b03648ff5)
 
@@ -57,3 +57,39 @@
 
 ### Another CPI Example
 ![image](https://github.com/user-attachments/assets/a7233b1e-2c55-4e27-ba2e-2b66d0d30267)
+
+### Increasing Clock Frequency: Pipelining
+![image](https://github.com/user-attachments/assets/fa525956-dc0e-471f-b954-bd20be8f2c83)
+
+![image](https://github.com/user-attachments/assets/bd871a3f-e6c4-46c0-851f-b54be71458b4)
+
+### CPI and Clock Freqeuncy
+![image](https://github.com/user-attachments/assets/5938457c-bb2d-430b-86cf-d0bea991c40f)
+
+### Measuring CPI
+![image](https://github.com/user-attachments/assets/b592a488-44ca-40f9-8246-8b6372ac9eee)
+
+## 1.6 Amdahl's Law and Little's Law
+### Amdahl's Law
+- Q: What is Amdahl's law?
+  
+![image](https://github.com/user-attachments/assets/97b59dfd-dadb-4df9-b8b8-b476ce0c0762)
+
+### Amdahl's Law Example
+![image](https://github.com/user-attachments/assets/d98e06fa-2f53-4691-8007-70699c51939b)
+
+![image](https://github.com/user-attachments/assets/a6880ac0-8b42-4270-ab05-1dfc5970b9e5)
+
+![image](https://github.com/user-attachments/assets/33a8a865-72a0-40bb-b60c-ae69a253c40c)
+
+- Q: If you can parallelize 90% of your program, what is the highest speedup you can achieve?
+  
+![image](https://github.com/user-attachments/assets/286ef893-623e-401e-b9bb-efb189e7eaf0)
+
+### Little's Law
+- Q: How big a wine cellar do you need if your family buys 1 bottle a week, drink 1 bottle a week, and the wine drank needs to be aged for 5 years?
+- Q: What is Little's law?
+  
+![image](https://github.com/user-attachments/assets/b2d5ffdc-27e5-480c-9b63-dbe9bc1dd1ab)
+
+![image](https://github.com/user-attachments/assets/8cb65b5a-a1d2-44ba-a960-39ec414dedfb)
