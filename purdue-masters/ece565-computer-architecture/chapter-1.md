@@ -39,9 +39,21 @@
 - Q: What does seconds/cycle depend on?
 ![image](https://github.com/user-attachments/assets/dab1415f-6b8b-4cdd-b953-505fb38cc64a)
 
-## Danger: Partial Performance Metrics
+### Danger: Partial Performance Metrics
 ![image](https://github.com/user-attachments/assets/8127ed66-272b-453b-8496-295afbeee5ee)
 
-## MIPS and MFLOPS (MegaFLOPS)
+### MIPS and MFLOPS (MegaFLOPS)
 ![image](https://github.com/user-attachments/assets/0345c241-ef8e-4ff2-a373-301196bf6ab3)
 
+## Applying the Iron law (with examples)
+### Danger: Partial Performance Metrics 2
+![image](https://github.com/user-attachments/assets/461d13ac-2c12-480a-8382-900b03648ff5)
+
+### Cycles per Instructions (CPI)
+![image](https://github.com/user-attachments/assets/c11037cb-be6d-4bac-a155-4684e499f305)
+
+### A CPI Example
+![image](https://github.com/user-attachments/assets/79257df1-ab4d-4fb0-a1ae-94f659da1627)
+
+### Another CPI Example
+![image](https://github.com/user-attachments/assets/a7233b1e-2c55-4e27-ba2e-2b66d0d30267)
