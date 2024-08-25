@@ -349,3 +349,157 @@ assert property(@(posedge clk) $rose(start) |-> a throughout b[->3]);
 ![image](https://github.com/user-attachments/assets/d6ec4f08-647c-4ca7-8fbc-d28990fbf0aa)
 
 ![image](https://github.com/user-attachments/assets/e6378769-394b-4634-95ae-e4d129a4fcac)
+
+## Demonstration
+There should be 1 write request and 1 read request between start and finish. The write request is 1 cycle, the read request is 2 cycles.
+```
+module tb;
+  reg clk = 0,start = 0,wr = 0,rd = 0,stop = 0;
+  
+  always #5 clk = ~clk;
+  
+  initial begin
+    #3;
+    start = 1;
+    #10;
+    start = 0;
+  end
+  
+  initial begin
+    #180;
+    stop = 1;
+    #10;
+    stop = 0;
+  end
+ 
+  
+  initial begin
+   #30;
+   rd = 1;
+   #20;
+   rd = 0;
+   #30;
+  end
+  
+  initial begin
+   #15;
+   wr = 1;
+   #10;
+   wr = 0;
+  end
+  
+  A1: assert property (@(posedge clk) $rose(start) |-> (wr[->1] and (rd[->1] ##1 rd)) within stop[->]) $info("Suc at %0t", $time);
+
+  initial begin
+    $dumpvars;
+    $dumpfile("dump.vcd");
+    $assertvacuousoff(0);
+    #200;
+    $finish;
+  end 
+endmodule
+
+# KERNEL: Info: testbench.sv (36): Suc at 185
+```
+
+sclk should toggle when start is high
+```
+module tb;
+  reg clk = 0,start,sclk = 0,en = 0;
+  
+  always #5 clk = ~clk;
+  always #5 sclk = ~sclk;
+  
+  reg [3:0] dout = 0;
+  
+  initial begin
+   #10;
+   en = 1;
+   #10;
+   en = 0;
+  end
+  
+  initial begin
+   start = 0;
+   #20;
+   start = 1;
+   #50;
+   start = 0;
+  end
+
+  A1: assert property(@(edge clk) ##1 start |-> start throughout $changed(sclk)) $info("Suc at %0t", $time);
+                                                                       
+  initial begin
+    $dumpvars;
+    $dumpfile("dump.vcd");
+    $assertvacuousoff(0);
+    #100;
+    $finish;
+  end
+endmodule
+
+# KERNEL: Info: testbench.sv (24): Suc at 25
+# KERNEL: Info: testbench.sv (24): Suc at 30
+# KERNEL: Info: testbench.sv (24): Suc at 35
+# KERNEL: Info: testbench.sv (24): Suc at 40
+# KERNEL: Info: testbench.sv (24): Suc at 45
+# KERNEL: Info: testbench.sv (24): Suc at 50
+# KERNEL: Info: testbench.sv (24): Suc at 55
+# KERNEL: Info: testbench.sv (24): Suc at 60
+# KERNEL: Info: testbench.sv (24): Suc at 65
+# KERNEL: Info: testbench.sv (24): Suc at 70
+```
+
+Read should not occur at the same time as write
+```
+module tb;
+  reg clk = 0,start,wr = 0,rd = 0;
+  
+  always #5 clk = ~clk;
+ 
+  initial begin
+    #30;
+    rd = 1;
+    #20;
+    rd = 0;
+    #30;
+    rd = 1;
+    #20;
+    rd = 0;    
+    #30;
+    rd = 1;
+    #20;
+    rd = 0;  
+  end
+  
+  initial begin
+    start = 0;
+    #15;
+    wr = 1;
+    #10;
+    wr = 0;
+    #60;
+    wr = 1;
+    #10;
+    wr = 0;
+    #20;
+    wr = 1;
+    #10;
+    wr = 0;    
+  end
+  
+  assert property (@(posedge clk) $rose(rd) |-> not(wr[->1]) within rd[*2]) $info("Suc at %0t", $time);
+    
+  initial begin
+    $dumpvars;
+    $dumpfile("dump.vcd");
+    $assertvacuousoff(0);
+    #200;
+    $finish;
+  end 
+endmodule
+
+# KERNEL: Info: testbench.sv (37): Suc at 45
+# ASSERT: Error: ASRT_0005 testbench.sv(37): Assertion FAILED at time: 95ns, scope: tb, start-time: 85ns
+# KERNEL: Info: testbench.sv (37): Suc at 145
+```
