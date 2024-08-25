@@ -93,3 +93,15 @@
 ![image](https://github.com/user-attachments/assets/b2d5ffdc-27e5-480c-9b63-dbe9bc1dd1ab)
 
 ![image](https://github.com/user-attachments/assets/8cb65b5a-a1d2-44ba-a960-39ec414dedfb)
+
+# Knowledge check
+- Q1: If machine A takes 30 seconds to execute a program and machine B takes 60 seconds, then machine A is 100% faster than machine B.
+- Q2: The MIPS (Millions of instructions per second) metric accurately captures the performance of a computer.
+- Q3: The maximum speedup acheivable by optimizing 20% of the execution time is 25%
+- Q4: If each disk access takes 5 ms on average, and each access fetches a 4KB data block, how many concurrent accesses must a disk support to achieve a throughput of 400 MB/s.
+- Q5: Deeper pipelines increases the CPI. (Ignore all pipeline hazards).
+- A1: True
+- A2: False
+- A3: True
+- A4: 500
+- A5: False
