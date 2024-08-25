@@ -37,6 +37,7 @@
 - Q: What does instructions/program depend on?
 - Q: What does cycles/instruction depend on?
 - Q: What does seconds/cycle depend on?
+  
 ![image](https://github.com/user-attachments/assets/dab1415f-6b8b-4cdd-b953-505fb38cc64a)
 
 ### Danger: Partial Performance Metrics
