@@ -319,13 +319,33 @@ endmodule
 ```
 
 ## Use Cases
-![image](https://github.com/user-attachments/assets/f05f55be-a1d3-49bd-adf9-dd07fe10a88a)
+![image](https://github.com/user-attachments/assets/27d72d3b-0e8c-4b45-9345-8a61d1ec0fd9)
 ```
-sequence seq_cs;
-  !cs[*3];
+assert property (@(posedge clk) CE |=> (dout == $past(dout+1)));
+```
+
+![image](https://github.com/user-attachments/assets/1c4dfc10-c98c-4750-b06f-f90b1318988d)
+```
+sequence seq_a;
+  a[->2];
 endsequence
 
-sequence seq_sclk;
-  sclk |=> $past(sclk)
+sequence seq_b;
+  b[->3];
 endsequence
+
+assert property(@(posedge clk) $rose(start) |-> seq_a intersect seq_b);
 ```
+
+![image](https://github.com/user-attachments/assets/e9cf9f88-67d7-4c27-88ed-d340013cce64)
+```
+assert property(@(posedge clk) $rose(start) |-> a throughout b[->3]);
+```
+
+![image](https://github.com/user-attachments/assets/89327c70-93a8-4b1b-b71d-50ef001a306e)
+
+![image](https://github.com/user-attachments/assets/d2bcce9d-8e93-4b1b-a30c-210e1014d47a)
+
+![image](https://github.com/user-attachments/assets/d6ec4f08-647c-4ca7-8fbc-d28990fbf0aa)
+
+![image](https://github.com/user-attachments/assets/e6378769-394b-4634-95ae-e4d129a4fcac)
