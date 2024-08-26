@@ -80,3 +80,18 @@ We will only perform operations on registers in load-store.
 
 ### How Many Registers?
 ![image](https://github.com/user-attachments/assets/fe75a4f6-ccbc-4844-bec6-446b6e9f632c)
+
+## Module 2.3 Aspects of ISAs: Virtual address size, addressing modes, endianness, control flow
+
+### Virtual Address Size
+![image](https://github.com/user-attachments/assets/997f8976-efa1-4e0f-8ff6-d59cda8fd769)
+
+### Memory Addressing
+- Q: What are the 8 addressing modes?
+![image](https://github.com/user-attachments/assets/f10cbf4b-a7d0-4052-ae88-de7d1db052fa)
+
+### Example: MIPS Addressing Modes
+![image](https://github.com/user-attachments/assets/974e6b98-4ca1-4826-8ce6-63a2a3b7a049)
+
+### Two Mode Addressing Issues
+![image](https://github.com/user-attachments/assets/b33db5e9-406b-439e-8a73-92c7be1744df)
