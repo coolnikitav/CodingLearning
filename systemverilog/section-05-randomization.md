@@ -126,6 +126,8 @@ endmodule
 ```
 
 ## Adding constraint: simple expression
+- Q: Write a constraint that restricts a to be greater than 3 and less than 7.
+  
 ```
 class generator;
   
@@ -215,6 +217,8 @@ endmodule
 # KERNEL: value of a : 6 and b : 6
 ```
 ## Adding constraint: working with ranges
+- Q: Write a constraint that restricts a to be between 0 and 8, and 10 and 11 (inclusive)
+  
 ```
 class generator;
   
@@ -296,6 +300,8 @@ module tb;
 endmodule
 ```
 ## External function and constraint
+- Q: Show how you would implement an extern constraint and an extern function display for the generator.
+  
 ```
 class generator;
   
@@ -452,6 +458,8 @@ endmodule
 # KERNEL: value of a : 6 and b : 7
 ```
 ## Weighted distribution
+- Q: Explain how to assign weighted distribution to constraints.
+  
 := will assign the weight to every item in the range
 
 :/ will divide the weight equally between all of the items in the range
@@ -513,6 +521,8 @@ module tb;
 endmodule
 ```
 ## Constraint operators
+- Q: What constraint operators do we have and how do we use them?
+  
 - Implication
   - ->
   - (x==1)->(y==1), when x is 1, y must be 1
@@ -691,6 +701,8 @@ endmodule
 # KERNEL: Value of wr : 1 | oe : 0 |  raddr : 0 | waddr : 11 |
 ```
 ## Enabling/Disabling constraints
+- Q: How to enable/disable a constraint? Write an example generator class and a main module block.
+  
 ```
 class generator;
   
@@ -709,8 +721,6 @@ class generator;
   constraint wr_oe_c {
     (wr == 1) <-> (oe == 0); 
   }
-  
-  
 endclass
 
 module tb;
