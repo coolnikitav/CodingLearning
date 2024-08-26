@@ -53,3 +53,30 @@
 ### Format
 - Q: What are the pros and cons of fixed length format? What about variable length?
 ![image](https://github.com/user-attachments/assets/98338ccf-bad2-4d49-8039-f5deb56047a0)
+
+### Example: MIPS Format
+![image](https://github.com/user-attachments/assets/74fcce32-c5d7-4a61-9dab-0418a20428cd)
+
+### Operand Model: Memory Only
+![image](https://github.com/user-attachments/assets/46e6c25c-301e-4f24-8dd5-8d115f444fbb)
+
+### Operand Model: Accumulator
+- Q: How would mem[A] = mem[B] + mem[C] look like with an accumulator?
+![image](https://github.com/user-attachments/assets/e1a7cc0c-b059-4d55-bb8f-dfb996d1f19b)
+
+### Operand Model: Stack
+- Q: How would mem[A] = mem[B] + mem[C] look like with a stack?
+![image](https://github.com/user-attachments/assets/b5d589e0-c990-45ce-b373-68681da356d9)
+
+### Operand Model: Registers
+- Q: How would mem[A] = mem[B] + mem[C] look like with general-purpose registers?
+- Q: How would mem[A] = mem[B] + mem[C] look like with load-store?
+![image](https://github.com/user-attachments/assets/6d08a40d-15d7-4d59-bebb-eb606bb229f2)
+We will only perform operations on registers in load-store.
+
+### Operand Model Pros and Cons
+- Q: Rank the 4 models for statuc code size, data memory traffic, and cycles per instruction.
+![image](https://github.com/user-attachments/assets/561a720e-e122-4893-b95f-807d423a9225)
+
+### How Many Registers?
+![image](https://github.com/user-attachments/assets/fe75a4f6-ccbc-4844-bec6-446b6e9f632c)
