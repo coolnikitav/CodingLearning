@@ -41,3 +41,15 @@
 - Q: Why can you not define unused instruction fields as don't cares? What is the solution to this problem?
 ![image](https://github.com/user-attachments/assets/99b84554-a487-4350-9a43-f20a11aa184d)
 - A: Once you define them as don't cares, you can define them as anything else.
+
+## Module 2.2 Aspects of ISAs: Operand models, Registers
+
+### Aspects of ISAs
+![image](https://github.com/user-attachments/assets/1a344143-eb0c-4fc4-8b68-0b33c8df7d36)
+
+### The Sequential Model
+![image](https://github.com/user-attachments/assets/b508a9cc-6226-4cc0-8b4c-6fb86f3bd04a)
+
+### Format
+- Q: What are the pros and cons of fixed length format? What about variable length?
+![image](https://github.com/user-attachments/assets/98338ccf-bad2-4d49-8039-f5deb56047a0)
