@@ -26,3 +26,18 @@
 - Q: What are ISA features that make implementing high performance hard?
 - Q: Can every ISA be implemented?
 ![image](https://github.com/user-attachments/assets/6be634d1-14bc-4920-81aa-e7ab0a53edae)
+
+### Compatibility
+![image](https://github.com/user-attachments/assets/f765bd88-f54f-40d6-b5f5-4c7463e2fd17)
+
+### The Compatibility Trap
+- Q: Explain what traps are.
+![image](https://github.com/user-attachments/assets/a686a45a-5a89-4f3a-80b9-e29deec20833)
+
+### The Compatibility Trap Door
+![image](https://github.com/user-attachments/assets/079ddfa3-46ee-4bb5-8d72-d320238d60ab)
+
+### Blocking the Compatibility Trap Door
+- Q: Why can you not define unused instruction fields as don't cares? What is the solution to this problem?
+![image](https://github.com/user-attachments/assets/99b84554-a487-4350-9a43-f20a11aa184d)
+- A: Once you define them as don't cares, you can define them as anything else.
