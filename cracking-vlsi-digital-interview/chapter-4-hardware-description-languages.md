@@ -65,3 +65,13 @@ task sticky(ref int array[50], int a, b);
 ### 216. What is the difference between a packed array and an unpacked array?
 - packed: bit [7:0] mem;  Packed array represents a contiguous set of bits. Packed arrays can be made of only the single bit data types (bit, logic, reg), or enumerated types.
 - unpacked: bit mem [7:0]; Doesn't need to be represented as a contiguous set of bits. Unpacked array can be made of any data type. If you want to perform operations on multiple bits, you have to do them one by one. You cant use a range like arr[7:4] = 4'b1010 or arr = ~arr
+
+### 217. What is the difference between a packed and unpacked struct?
+- packed: all elements can be represented in bits, so they can all be packed next to each other as a contiguous block of memory
+- unpacked: elements are stored in different places in memory
+
+### 218. Which of these statements is true?
+- Functions should execute in zero simulation time.
+- Tasks should execute in zero simulation time.
+- True
+- False
