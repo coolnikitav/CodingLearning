@@ -44,4 +44,41 @@ initial A1: assert property(@(posedge clk) eventually[3:10] !rst) $info("suc at 
 # KERNEL: Info: testbench.sv (22): suc at 45
 ```
 
-## Strong and Weak Demonstration
+## nexttime
+```
+module tb;
+  reg clk = 0, rst = 0;
+  always #5 clk = ~clk;
+  
+  initial begin
+    repeat(5) @(posedge clk);
+    rst = 1;
+  end
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+    $assertvacuousoff(0);
+    #100;
+    $finish();
+  end
+  
+  // We want reset to be true after 5 clock cycles
+  A1: assert property (@(posedge clk) s_nexttime[5] rst) $info("success at %0t", $time);
+endmodule
+
+# KERNEL: Info: testbench.sv (19): success at 55
+# KERNEL: Info: testbench.sv (19): success at 65
+# KERNEL: Info: testbench.sv (19): success at 75
+# KERNEL: Info: testbench.sv (19): success at 85
+# KERNEL: Info: testbench.sv (19): success at 95
+# RUNTIME: Info: RUNTIME_0068 testbench.sv (15): $finish called.
+# KERNEL: Time: 100 ns,  Iteration: 0,  Instance: /tb,  Process: @INITIAL#10_2@.
+# KERNEL: stopped at time: 100 ns
+# VSIM: Simulation has finished. There are no more test vectors to simulate.
+# ASSERT: Error: ASRT_0005 testbench.sv(19): Assertion "A1" FAILED at time: 100ns, scope: tb, start-time: 55ns
+# ASSERT: Error: ASRT_0005 testbench.sv(19): Assertion "A1" FAILED at time: 100ns, scope: tb, start-time: 65ns
+# ASSERT: Error: ASRT_0005 testbench.sv(19): Assertion "A1" FAILED at time: 100ns, scope: tb, start-time: 75ns
+# ASSERT: Error: ASRT_0005 testbench.sv(19): Assertion "A1" FAILED at time: 100ns, scope: tb, start-time: 85ns
+# ASSERT: Error: ASRT_0005 testbench.sv(19): Assertion "A1" FAILED at time: 100ns, scope: tb, start-time: 95ns
+```
