@@ -82,3 +82,20 @@ endmodule
 # ASSERT: Error: ASRT_0005 testbench.sv(19): Assertion "A1" FAILED at time: 100ns, scope: tb, start-time: 85ns
 # ASSERT: Error: ASRT_0005 testbench.sv(19): Assertion "A1" FAILED at time: 100ns, scope: tb, start-time: 95ns
 ```
+
+```
+initial A1: assert property (@(posedge clk) s_nexttime[5] rst) $info("success at %0t", $time);
+
+# KERNEL: Info: testbench.sv (19): success at 55
+```
+
+## until
+- overlapping (until_with) - at least one clock tick with signals sharing behavior
+  - until_with
+  - s_until_with
+- non-overlapping (until)
+  - until
+  - s_until
+ 
+Example: sig1 should remain true until we have sig2 becoming true
+- sig1 s_until sig2
