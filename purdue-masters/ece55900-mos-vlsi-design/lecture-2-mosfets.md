@@ -40,5 +40,10 @@ We want the gate voltage to lower the barrier when the device is turned on:
 ## Threshold Voltage (Vth)
 - Q: At Vgs = Vth, what is the relationship between surface and bulk?
 - Q: At threshold, what is the relationship between psi S and psi B?
+- Q: What is the equation that describes Vgs (ideal and non ideal)?
   
 ![image](https://github.com/user-attachments/assets/a3f1ae80-d374-4d7e-9e1d-0c5d81b035d8)
+
+![image](https://github.com/user-attachments/assets/9458e601-a88d-4ef7-99ea-94fc92fa6277)
+
+![image](https://github.com/user-attachments/assets/d2a0cbf3-98b5-46c1-aa06-4bc0d1fc006a)
