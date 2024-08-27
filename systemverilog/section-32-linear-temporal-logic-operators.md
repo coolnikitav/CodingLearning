@@ -99,3 +99,145 @@ initial A1: assert property (@(posedge clk) s_nexttime[5] rst) $info("success at
  
 Example: sig1 should remain true until we have sig2 becoming true
 - sig1 s_until sig2
+
+## Demonstration
+```
+module tb;
+  reg clk = 0, rst = 0, ce = 0;
+  always #5 clk = ~clk;  
+  
+  initial begin
+    rst = 1;
+    #30;
+    rst = 1;
+    #10;
+    ce = 1;
+    rst = 1;
+    #10;
+    rst = 0;
+    #50;
+    ce = 0;
+  end
+
+  initial begin
+    $dumpfile("dump.vcd"); 
+    $dumpvars;
+    $assertvacuousoff(0);
+    #100;
+    $finish();
+  end
+  
+  initial A1: assert property (@(posedge clk) rst s_until ce) $info("Suc at %0t", $time);
+endmodule
+
+# KERNEL: Info: testbench.sv (26): Suc at 45
+```
+
+```
+module tb;
+  reg clk = 0, rst = 0, ce = 0;
+  always #5 clk = ~clk;  
+  
+  initial begin
+    rst = 1;
+    #30;
+    rst = 0;
+    #10;
+    rst = 1;
+    #10;
+    ce = 1;
+    rst = 0;
+    #50;
+    ce = 0;
+  end
+
+  initial begin
+    $dumpfile("dump.vcd"); 
+    $dumpvars;
+    $assertvacuousoff(0);
+    #100;
+    $finish();
+  end
+  
+  initial A1: assert property (@(posedge clk) rst s_until ce) $info("Suc at %0t", $time);
+endmodule
+
+# ASSERT: Error: ASRT_0005 testbench.sv(26): Assertion "A1" FAILED at time: 35ns, scope: tb, start-time: 5ns
+```
+
+## Strong and Weak nature of until
+```
+module tb;
+  reg clk = 0, rst = 0, ce = 0;
+  always #5 clk = ~clk;  
+  
+  initial begin
+    rst = 1;
+    #30;
+    rst = 1;
+    #10;
+    ce = 0;
+    rst = 1;
+    #10;
+    rst = 1;
+    #50;
+    ce = 0;
+  end
+
+  initial begin
+    $dumpfile("dump.vcd"); 
+    $dumpvars;
+    $assertvacuousoff(0);
+    #100;
+    $finish();
+  end
+  
+  initial A1: assert property (@(posedge clk) rst s_until ce) $info("Suc at %0t", $time);
+  initial A2: assert property (@(posedge clk) rst until ce) $info("Suc at %0t", $time);
+endmodule
+
+# ASSERT: Error: ASRT_0005 testbench.sv(26): Assertion "A1" FAILED at time: 100ns, scope: tb, start-time: 5ns
+```
+
+## Followed by Operator
+followed by
+- implication
+  - overlapping (#-#)
+  - non-overlapping (#=#)
+ 
+When the antecedent fails, followed by gives a failure instead of a vacuous success.
+ 
+## Demonstration
+```
+module tb;
+  reg clk = 0, rst = 0, ce = 0;
+  always #5 clk = ~clk;
+  
+  initial begin
+    rst = 1;
+    #20;
+    ce = 1;
+    rst = 0;
+    #20;
+    ce = 0;
+  end
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+    $assertvacuousoff(0);
+    #50;
+    $finish();
+  end
+  
+  initial A1: assert property (@(posedge clk) rst[*2] |-> ##1 ce[*2]) $info("A1 suc at %0t", $time);
+  initial A2: assert property (@(posedge clk) rst[*2] |=> ce[*2]) $info("A2 suc at %0t", $time);
+  initial A3: assert property (@(posedge clk) rst[*2] #=# ce[*2]) $info("A3 suc at %0t", $time);
+  initial A4: assert property (@(posedge clk) rst[*2] #-# ##1 ce[*2]) $info("A4 suc at %0t", $time);
+endmodule
+
+# KERNEL: Info: testbench.sv (22): A1 suc at 35
+# KERNEL: Info: testbench.sv (23): A2 suc at 35
+# KERNEL: Info: testbench.sv (24): A3 suc at 35
+# KERNEL: Info: testbench.sv (25): A4 suc at 35
+```
