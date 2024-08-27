@@ -75,3 +75,22 @@ task sticky(ref int array[50], int a, b);
 - Tasks should execute in zero simulation time.
 - True
 - False
+
+### 219. Given a dynamic array of size 100, how can the array be re-sized to hold 200 elementes while the lower 100 elements are preserved as original?
+```
+int arr[];
+arr = new[100];
+arr = new[200](arr);
+```
+
+### 220. What is the difference between forever and for in SystemVerilog?
+- forever will repeat its loop until the simulation ends. A break statement can be used to break out of a for loop.
+- for will repeat its loop specified number of times.
+
+### 221. What is the difference between "case", "casex" and "casez" in SystemVerilog?
+- A case statement needs an exact match.
+- casex supports ?, z, x as don't care characters
+- casez supports ?, z as don't care characters
+
+### 222. Which of the logical equality operators "==" or "===" are used in case expression conditions for case, casex, and casez?
+- === is used
