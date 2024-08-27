@@ -32,6 +32,7 @@
 
 ### The Compatibility Trap
 - Q: Explain what traps are.
+  
 ![image](https://github.com/user-attachments/assets/a686a45a-5a89-4f3a-80b9-e29deec20833)
 
 ### The Compatibility Trap Door
