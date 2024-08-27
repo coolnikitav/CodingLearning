@@ -47,3 +47,31 @@ We want the gate voltage to lower the barrier when the device is turned on:
 ![image](https://github.com/user-attachments/assets/9458e601-a88d-4ef7-99ea-94fc92fa6277)
 
 ![image](https://github.com/user-attachments/assets/d2a0cbf3-98b5-46c1-aa06-4bc0d1fc006a)
+
+## Body Effect (Non-Zero Source-To-Body Voltage)
+- Q1: What should be the voltage of the body of an n-mosfet? What about a p-mosfet? Why?
+- Q: How does relationship between surface and bulk potential change if we account for the body effect?
+
+![image](https://github.com/user-attachments/assets/34d5751f-9f11-4ee0-b840-d92dfabf1860)
+
+- A1: Most negative, to make sure the diode in the pn junction is always reverse biased (off). Most positive
+
+![image](https://github.com/user-attachments/assets/357382dd-4f47-46a9-ac9d-97733e7b62bb)
+
+## Threshold Voltage With Body Effect (NMOS)
+- Q: Write the equation for the threshold voltage without and with body effect.
+
+![image](https://github.com/user-attachments/assets/b3a1e1a5-1b16-425d-95a2-a9209e09700f)
+
+## Sub-Threshold Characteristics (Vgs < Vth)
+- Q: How to express surface potential in terms of oxide capacitance, substrate capacitance, and Vgs?
+- Q: What is the body factor? What is the equation for it?
+- Q1: What should the voltage be set to in order to completely lower the barrier?
+
+![image](https://github.com/user-attachments/assets/b830c526-b9f7-4c23-89e0-2815d086d542)
+
+- A1: The threshold voltage, which corresponds to Eb.
+  
+The number of electrons that can be injected over the barrier are exponentially related to the negative of the barrier. If the barrier is high, the number of electrons that can be injected is exponentially reduced. If the barrier is lowered, the number of electrons that can be injected will exponentially increase.
+
+psi S corresponds to Vgs
