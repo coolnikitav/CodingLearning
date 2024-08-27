@@ -95,3 +95,60 @@ We will only perform operations on registers in load-store.
 
 ### Two Mode Addressing Issues
 ![image](https://github.com/user-attachments/assets/b33db5e9-406b-439e-8a73-92c7be1744df)
+
+### Control Flow Instructions
+- Q: What are the 3 options we have when testing for conditions?
+- Q: Explain their pros and cons.
+![image](https://github.com/user-attachments/assets/7bd21abf-0c5f-48a0-8604-67a560115750)
+
+### Example: MIPS Conditional Branches
+![image](https://github.com/user-attachments/assets/fce3c8f9-065a-4c70-82bf-6edb56f496b5)
+
+### Control Instructions II
+- Q: Explain the 3 ways of computing targets.
+- Q: What is each of these modes used for?
+![image](https://github.com/user-attachments/assets/a98843fa-c86b-4d6b-870d-9205b4acced4)
+
+### MIPS Control Instructions
+![image](https://github.com/user-attachments/assets/9fc15a7c-74b7-4d16-90a8-4d5ad92108cd)
+
+### Control Instructions III
+![image](https://github.com/user-attachments/assets/c382a1a6-915d-4004-a256-8751ff09027c)
+
+### RISC & CISC
+![image](https://github.com/user-attachments/assets/decf6154-ebb9-4bbf-a1d5-c6e9a820314c)
+
+## Module 2.4 Survey of ISAs in the Field
+### Current Winner (units sold): RISC: ARM
+![image](https://github.com/user-attachments/assets/dbb0f9d7-7a2a-4cfd-a21d-6e7733fe4cef)
+
+![image](https://github.com/user-attachments/assets/1642bd6f-6691-426d-81a4-dd1847dcaa0f)
+
+![image](https://github.com/user-attachments/assets/12538b8e-d16d-4f48-ae0d-5a78a438e78b)
+
+### The ARM Business Model
+![image](https://github.com/user-attachments/assets/e4a4aeb1-665f-46ea-801e-9f3e28037ed3)
+
+### Historical Winner (revenue): x86
+![image](https://github.com/user-attachments/assets/d52cfeed-204b-49a5-a563-e59dca0a811c)
+
+### x86: Registers
+![image](https://github.com/user-attachments/assets/ad062be7-4992-4d36-8007-585112d933b8)
+
+### x86 Addressing
+![image](https://github.com/user-attachments/assets/1fe26276-f372-4f57-a9b5-f1687b36af64)
+
+### x86 Instruction Formats
+![image](https://github.com/user-attachments/assets/9cc45d7f-1048-4587-90a9-1cc704ddada0)
+
+### x86 Outside = RISC Inside
+![image](https://github.com/user-attachments/assets/5ddb322c-e2da-4d1c-9fc6-45d6b65d3ba7)
+
+### Transmeta's Take: Code Morphing
+![image](https://github.com/user-attachments/assets/9fa98d06-85ff-4411-8366-4dbcb4f0f5a0)
+
+### Emulation/Binary Translation
+![image](https://github.com/user-attachments/assets/9a527608-8a0b-4f30-b397-c3bf13cf4422)
+
+### Virtual ISAs
+![image](https://github.com/user-attachments/assets/de168500-777a-4c51-83c4-d4a621cf1fbd)
