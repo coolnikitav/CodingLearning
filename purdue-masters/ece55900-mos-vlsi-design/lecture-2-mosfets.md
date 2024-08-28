@@ -75,3 +75,65 @@ We want the gate voltage to lower the barrier when the device is turned on:
 The number of electrons that can be injected over the barrier are exponentially related to the negative of the barrier. If the barrier is high, the number of electrons that can be injected is exponentially reduced. If the barrier is lowered, the number of electrons that can be injected will exponentially increase.
 
 psi S corresponds to Vgs
+
+## Super-Threshold Characteristics: Linear Region (Vgs>Vth, small Vds)
+- Q1: What is another name for the linear region?
+- Q: What is the equation for inversion charge? How does this equation change when Vds is not 0?
+- Q: Why is it called the linear region?
+
+![image](https://github.com/user-attachments/assets/8b76e2d0-6b85-4f28-8a60-10dd47bff82b)
+
+![image](https://github.com/user-attachments/assets/4493e4ef-d4ed-465d-a4b1-49c5a6cbdf76)
+
+v is velocity
+
+- A1: The triode region.
+
+### Super-Threshold Characteristics: Saturation Region (Vgs > Vth, Large Vds)
+- Q: What is pinch-off and why does it occur?
+- Q: What happens when Vds > Vgs-Vth?
+- Q1: Why is it called saturation region?
+- Q: What is channel length modulation?
+
+![image](https://github.com/user-attachments/assets/2964d35e-701a-412a-9167-ed290d4a4031)
+
+![image](https://github.com/user-attachments/assets/552c5742-7b37-4746-b2fa-6bf4a994ecdb)
+
+- A1: Current is no longer increasing, and is instead getting saturated.
+
+## Mild Modification To Current In Linear Regime
+- Q: How does current for linear region change when we go into saturation region?
+  
+![image](https://github.com/user-attachments/assets/8bd43ec4-949e-4b8d-bdb5-fc836de4d8dd)
+
+Lambda is a proportionality constant
+
+## Velocity Saturation: Short Channel Effect
+![image](https://github.com/user-attachments/assets/a51b0592-095b-41bf-b770-d094223d7741)
+
+## Derivation Revisited
+- Q: During velocity saturation, what is the relationship between current and Vgs-Vth?
+  
+![image](https://github.com/user-attachments/assets/5cce6e48-97a2-40c2-a1c1-768ac9fd0faa)
+
+For the purposes of this course, Vdsat is a constant parameter
+
+## MOSFET Characteristics: Long Channel Regime
+- Q: What does a current vs Vgs graph look like? Show where the Vth is.
+- Q: What is the difference between transfer characteristics and output characteristics?
+- Q1: What would quadratic dependence on Vgs mean?
+
+![image](https://github.com/user-attachments/assets/8d32da0d-81b8-4b9a-b4d3-2a35f1081512)
+
+- A1: It means we are seeing pinch off saturation.
+
+## Transfer Characteristics: Id versus Vgs
+- Q: What is the difference in graphs for long channnel vs short channel?
+- Q1: Why does short channel have quadratic dependecy at lower values of Vgs?
+
+![image](https://github.com/user-attachments/assets/223b69ca-2e02-4c74-a433-ba9ee3658c42)
+
+- A1: Because pinch off is occuring before velocity saturation.
+
+## MOSFET Characteristics
+![image](https://github.com/user-attachments/assets/129c8661-3575-4bed-853d-dc12a3ea37a6)
