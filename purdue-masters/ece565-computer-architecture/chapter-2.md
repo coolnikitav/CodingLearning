@@ -153,3 +153,32 @@ We will only perform operations on registers in load-store.
 
 ### Virtual ISAs
 ![image](https://github.com/user-attachments/assets/de168500-777a-4c51-83c4-d4a621cf1fbd)
+
+## Module 2.5 Translating High-Level Code to MIPS Assembly
+### Branches and Jumps
+- Q: Convert the following code into assembly:
+```
+while(i != j) {
+  j = j + i;
+  i = i + 1;
+}
+```
+![image](https://github.com/user-attachments/assets/1ef8b9a0-6d59-4c71-a6b5-621bac860da8)
+
+![image](https://github.com/user-attachments/assets/f890163f-e082-4914-872c-05afc3df4d73)
+
+![image](https://github.com/user-attachments/assets/6b2b1598-0698-49df-a65c-af8706c7bcf7)
+
+### Assembly Exercise
+![image](https://github.com/user-attachments/assets/3c562298-9fe3-4ba6-b9f7-520f12714e5d)
+
+Ind stands for induction
+
+![image](https://github.com/user-attachments/assets/5f59e414-7b04-478c-9807-d06169faa832)
+
+### Procedure Calls
+- Q: Explain the stack for the procedure calls. How do push and pop work?
+  
+![image](https://github.com/user-attachments/assets/c50c9616-5ccb-4a85-914a-4c5a5bc0545f)
+
+![image](https://github.com/user-attachments/assets/7ad1a7ed-38b3-4526-a298-45aac9eaadce)
