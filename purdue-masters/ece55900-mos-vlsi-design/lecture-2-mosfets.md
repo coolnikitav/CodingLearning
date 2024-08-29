@@ -137,3 +137,13 @@ For the purposes of this course, Vdsat is a constant parameter
 
 ## MOSFET Characteristics
 ![image](https://github.com/user-attachments/assets/129c8661-3575-4bed-853d-dc12a3ea37a6)
+
+## Output Characteristics: Id vs Vds
+- Q: How would output characteristics differ for short channel vs long channel?
+
+![image](https://github.com/user-attachments/assets/f0ec8d81-df3b-451a-af56-48d8765750f2)
+
+## Transfer Characteristics (Log Scale): Id vs Vgs
+- Q: How to calculate DIBL based on the information in the graph?
+
+![image](https://github.com/user-attachments/assets/f5037a09-e7c8-4037-a2a9-5685b7c4e489)
