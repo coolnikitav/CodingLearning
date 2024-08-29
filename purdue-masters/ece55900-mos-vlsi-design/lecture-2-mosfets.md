@@ -147,3 +147,22 @@ For the purposes of this course, Vdsat is a constant parameter
 - Q: How to calculate DIBL based on the information in the graph?
 
 ![image](https://github.com/user-attachments/assets/f5037a09-e7c8-4037-a2a9-5685b7c4e489)
+
+## Key Points: General MOSFET Characteristics (NMOS)
+![image](https://github.com/user-attachments/assets/5ce806fc-5ac6-448f-b2dc-796d7796ca26)
+
+## Key Points: General MOSFET Characteristics (PMOS)
+![image](https://github.com/user-attachments/assets/c0982bb2-70a5-4d8b-9d2f-30068208eda3)
+
+![image](https://github.com/user-attachments/assets/87efc0b2-7dad-433c-a944-c9f92b367f2e)
+
+## Other Short Channel Effects
+![image](https://github.com/user-attachments/assets/35f18727-9f32-4e9e-a973-994b1796f284)
+
+## Alternate Devices
+- Q: What are the 7 alternate devices called?
+- Q1: Why did bulk MOSFETs stop being used past 20nm?
+
+![image](https://github.com/user-attachments/assets/4ae03549-ed76-4205-a8d0-0f389a3dec94)
+
+- A1: Drain in source are so close that drain's electric field has a lot of influence on the source through DIBL. Ideally we only want gate to be controlling the source.
