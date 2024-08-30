@@ -166,3 +166,18 @@ For the purposes of this course, Vdsat is a constant parameter
 ![image](https://github.com/user-attachments/assets/4ae03549-ed76-4205-a8d0-0f389a3dec94)
 
 - A1: Drain in source are so close that drain's electric field has a lot of influence on the source through DIBL. Ideally we only want gate to be controlling the source.
+
+## Double Gate MOSFET Structure
+- Q: What is the issue with double gate MOSFET?
+
+![image](https://github.com/user-attachments/assets/a745bd0a-3b12-4ebb-90a2-e826f198f776)
+
+## FinFET
+![image](https://github.com/user-attachments/assets/5999f8f7-0f45-4568-98bd-a49bec9da4be)
+
+## FinFET Characteristics At A Glance
+- Q: What are the voltage conditions under which we look at Ioff?
+
+![image](https://github.com/user-attachments/assets/25a590cc-5bb5-4864-92e5-39705f60bd9f)
+
+S.S - subthreshold swing
