@@ -63,20 +63,24 @@
 
 ### Operand Model: Accumulator
 - Q: How would mem[A] = mem[B] + mem[C] look like with an accumulator?
+  
 ![image](https://github.com/user-attachments/assets/e1a7cc0c-b059-4d55-bb8f-dfb996d1f19b)
 
 ### Operand Model: Stack
 - Q: How would mem[A] = mem[B] + mem[C] look like with a stack?
+  
 ![image](https://github.com/user-attachments/assets/b5d589e0-c990-45ce-b373-68681da356d9)
 
 ### Operand Model: Registers
 - Q: How would mem[A] = mem[B] + mem[C] look like with general-purpose registers?
 - Q: How would mem[A] = mem[B] + mem[C] look like with load-store?
+  
 ![image](https://github.com/user-attachments/assets/6d08a40d-15d7-4d59-bebb-eb606bb229f2)
 We will only perform operations on registers in load-store.
 
 ### Operand Model Pros and Cons
 - Q: Rank the 4 models for statuc code size, data memory traffic, and cycles per instruction.
+  
 ![image](https://github.com/user-attachments/assets/561a720e-e122-4893-b95f-807d423a9225)
 
 ### How Many Registers?
@@ -89,6 +93,7 @@ We will only perform operations on registers in load-store.
 
 ### Memory Addressing
 - Q: What are the 8 addressing modes?
+  
 ![image](https://github.com/user-attachments/assets/f10cbf4b-a7d0-4052-ae88-de7d1db052fa)
 
 ### Example: MIPS Addressing Modes
@@ -100,6 +105,7 @@ We will only perform operations on registers in load-store.
 ### Control Flow Instructions
 - Q: What are the 3 options we have when testing for conditions?
 - Q: Explain their pros and cons.
+  
 ![image](https://github.com/user-attachments/assets/7bd21abf-0c5f-48a0-8604-67a560115750)
 
 ### Example: MIPS Conditional Branches
@@ -108,6 +114,7 @@ We will only perform operations on registers in load-store.
 ### Control Instructions II
 - Q: Explain the 3 ways of computing targets.
 - Q: What is each of these modes used for?
+  
 ![image](https://github.com/user-attachments/assets/a98843fa-c86b-4d6b-870d-9205b4acced4)
 
 ### MIPS Control Instructions
@@ -182,3 +189,10 @@ Ind stands for induction
 ![image](https://github.com/user-attachments/assets/c50c9616-5ccb-4a85-914a-4c5a5bc0545f)
 
 ![image](https://github.com/user-attachments/assets/7ad1a7ed-38b3-4526-a298-45aac9eaadce)
+
+### Procedure Example
+![image](https://github.com/user-attachments/assets/61711fea-535c-4374-9917-20a9a7b921e5)
+
+![image](https://github.com/user-attachments/assets/235a0f10-121b-4e3f-859a-03ed64c85798)
+
+![image](https://github.com/user-attachments/assets/42d18f05-3bba-4f91-a9c0-851bfc665dbd)
