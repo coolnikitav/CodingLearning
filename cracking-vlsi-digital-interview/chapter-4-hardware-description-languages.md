@@ -94,3 +94,81 @@ arr = new[200](arr);
 
 ### 222. Which of the logical equality operators "==" or "===" are used in case expression conditions for case, casex, and casez?
 - === is used
+
+### 223. What is the difference between $display, $write, $monitor and $strobe in SystemVerilog?
+- $display prints to the console and adds a newline char to the end
+- $write prints to the console without a newline char
+- $monitor print to the console every time one of its variable changes
+- $strobe prints the last updated value at the end of the time step. Typically the next $display would print this value
+
+### 224. What is wrong with following SystemVerilog code?
+```
+task wait_packet;
+  Packet packet;
+  event packet_received;
+  @packet_received;
+  packet = new();
+endtask
+
+function void do_print();
+  wait_packet();
+  $display("packet received")
+endfunction
+```
+
+You cannot have any construct that consumes time in a function.
+
+### 225. What is the difference between new() and new[] in SystemVerilog?
+- new() is a constructor for an object
+- new[] is used to allocate memory for dynamic arrays
+
+### 226. What is the concept of forward declaration of a class in SystemVerilog?
+- Forward declaration is used to prevent a compiler error when class might reference another class before it is defined:
+```
+typedef class DEF;
+
+class ABC;
+  DEF def;  // typedef prevents from a compiler error being thrown here
+endclass
+
+class DEF;
+  ABC abc;
+endclass
+```
+
+### 227. Analyze the following code and explain if there are any issues with code?
+```
+task gen_packet(Packet pkt);
+  pkt = new();
+  pkt.dest = 0xABCD;
+endtask
+
+Packet pck;
+initial begin
+  gen_packet(pkt);
+  $display(pkt.dest);
+end
+```
+- There will be a null-pointer runtime error. The object is passed by value into the task. It creates an object local to the task and modifies its property. When $display is called outside of the task, it is called on a property that wasn't set.
+
+### 228. What is the difference between private, public, and protected data members of a SystemVerilog class?
+- private - only accessible in the current class. The word "local" is used to indicate that its private
+- public - accessible by other classes
+- protected - only accessible in class and by derived classes
+
+### 229. Are SystemVerilog class members public or private by default?
+- They are public by default.
+
+### 230. What is a nested class and when would you use a nested class?
+- A class defined inside of a class. Used when the object you want to create should only be specific to the object its in.
+```
+class StringList;
+  class Node;
+    string name;
+    Node link;
+  endclass
+endclass
+```
+
+### 231. What are interfaces in SystemVerilog?
+- Interfaces are used to give users access to outputs and inputs of modules without directly having access to the internal code. It helps in communication between design blocks by connecting using a single name instead of having all the port names and connections.
