@@ -181,3 +181,51 @@ For the purposes of this course, Vdsat is a constant parameter
 ![image](https://github.com/user-attachments/assets/25a590cc-5bb5-4864-92e5-39705f60bd9f)
 
 S.S - subthreshold swing
+
+## Multi-fin FinFETs
+![image](https://github.com/user-attachments/assets/09c720ad-3c22-4dc0-b901-53b3ec6d2587)
+
+# Capacitance Components
+
+## Dynamic Behavior of MOS Transistor
+![image](https://github.com/user-attachments/assets/24871f6e-e8f6-4dd4-8108-cb42b7a8d087)
+
+## Gate Capacitance (Cch)
+- Q: What is the equation for each of channel, source overlap, drain overlap, and gate capacitances?
+  
+![image](https://github.com/user-attachments/assets/ef1f2760-088e-446c-af24-7f436cfac369)
+
+ov = overlap
+
+- Q: What conditions define each operation region?
+- Q: What is the capacitance of Cgb, Cgs, Cgd at each operation region?
+
+![image](https://github.com/user-attachments/assets/f6fe5571-8b07-4a46-8bae-a65801e81925)
+
+## Diffusion Capacitance (Csb and Cdb)
+![image](https://github.com/user-attachments/assets/767fe5d0-afcb-42ec-929d-bbc9aadb9f2b)
+
+## FinFET: Capacitance
+- Q: How is FinFETs capacitance compared to planar or bulk ones?
+  
+![image](https://github.com/user-attachments/assets/1dfa6ffe-17d2-45cc-bb8d-10dfe2bf0ab1)
+
+Having a higher capacitance is not good.
+
+## Source/Drain Resistance
+- Q: How do the resistances affect the performance? Why?
+
+![image](https://github.com/user-attachments/assets/18c7bcb0-71cb-457e-8731-0e050c5c0f5c)
+
+- A: Resistance degrade performance by reducing the on current.
+
+## Leakage Components
+- Q: What are the 4 leakages discussed?
+  
+![image](https://github.com/user-attachments/assets/71562f5a-d2e7-4c39-a740-0deb650e96a7)
+
+## CMOS Beyond FinFETs: Nanosheet FETs
+![image](https://github.com/user-attachments/assets/6f3ac735-7edf-440f-8260-4b184a485894)
+
+## CMOS Beyond FinFETs: Forksheet FETs
+![image](https://github.com/user-attachments/assets/2865a3f0-183c-41be-a078-6c5029aedf88)
