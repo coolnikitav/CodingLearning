@@ -71,6 +71,8 @@ endmodule
 ```
 
 ## Working with verbosity level
+- Q: How to print the verbosity level of UVM_ROOT?
+  
 UVM_ROOT is parent to all the classes that we add in UVM Testbench environment (UVM Tree).
 
 Because UVM_ROOT returns a null pointer, we cannot directly access it. However, in a few situations, we may need to access or configure the default settings of UVM_ROOT.
