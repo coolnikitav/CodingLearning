@@ -282,3 +282,161 @@ endmodule
 # KERNEL: value of output bus: 5
 # KERNEL: Info: testbench.sv (56): suc at 115
 ```
+
+```
+module tb;
+ 
+ reg clk = 0;
+ 
+ reg req = 0;
+ reg ack = 0;
+ integer reqcnt = 0;
+ integer ackcnt = 0;
+ 
+ always #5 clk = ~clk;
+ 
+ initial begin
+   #10;
+   req = 1;
+   #10;
+   req = 0;
+   #10;
+   req = 1;
+   #10;
+   req = 0;
+   #20;
+   ack = 1;
+   #10;
+   ack = 0;
+   #30;
+   ack = 1;
+   #10;
+   ack = 0;
+ end
+ 
+ always @(posedge clk) begin
+   if (req)
+     reqcnt <= reqcnt + 1;
+   if (ack)
+     ackcnt <= ackcnt + 1;
+ end
+   
+ property p1;
+   integer rcnt = 0;
+   integer acnt = 0;
+   
+   ($rose(req), rcnt = reqcnt) |-> ##[1:7] ($rose(ack), acnt = ackcnt) ##0 (acnt == rcnt);
+ endproperty
+   
+ assert property (@(posedge clk) p1) $info("suc at %0t", $time);
+   
+ initial begin 
+   $dumpfile("dump.vcd");
+   $dumpvars;
+   $assertvacuousoff(0);
+   #200;
+   $finish();
+ end
+ 
+endmodule
+
+# KERNEL: Info: testbench.sv (45): suc at 65
+# KERNEL: Info: testbench.sv (45): suc at 105
+```
+
+```
+module tb;
+ 
+ reg clk = 0;
+ 
+ reg req = 0;
+ reg ack = 0;
+ int delay = 0;
+ 
+ 
+ always #5 clk = ~clk;
+ 
+ initial begin
+   for(int i = 0; i < 5 ; i ++) 
+   begin
+   @(posedge clk);
+   delay = $urandom_range(4, 6);
+   req = 1;
+   @(posedge clk);
+   req = 0;
+   repeat(delay) @(posedge clk);
+   ack = 1;
+   @(posedge clk);
+   ack = 0;
+   end
+ end
+
+ property p1 (count);
+   time stime;
+   time etime;
+    
+   ($rose(req), stime = $realtime) |-> ##[1:$] ($rose(ack), etime = $realtime) ##0 (((etime - stime) == count), $display("Diff: %0t", etime - stime));
+ endproperty
+  
+ assert property (@(posedge clk) p1(50)) $info("suc at %0t", $time);
+ 
+ initial begin 
+   $dumpfile("dump.vcd");
+   $dumpvars;
+   $assertvacuousoff(0);
+   #500;
+   $finish();
+ end
+ 
+endmodule
+
+# KERNEL: Diff: 50
+# KERNEL: Info: testbench.sv (34): suc at 225
+# KERNEL: Diff: 50
+# KERNEL: Info: testbench.sv (34): suc at 295
+```
+```
+module tb; 
+ reg clk = 0;
+
+ always #5 clk = ~clk;
+
+ property p1;
+   time stime = 0;
+   time etime = 0;
+   time count = 0;
+   
+   // This lets us find the time between 2 clock cycles
+   (1'b1, stime = $realtime) ##1 (1'b1, etime = $realtime, count = (etime - stime), $display("Period (nsec): %0t", count));
+ endproperty
+  
+ assert property (@(posedge clk) p1) $info("suc at %0t", $time);
+  
+ initial begin 
+   $dumpfile("dump.vcd");
+   $dumpvars;
+   $assertvacuousoff(0);
+   #100;
+   $finish();
+ end
+endmodule
+
+# KERNEL: Period (nsec): 10
+# KERNEL: Info: testbench.sv (15): suc at 15
+# KERNEL: Period (nsec): 10
+# KERNEL: Info: testbench.sv (15): suc at 25
+# KERNEL: Period (nsec): 10
+# KERNEL: Info: testbench.sv (15): suc at 35
+# KERNEL: Period (nsec): 10
+# KERNEL: Info: testbench.sv (15): suc at 45
+# KERNEL: Period (nsec): 10
+# KERNEL: Info: testbench.sv (15): suc at 55
+# KERNEL: Period (nsec): 10
+# KERNEL: Info: testbench.sv (15): suc at 65
+# KERNEL: Period (nsec): 10
+# KERNEL: Info: testbench.sv (15): suc at 75
+# KERNEL: Period (nsec): 10
+# KERNEL: Info: testbench.sv (15): suc at 85
+# KERNEL: Period (nsec): 10
+# KERNEL: Info: testbench.sv (15): suc at 95
+```
