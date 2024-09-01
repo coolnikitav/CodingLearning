@@ -29,6 +29,7 @@
 - Q: What are some classical high-performance designs features?
 - Q: What are ISA features that make implementing high performance hard?
 - Q: Can every ISA be implemented?
+  
 ![image](https://github.com/user-attachments/assets/6be634d1-14bc-4920-81aa-e7ab0a53edae)
 
 ### Compatibility
