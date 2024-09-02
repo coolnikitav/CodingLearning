@@ -279,3 +279,45 @@ endmodule
 ![image](https://github.com/user-attachments/assets/0ff75280-34d7-4a95-8b1b-8768a6be99ad)
 
 ![image](https://github.com/user-attachments/assets/b1b84f8e-9bdc-4d65-adb5-90df8e4f0419)
+
+## Adding Memory
+![image](https://github.com/user-attachments/assets/e9d0ffe0-44a3-4975-bc5a-f370a6a12f27)
+
+![image](https://github.com/user-attachments/assets/4b401869-3e7e-4f81-a32f-a66dc88d7687)
+
+We typically use "RW" access for RAMs and "RO" for ROMs.
+
+```
+/*
+ *	Memory 1
+ */
+class dut_mem1 extends uvm_mem;
+  `uvm_object_utils(dut_mem1)
+  
+  function new(string name = "dut_mem1");
+    super.new(name, 16, 8, "RW", UVM_NO_COVERAGE);
+  endfunction
+endclass
+
+/*
+ *	Memory 2
+ */
+class dut_mem2 extends uvm_mem;
+  `uvm_object_utils(dut_mem2)
+  
+  function new(string name = "dut_mem2");
+    super.new(name, 1024, 16, "RW", UVM_NO_COVERAGE);
+  endfunction
+endclass
+
+/*
+ *	Memory 3
+ */
+class dut_mem3 extends uvm_mem;
+  `uvm_object_utils(dut_mem3)
+  
+  function new(string name = "dut_mem3");
+    super.new(name, 2048, 32, "RW", UVM_NO_COVERAGE);
+  endfunction
+endclass
+```
