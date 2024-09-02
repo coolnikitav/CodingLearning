@@ -54,3 +54,46 @@
 - Q: What are the equations for IPC and freq in terms of gate delay, overhead per stage, and average stall per instruction per stage
   
 ![image](https://github.com/user-attachments/assets/f2198289-4c48-471c-bc11-c349b063c69d)
+
+## Module 3.2 Pipeline Hazards: Structural Hazards and Read-After-Write (RAW) Data Hazards
+
+### Managing a Pipeline
+![image](https://github.com/user-attachments/assets/798ce85b-c571-4d60-b843-a39dd0f30a8d)
+
+### Structural Hazards
+![image](https://github.com/user-attachments/assets/66cdb72e-94c8-41af-bea1-8198cc66fd9d)
+
+### Fixing Structural Hazards
+![image](https://github.com/user-attachments/assets/eac5fed3-daf4-4d9d-bfef-c89b926ec62d)
+
+### Avoiding Structural Hazards (PRS)
+- Q: What are the 3 ways mentioned to deal with structural hazards?
+
+![image](https://github.com/user-attachments/assets/d02e696d-113a-4ee8-b586-73809c8b8da0)
+
+### Data Hazards
+![image](https://github.com/user-attachments/assets/19f4dd77-1416-469f-92d0-1ac3b9e91ec5)
+
+### Dependences and Loops
+![image](https://github.com/user-attachments/assets/01a9d0da-5b2f-486b-9fb3-b4e39c4f7d5b)
+
+### RAW
+![image](https://github.com/user-attachments/assets/b49f588d-59c0-4d91-97b2-c75ca98d246e)
+
+### RAW: Detect and Stall
+![image](https://github.com/user-attachments/assets/29d0b58d-75c6-47c1-8b09-821134cbaab1)
+
+### Two Stall Timings (without bypassing)
+![image](https://github.com/user-attachments/assets/41b1cbc0-5695-48b9-8b9b-df9fb2824447)
+
+### Reducing RAW Stalls with Bypassing
+![image](https://github.com/user-attachments/assets/4bba0b84-c56f-48b7-a8d8-3d11baa4bba2)
+
+### Bypass Logic
+![image](https://github.com/user-attachments/assets/e9be6b1b-4e1d-43bd-95f3-88ed459bd991)
+
+### Pipeline Diagrams with Bypassing
+![image](https://github.com/user-attachments/assets/a4137076-714d-439f-98db-03c64915cfe3)
+
+### Load-Use Stalls
+![image](https://github.com/user-attachments/assets/1ace2ec9-7950-4e34-aed3-127c42c0cfb8)
