@@ -202,4 +202,35 @@ endmodule
 # KERNEL: UVM_INFO /home/build/vlib1/vlib/uvm-1.2/src/base/uvm_report_server.svh(869) @ 100: reporter [UVM/REPORT/SERVER] 
 ```
 
-## Understanding Design
+## Understanding Desigerd and Mirrored values
+- Desired: Value of register for next transaction allows to specify value before write
+- Mirrored: Current known state of hardware register. Updated at the end of each read/write
+
+```
+Desired: 0, Mirrored: 0, DUT_reg: 0
+Set(2)
+Desired: 2, Mirrored: 0, DUT_reg: 0
+Update
+Desired: 2, Mirrored: 2, DUT_reg: 2
+```
+
+## Different Register Methods
+Methods before transaction
+- Desired value
+  - Set
+  - Get
+- Mirrored value
+  - get_mirrored_value
+ 
+Methods after transaction
+- Desired value + mirroried value
+  - Frontdoor access
+    - write
+    - reda
+    - update
+    - mirror
+    - predict
+    - randomize
+  - Backdoor access
+    - peek
+    - poke
