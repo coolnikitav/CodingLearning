@@ -1,29 +1,23 @@
-function Unzip-ZipFile {
-    param (
-        [string] $zipName,
-        [string] $zipLocation,
-        [string] $destination,
-        [string[]] $excludeFolders = @()  # Default to an empty array
-    )
+I have a file sim_message that has this enum in it:
 
-    # Check if the zip file exists
-    if (Test-Path -Path "$zipLocation\$zipName") {
-        # Use Expand-Archive to unzip the entire file
-        Expand-Archive -Path "$zipLocation\$zipName" -DestinationPath $destination -Force
-
-        # Remove the excluded folders
-        foreach ($folder in $excludeFolders) {
-            $folderPath = Join-Path $destination $folder
-            if (Test-Path -Path $folderPath) {
-                Remove-Item -Path $folderPath -Recurse -Force
-            }
-        }
-
-        # Optionally, delete the original zip file after extraction
-        Remove-Item -Path "$zipLocation\$zipName" -Force
-    } else {
-        Write-Host "$zipName is not found" -ForegroundColor Red
-        Read-Host -Prompt "Press Enter to exit"
-        exit
-    }
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Product {
+    pub name: ProductName,
+    pub version: String,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum ProductName {
+    Commercial,
+    CentralDriveEV,
+    OffHighway,
+    Defense,
+    AcromagIntegration,
+    TCMSelfTest,
+    Addons,
+    SupportApps,
+    Unknown,
+}
+
+I have another file called sim_client. I did "use sim_message::Product" in it. However, when i try writing "ProductName::Commercial", it says "failed to resolve: use of undeclared type filename. Consider importing this enum
+use sim_message::ProductName". Is having "use sim_message::Product" not enough?
