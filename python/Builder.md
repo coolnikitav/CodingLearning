@@ -1,18 +1,34 @@
 ```
-pub fn convert_product_vec_to_string(
-    product_vector: &Vec<Product>
-) -> String {
-    let mut product_string = String::new();
-    let mut product_entry = String::new();
+I have a vector of installed products. Since it was built from a hasmap, its unordered. I want to sort this vector by the enumerated value, since enum have an actual count attached to them.
 
-    for product in product_vector.iter() {
-        product_entry.push_str(product.name.as_string());
-        product_entry.push_str(": ");
-        product_entry.push_str(product.version.as_str());
-        product_string.push_str(product_entry.as_str());
-        product_entry.clear();
+pub fn collect_installed_products(
+    product_ini_locations: &HashMap<String, String>,
+) -> Result<Vec<Product>, anyhow::Error> {
+    log::debug!("Entered collect_installed_products");
+    let mut installed_products = Vec::with_capacity(product_ini_locations.len());
+
+    for (product_name, product_ini_location) in product_ini_locations.iter() {
+        let product_result = add_product(product_name, product_ini_location);
+        // If ini file is not found, handle it and continue execution
+        match product_result {
+            Ok(product) => installed_products.push(product),
+            Err(error) => log::debug!("Error opening ini file: {}", error),
+        }   
     }
+    // sort installed_products by productName here
+    Ok(installed_products)
+}
 
-    return product_string;
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum ProductName {
+    Commercial,
+    CentralDriveEV,
+    OffHighway,
+    Defense,
+    AcromagIntegration,
+    TCMSelfTest,
+    Addons,
+    SupportApps,
+    Unknown,
 }
 ```
