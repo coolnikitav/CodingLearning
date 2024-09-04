@@ -1,23 +1,21 @@
-I have a file sim_message that has this enum in it:
+I also have this in sim_message:
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Product {
-    pub name: ProductName,
-    pub version: String,
+impl ProductName {
+    pub fn as_string(&self) -> &str {
+        match &self {
+            ProductName::Commercial => "Commercial",
+            ProductName::CentralDriveEV => "CentralDriveEV",
+            ProductName::OffHighway => "OffHighway",
+            ProductName::Defense => "Defense",
+            ProductName::AcromagIntegration => "AcromagIntegration",
+            ProductName::TCMSelfTest => "TCMSelfTest",
+            ProductName::Addons => "Addons",
+            ProductName::SupportApps => "SupportApps",
+            ProductName::Unknown => "Unknown",
+        }
+    }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub enum ProductName {
-    Commercial,
-    CentralDriveEV,
-    OffHighway,
-    Defense,
-    AcromagIntegration,
-    TCMSelfTest,
-    Addons,
-    SupportApps,
-    Unknown,
-}
-
-I have another file called sim_client. I did "use sim_message::Product" in it. However, when i try writing "ProductName::Commercial", it says "failed to resolve: use of undeclared type filename. Consider importing this enum
-use sim_message::ProductName". Is having "use sim_message::Product" not enough?
+However, when I try using it in sim_client, I get an error:
+let product_name = match product_name {
+        ProductName::Commercial.as_string() => ProductName::Commercial,
