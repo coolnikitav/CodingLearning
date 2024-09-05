@@ -1,14 +1,41 @@
 ```
-the trait bound `ProductName: Ord` is not satisfied
-the trait `Ord` is not implemented for `ProductName`rustcClick for full compiler diagnostic
-slice.rs(308, 12): required by a bound in `slice::<impl [T]>::sort_by_key`
-alloc::slice
-impl<T> [T]
-pub fn sort_by_key<K, F>(&mut self, f: F)
-where
-    F: FnMut(&T) -> K,
-    K: Ord,
-Sorts the slice with a key extraction function.
+let tcm_types = data
+    .sim_message
+    .tcm_types
+    .as_ref()
+    .map(|tcms| {
+        let mut tokens = String::new();
+        for tcm in tcms {
+            let _ = write!(&mut tokens, "{},", tcm);
+        }
+        tokens
+    })
+    .unwrap_or("None".to_string());
+doc.add_text(tcm_kind_field, tcm_types);
 
-This sort is stable (i.e., does not reorder equal elements) and O(m * n * log(n)) worst-case, where the key function is O(m).
+let products_installed = data
+    .sim_message
+    .products_installed
+    .as_ref()
+    .map(|products| {
+        let mut tokens = String::new();
+        for product in products {
+            let _ = write!(&mut tokens, "{},", product);
+        }
+        tokens
+    })
+    .unwrap_or("None".to_string());
+doc.add_text(products_installed_field, products_installed);
+
+.as_ref() in products_installed is underlined red. It is saying this error:
+type annotations neededrustcClick for full compiler diagnostic
+mod.rs(286, 14): type must be known at this point
+mod.rs(282, 34): try using a fully qualified path to specify the expected types: `<std::vec::Vec<sim_message::Product> as AsRef<T>>::as_ref(&`, `)`
+core::convert::AsRef
+pub trait AsRef<T>
+pub fn as_ref(&self) -> &T
+where
+    // Bounds from trait:
+    T: ?Sized,
+Converts this type into a shared reference of the (usually inferred) input type.
 ```
