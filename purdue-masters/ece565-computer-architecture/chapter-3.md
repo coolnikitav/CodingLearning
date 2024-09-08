@@ -97,3 +97,39 @@
 
 ### Load-Use Stalls
 ![image](https://github.com/user-attachments/assets/1ace2ec9-7950-4e34-aed3-127c42c0cfb8)
+
+## Module 3.3 Compiler Scheduling for RAW Hazards
+### Compiler Scheduling
+![image](https://github.com/user-attachments/assets/dcba8f58-5439-4e04-ac4a-b874d0467c11)
+
+### Compiling Scheduling Requires
+![image](https://github.com/user-attachments/assets/7771c843-8342-4c2c-bb93-b6040f2d95c7)
+
+![image](https://github.com/user-attachments/assets/3b7b5e80-84b0-4119-a658-9370478c5001)
+
+![image](https://github.com/user-attachments/assets/3b9e46f2-33b5-466b-9ff7-fe9c9ce2b5ec)
+
+## Module 3.4 WAR and WAW Hazards
+### WAW Hazards
+![image](https://github.com/user-attachments/assets/ab01644c-5fcb-4ba7-8df7-09bb5db51818)
+
+### Handling WAW Hazards
+![image](https://github.com/user-attachments/assets/2a67b03b-01c3-4d08-ad66-550fdfd29aca)
+
+### Handling Interrupts/Exceptions
+- Q: What is an example of interrupts? What about exceptions?
+- Q: Explain precise state or precise interrupts
+
+![image](https://github.com/user-attachments/assets/f04144fc-1982-4ce9-a80d-0874c501fd48)
+
+### Handling Interrupts
+![image](https://github.com/user-attachments/assets/f4876dae-d1e3-4906-923c-7300c2740cbf)
+
+### More Interrupt Nastiness
+![image](https://github.com/user-attachments/assets/9a62b675-682f-43ba-8f5b-4055258f783f)
+
+### WAR Hazards
+![image](https://github.com/user-attachments/assets/55eb92e1-4ed3-4ab2-b850-482da9824fc5)
+
+### Memory Data Hazards
+![image](https://github.com/user-attachments/assets/f395710e-d3e8-4fbe-9d8a-ef482d569a94)
