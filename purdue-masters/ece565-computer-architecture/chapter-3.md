@@ -133,3 +133,27 @@
 
 ### Memory Data Hazards
 ![image](https://github.com/user-attachments/assets/f395710e-d3e8-4fbe-9d8a-ef482d569a94)
+
+## Module 3.6 Dynamic Branch Prediction: BTB and RAS
+### Branch Resolution in our Simple Pipeline
+![image](https://github.com/user-attachments/assets/2f3298dd-5914-4a0b-b314-09829dee5d08)
+
+### Control Hazards
+- Q: What is the CPI if branch is 20% of the intructions, 75% of branches are taken, and branches cause a 2 cycle stall?
+  
+![image](https://github.com/user-attachments/assets/761cbfd6-4527-4b40-a98d-b6bfdd179a87)
+
+### ISA Branch Techniques
+![image](https://github.com/user-attachments/assets/61b17cf8-932f-4643-9f01-5c0ab064a08d)
+
+### Can We Do Better?
+![image](https://github.com/user-attachments/assets/abd8f226-0131-4b74-b458-004ab26729f2)
+
+### Predict Not Taken
+![image](https://github.com/user-attachments/assets/e8a1d708-d129-439f-aef8-5ef74ba1060b)
+
+### Big Idea: Speculation
+![image](https://github.com/user-attachments/assets/208280b8-13ac-4d7f-ab02-474141eaeadb)
+
+### Control Hazards: Control Speculation
+![image](https://github.com/user-attachments/assets/b83f905c-bd8b-41f9-ab13-c5deef27e490)
