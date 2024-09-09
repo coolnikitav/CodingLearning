@@ -187,3 +187,33 @@
 
 ### Return Address Stack (RAS)
 ![image](https://github.com/user-attachments/assets/3e4cc95a-2b45-436e-93a8-a7aa73926388)
+
+## Module 3.7 Dynamic Branch Prediction: Direction Prediction
+### Branch Direction Prediction - Part 2
+![image](https://github.com/user-attachments/assets/30af3d0e-d619-4174-8874-5819d9292398)
+
+### Branch History Table (BHT)
+![image](https://github.com/user-attachments/assets/4059c8bb-baf9-4d0e-a580-17f8d563286e)
+
+### Dynamic Branch Prediction
+![image](https://github.com/user-attachments/assets/dc859f39-2fdd-4d08-bcd6-ae75068ee731)
+
+### Branch History Table
+![image](https://github.com/user-attachments/assets/f0ad3d02-f7cf-461f-8538-29b87f2dde80)
+
+### Two-Bit Saturating Counters (2bc)
+![image](https://github.com/user-attachments/assets/8f9c78e2-659e-47ab-92f9-a197db4a4082)
+
+### Correlated Predictor
+![image](https://github.com/user-attachments/assets/0afef4b3-0614-4288-b6df-ccc30f72bc87)
+
+### Gshare Predictor (McFarling)
+![image](https://github.com/user-attachments/assets/34eae685-6d14-4f6d-b851-756f8ffb9587)
+
+### Correlated Predictor
+![image](https://github.com/user-attachments/assets/32472df9-c82f-4fd1-af27-8e593a261b33)
+
+![image](https://github.com/user-attachments/assets/89acb4a5-9797-4ddd-8df8-4d9662533198)
+
+### Research: Perceptron Predictor
+![image](https://github.com/user-attachments/assets/d20c9283-e294-4f61-a411-c67100a5188b)
