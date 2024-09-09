@@ -157,3 +157,33 @@
 
 ### Control Hazards: Control Speculation
 ![image](https://github.com/user-attachments/assets/b83f905c-bd8b-41f9-ab13-c5deef27e490)
+
+### Control Speculation and Recovery
+- Q: How to handle mis-speculation in an in-order pipeline?
+
+![image](https://github.com/user-attachments/assets/58957439-9bc6-48b9-a6a1-39ea3728fa85)
+
+### Dynamic Branch Prediction - take solution 3 further
+![image](https://github.com/user-attachments/assets/41cdeceb-297b-4dd2-bf2f-434e458d7af6)
+
+![image](https://github.com/user-attachments/assets/0fa7c9b8-1134-41e4-a416-da30a3c84edd)
+
+### Hazards in Real Microprocessors
+![image](https://github.com/user-attachments/assets/c25f6909-3283-4b45-86ea-e67fe2e44775)
+
+### Dynamic Branch Prediction
+![image](https://github.com/user-attachments/assets/04ed5f73-54fc-40cb-9e4c-0141db5cd398)
+
+### Branch Prediction (I): Branch Target Buffer
+![image](https://github.com/user-attachments/assets/42100bf9-27df-441c-a494-c818811cfab6)
+
+![image](https://github.com/user-attachments/assets/dc39e5c4-0adf-4bd0-a9eb-2438369a9b28)
+
+### Branch Target Buffer
+![image](https://github.com/user-attachments/assets/04e2271c-16a4-4fc2-9ee0-c182673a0863)
+
+### Why Does a BTB Work?
+![image](https://github.com/user-attachments/assets/28aed2b8-8775-46a7-a80f-adf19c517893)
+
+### Return Address Stack (RAS)
+![image](https://github.com/user-attachments/assets/3e4cc95a-2b45-436e-93a8-a7aa73926388)
