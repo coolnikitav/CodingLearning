@@ -78,7 +78,34 @@ Big C is total capacitance. Small c is capacitance per unit length.
 ![image](https://github.com/user-attachments/assets/b7859669-aae5-46af-90d0-3a5f6888c28f)
 
 ## The Distriburted RC Models
-- Draw the pi-2 model, t-model, and distributed RC chain for this wire:
+- Draw the pi-1, pi-2, pi-3 model, t-1, t-2, t-3 model, and distributed RC chain for this wire:
   
 ![image](https://github.com/user-attachments/assets/f4dd991b-09ad-47ff-84f3-733f0a60dd70)
 
+![image](https://github.com/user-attachments/assets/95644bdd-5f46-425d-b844-cb2e2de11559)
+
+### The Distributed RC Model: pi-1 Model
+![image](https://github.com/user-attachments/assets/fc227073-e12a-4533-8067-ef576b9bbe24)
+
+### Elmore Delay Model
+- Q: What is the time constant of the waveform appearing at node 3?
+
+![image](https://github.com/user-attachments/assets/72703af7-fc4c-459c-a4dc-884fccdcc446)
+
+![image](https://github.com/user-attachments/assets/81f7c60f-1759-4795-99f5-e612c248a187)
+
+![image](https://github.com/user-attachments/assets/405e1512-9a1c-4c33-b831-fc45f80bf791)
+
+![image](https://github.com/user-attachments/assets/a7957e5d-3212-4d2c-b79e-e3e5253fb577)
+
+- This model is typically used for end nodes, like 3,4,5. We cannot really use it to approximate the time constant on nodes 1 and 2.
+
+### The Elmore Delay RC Chain
+- Q: What is the time constant of the rc chain?
+
+![image](https://github.com/user-attachments/assets/399263f9-f702-40f2-8d91-4f3e82685d58)
+
+![image](https://github.com/user-attachments/assets/79731df3-5a2a-4948-9593-6762648bc3c7)
+
+- Q1: Where does the 2 in the denominator come from?
+- A1: The RC components are distributed.
