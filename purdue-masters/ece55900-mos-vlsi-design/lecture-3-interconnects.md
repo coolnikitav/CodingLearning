@@ -111,3 +111,11 @@ Big C is total capacitance. Small c is capacitance per unit length.
 - A1: The RC components are distributed.
 
 - Time constant is quadratically related to the length of the wire. If you double the length, it will quadriple.
+
+### Step-Response of RC Wire
+![image](https://github.com/user-attachments/assets/1b8743cf-d95d-4781-90b0-82291a9a4e43)
+
+![image](https://github.com/user-attachments/assets/d095623a-719a-47ad-9821-3cd549903101)
+
+### RC Models: Lumped vs Distributed
+![image](https://github.com/user-attachments/assets/ccde7d8a-692b-4635-b5d0-80dd54544f14)
