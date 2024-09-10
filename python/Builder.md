@@ -1,17 +1,1 @@
-```
-impl Display for ProductName {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            ProductName::Commercial         => write!(f, "Commercial"),
-            ProductName::CentralDriveEV     => write!(f, "CentralDriveEV"),
-            ProductName::OffHighway         => write!(f, "OffHighway"),
-            ProductName::Defense            => write!(f, "Defense"),
-            ProductName::AcromagIntegration => write!(f, "AcromagIntegration"),
-            ProductName::TCMSelfTest        => write!(f, "TCMSelfTest"),
-            ProductName::Addons             => write!(f, "Addons"),
-            ProductName::SupportApps        => write!(f, "SupportApps"),
-            ProductName::Unknown            => write!(f, "Unknown"),
-        }
-    }
-}
-```
+How do I create a service that has the following path to executable: C:\eng_apps\sim_client\shawl.exe run --name sim_client_service -- C:\eng_apps\sim_client\sim_client.exe start usctd0470w9l 443 C:\eng_apps\sim_client\config.json "C:\ProgramData\ETAS\Experiment Environment\3.7\SimTCMConfiguration.txt"
