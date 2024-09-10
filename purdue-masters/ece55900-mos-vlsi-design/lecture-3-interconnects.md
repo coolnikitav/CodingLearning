@@ -109,3 +109,5 @@ Big C is total capacitance. Small c is capacitance per unit length.
 
 - Q1: Where does the 2 in the denominator come from?
 - A1: The RC components are distributed.
+
+- Time constant is quadratically related to the length of the wire. If you double the length, it will quadriple.
