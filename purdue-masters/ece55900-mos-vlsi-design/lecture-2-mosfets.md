@@ -149,10 +149,10 @@ For the purposes of this course, Vdsat is a constant parameter
 ![image](https://github.com/user-attachments/assets/f5037a09-e7c8-4037-a2a9-5685b7c4e489)
 
 ## Key Points: General MOSFET Characteristics (NMOS)
-![image](https://github.com/user-attachments/assets/5ce806fc-5ac6-448f-b2dc-796d7796ca26)
+![image](https://github.com/user-attachments/assets/a08a6e7b-38f7-4295-a930-64cfef96e9e9)
 
 ## Key Points: General MOSFET Characteristics (PMOS)
-![image](https://github.com/user-attachments/assets/c0982bb2-70a5-4d8b-9d2f-30068208eda3)
+![image](https://github.com/user-attachments/assets/2ed912ce-e8c2-4f27-9c23-f37f435ecba6)
 
 ![image](https://github.com/user-attachments/assets/87efc0b2-7dad-433c-a944-c9f92b367f2e)
 
