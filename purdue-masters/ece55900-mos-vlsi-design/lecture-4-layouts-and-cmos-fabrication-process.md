@@ -22,3 +22,10 @@
 
 ![image](https://github.com/user-attachments/assets/ca1ae916-d2e5-432d-ae1d-3332e7a5e102)
 
+## Stick Diagrams
+![image](https://github.com/user-attachments/assets/a1ea87e9-8652-4b96-8651-da71852eebf8)
+
+## Design Rules
+![image](https://github.com/user-attachments/assets/90892035-3663-4af3-a10e-ef324dfecafb)
+
+![image](https://github.com/user-attachments/assets/790ce810-df0c-42a8-ad91-844080e7aa50)
