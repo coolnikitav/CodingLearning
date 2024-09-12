@@ -134,7 +134,7 @@
 ### Memory Data Hazards
 ![image](https://github.com/user-attachments/assets/f395710e-d3e8-4fbe-9d8a-ef482d569a94)
 
-## Module 3.6 Dynamic Branch Prediction: BTB and RAS
+## Module 3.5 Control Hazards
 ### Branch Resolution in our Simple Pipeline
 ![image](https://github.com/user-attachments/assets/2f3298dd-5914-4a0b-b314-09829dee5d08)
 
@@ -146,6 +146,27 @@
 ### ISA Branch Techniques
 ![image](https://github.com/user-attachments/assets/61b17cf8-932f-4643-9f01-5c0ab064a08d)
 
+### 1 - Fast Branch
+![image](https://github.com/user-attachments/assets/01236873-4fc2-4f71-8655-9402b632acfd)
+
+### 2 - Delayed Branch
+![image](https://github.com/user-attachments/assets/79a5cf43-11a0-4219-bbb4-497e45d1aa15)
+
+![image](https://github.com/user-attachments/assets/5b0410d1-dfcd-48c5-87f6-c20aa14019f5)
+
+### 2 - Easy way*** to hide branch hazard delay
+![image](https://github.com/user-attachments/assets/90ac75d7-9132-490f-89cd-0ec327f9d70c)
+
+### 2 - Ideal - From Before Branch
+![image](https://github.com/user-attachments/assets/d917da66-2749-4c7e-85d1-a1a961dd364e)
+
+### 2 - From Taken/Not-Taken Paths
+![image](https://github.com/user-attachments/assets/e100141f-cd6d-4f9a-8a91-6715c55fb3a8)
+
+### 2 - Two Cases if We Move From Y Path
+![image](https://github.com/user-attachments/assets/56cbde5c-4a20-497e-9072-0188f98c8b75)
+
+## Module 3.6 Dynamic Branch Prediction: BTB and RAS
 ### Can We Do Better?
 ![image](https://github.com/user-attachments/assets/abd8f226-0131-4b74-b458-004ab26729f2)
 
