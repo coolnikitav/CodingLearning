@@ -50,7 +50,7 @@ We want the gate voltage to lower the barrier when the device is turned on:
 
 ## Body Effect (Non-Zero Source-To-Body Voltage)
 - Q1: What should be the voltage of the body of an n-mosfet? What about a p-mosfet? Why?
-- Q: How does relationship between surface and bulk potential change if we account for the body effect?
+- Q: How does the body effect impact the energy barrier?
 
 ![image](https://github.com/user-attachments/assets/34d5751f-9f11-4ee0-b840-d92dfabf1860)
 
