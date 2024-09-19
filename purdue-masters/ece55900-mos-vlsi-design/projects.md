@@ -38,3 +38,17 @@
 
 ## Partial Product Accumulation
 ![image](https://github.com/user-attachments/assets/06d1a852-8661-40d6-a237-d5c7cad6bea8)
+
+## Wallace Tree Multipliers
+- Q: Show how wallace tree multiplier works for two 4-digit nums.
+  
+![image](https://github.com/user-attachments/assets/351bebcf-8a45-498a-b1b5-31fd4fd20a0f)
+
+## Final Adder
+![image](https://github.com/user-attachments/assets/7eb5603f-fb88-4b43-9c6b-6ad261820620)
+
+## Overall 4x4 Wallace Tree Multiplier
+![image](https://github.com/user-attachments/assets/332d7a61-3ccd-4805-95c0-14cd97b5b9be)
+
+## Multiply Accumulate (MAC) Module
+![image](https://github.com/user-attachments/assets/dceeaf49-c32a-4e15-a777-ed7fafdb5865)
