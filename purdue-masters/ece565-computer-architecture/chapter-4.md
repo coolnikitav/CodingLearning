@@ -95,3 +95,13 @@ Cycle 8:
 Cycle 9:
 
 ![image](https://github.com/user-attachments/assets/77f76600-ab36-415d-87b2-54ac1ad89108)
+
+Cycle 10:
+
+![image](https://github.com/user-attachments/assets/148d986c-1482-4552-bb50-3172d350ed4e)
+
+### In-Order vs. Scoreboard
+![image](https://github.com/user-attachments/assets/e83174ef-59fc-4df8-b952-82242f3f7f4c)
+
+### In-Order vs. Scoreboard 2: 5-cycle cache
+![image](https://github.com/user-attachments/assets/20bdecad-722b-4b44-a9f7-51356f170b23)
