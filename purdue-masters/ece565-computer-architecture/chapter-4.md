@@ -105,3 +105,104 @@ Cycle 10:
 
 ### In-Order vs. Scoreboard 2: 5-cycle cache
 ![image](https://github.com/user-attachments/assets/20bdecad-722b-4b44-a9f7-51356f170b23)
+
+## Module 4.4 Tomasulo's Scheduling
+
+### Scoreboard Redux
+![image](https://github.com/user-attachments/assets/e0e4f779-2498-46a3-8e1f-5f867bab9323)
+
+### Register Renaming
+- Q: How does register renaming work? What technique is used? What happens on a write and what happens on a read?
+
+![image](https://github.com/user-attachments/assets/e5149eb8-65b8-4e92-aee0-9da790b5f0a2)
+
+![image](https://github.com/user-attachments/assets/0611aaf3-657e-4fe3-b92c-9e7f9ccb1c80)
+
+### Scheduling Algorithm 2: Tomasulo
+![image](https://github.com/user-attachments/assets/379b463a-e127-458b-b27a-78619d32c606)
+
+### Tomasulo Data Structures
+![image](https://github.com/user-attachments/assets/5185d0fd-b2e2-46d1-885f-d80675642b51)
+
+### Simple Tomasulo Data Structures
+![image](https://github.com/user-attachments/assets/036ece0e-7063-4e23-96c3-29dbc8f1b5d5)
+
+### Simple Tomasulo Pipeline
+- Q: What are the stages in the Tomasulo pipeline?
+
+![image](https://github.com/user-attachments/assets/02d61835-b005-4988-abbc-51d674d465c0)
+
+### Tomasulo Dispatch (D)
+![image](https://github.com/user-attachments/assets/199f82d9-9e23-4772-9c46-53a752b6c295)
+
+### Tomasulo Issue (S)
+![image](https://github.com/user-attachments/assets/7933ca50-3f84-44e5-b7c1-3b3b2e2a60ea)
+
+### Tomasulo Execute (X)
+![image](https://github.com/user-attachments/assets/004a77e0-d49d-44dd-ab6d-d2d880e65a22)
+
+### Tomasulo Writeback (W)
+![image](https://github.com/user-attachments/assets/b3e0e9a2-0873-4634-8e52-7fdf2c437fbe)
+
+### Difference Between Scoreboard...
+![image](https://github.com/user-attachments/assets/d0cfbd8f-4401-4366-b264-8e62218ccc05)
+
+### ...And Tomasulo
+![image](https://github.com/user-attachments/assets/1e2fb373-dc02-4b19-99ec-6fa67414f3b4)
+
+### Value/Copy-Based Register Renaming
+![image](https://github.com/user-attachments/assets/81077824-6c47-4b51-8f78-aea17eceb8b0)
+
+### Value-Based Renaming Example
+![image](https://github.com/user-attachments/assets/6a08b55c-58f7-429a-a3cc-030e5f88c613)
+
+### Tomasulo Data Structures
+- Q: Fill out these tables:
+
+![image](https://github.com/user-attachments/assets/3ad3af70-63df-47c3-8a8d-940899f6c8db)
+
+cycle 1:
+
+![image](https://github.com/user-attachments/assets/7df0d57f-868f-4ae1-b3f3-34bfd05dbafb)
+
+cycle 2:
+
+![image](https://github.com/user-attachments/assets/9be951af-7f72-46ea-a2ec-ec82885217b5)
+
+cycle 3:
+
+![image](https://github.com/user-attachments/assets/db4728cb-77c8-451b-a4f4-63b75f8a1a03)
+
+cycle 4:
+
+![image](https://github.com/user-attachments/assets/92af3025-27fe-4177-adee-f0adb632d05c)
+
+cycle 5:
+
+![image](https://github.com/user-attachments/assets/7efc1fc2-6544-495b-a495-e80f6d0913cb)
+
+cycle 6:
+
+![image](https://github.com/user-attachments/assets/e9fe7f41-97f9-4cc0-acce-f7939c323efc)
+
+cycle 7:
+
+![image](https://github.com/user-attachments/assets/437d5a4a-1894-4ad2-aa13-67c7f58c3c3f)
+
+cycle 8:
+
+![image](https://github.com/user-attachments/assets/5abc7e6d-807e-468f-a7e4-f09b985c1a13)
+
+cycle 9:
+
+![image](https://github.com/user-attachments/assets/7a246d05-4b46-49b9-9d66-2ac8ca426a16)
+
+cycle 10:
+
+![image](https://github.com/user-attachments/assets/515e45b2-5f83-400b-be8b-33e331ee8354)
+
+### Scoreboard vs. Tomasulo
+![image](https://github.com/user-attachments/assets/2063361c-085e-4341-9e9e-05bc8e1cd48d)
+
+### Scoreboard vs. Tomasulo 2: Cache
+![image](https://github.com/user-attachments/assets/181a3905-e550-498c-b86b-78bd0c843d7b)
