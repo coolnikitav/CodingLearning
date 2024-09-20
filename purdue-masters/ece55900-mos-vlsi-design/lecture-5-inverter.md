@@ -57,3 +57,5 @@
 ![image](https://github.com/user-attachments/assets/064fd49d-6974-498b-a60b-ac0feb9b9223)
 
 ![image](https://github.com/user-attachments/assets/c20c59c5-a3c2-47b8-8c06-ba90a4b9780d)
+
+## Obtaining VTC And Metrics Of Interest: Analytical Method![image](https://github.com/user-attachments/assets/99a2061e-a2a5-4351-9293-22636f8412b9)
