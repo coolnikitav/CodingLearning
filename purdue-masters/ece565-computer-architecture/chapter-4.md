@@ -206,3 +206,23 @@ cycle 10:
 
 ### Scoreboard vs. Tomasulo 2: Cache
 ![image](https://github.com/user-attachments/assets/181a3905-e550-498c-b86b-78bd0c843d7b)
+
+# Knowledge Check
+- Q1: The issue queue logically separates the pipeline front end from the backend.
+- Q2: The issue queue offers first-in-first-out semantics; hence the name "queue".
+- Q3: Instructions enter the issue queue in program order.
+- Q4: Instructions leave the issue queue after a fixed delay of N cycles where N depends on the pipeline depth.
+- Q5: Register renaming eliminates all RAW and WAR hazards.
+- Q6: In the Scoreboard issue queue, everytime a new register value is produced, all instructions that were waiting on that register value are notified via broadcast.
+- Q7: The register status table in the Scoreboard tracks the functional unit that will produce the register values.
+- Q8: Tomasulo's method renames registers by pointing register names to physical register locations.
+- Q9: Register values are stored outside the architectural register file in Tomasulo's scheduling method.
+- A1: True
+- A2: False
+- A3: True
+- A4: False
+- A5: False
+- A6: True
+- A7: True
+- A8: False
+- A9: True
