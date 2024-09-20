@@ -32,6 +32,8 @@
 ![image](https://github.com/user-attachments/assets/90ef7cea-156a-4866-84e3-44ebaf36b2b2)
 
 ## Noise Margins
+- Q: What is the equation for noise margin high and noise margin low? Explain why they are like that.
+  
 ![image](https://github.com/user-attachments/assets/867cbd13-5029-4456-8939-713f6eab9996)
 
 ## VTC For An Inverter With A Resistive Load: Load Line Method
