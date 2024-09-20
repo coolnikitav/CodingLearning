@@ -35,4 +35,23 @@
 ![image](https://github.com/user-attachments/assets/867cbd13-5029-4456-8939-713f6eab9996)
 
 ## VTC For An Inverter With A Resistive Load: Load Line Method
-![image](https://github.com/user-attachments/assets/e3240c0f-ca2b-49e7-98f7-6d34160b5bdd)
+![image](https://github.com/user-attachments/assets/498a423f-ff91-40c8-a737-b84368acf8e1)
+
+- Q: As R_L is increasing, how is the output curve changing?
+  
+![image](https://github.com/user-attachments/assets/e23f2f51-b5cd-45a3-8c92-58c229a1123f)
+
+## VTC For A Pseudo-NMOS Inverter: Load Line Method
+- Q: How do Wp and Lp affect the current:
+![image](https://github.com/user-attachments/assets/86a1eed7-ab5f-4ff9-b2ee-ebb0cf235e6c)
+
+- Q1: Is the V_OL of this inverter smaller or larger than the linear one?
+  
+![image](https://github.com/user-attachments/assets/a30e9946-6810-4566-a3c2-3e888b1e6ca3)
+
+- A1: Smaller
+
+## VTC For A CMOS Inverter: Load Line Method
+![image](https://github.com/user-attachments/assets/064fd49d-6974-498b-a60b-ac0feb9b9223)
+
+![image](https://github.com/user-attachments/assets/c20c59c5-a3c2-47b8-8c06-ba90a4b9780d)
