@@ -172,3 +172,28 @@ endclass
 
 ### 231. What are interfaces in SystemVerilog?
 - Interfaces are used to give users access to outputs and inputs of modules without directly having access to the internal code. It helps in communication between design blocks by connecting using a single name instead of having all the port names and connections.
+
+### 232. What is a modport construct in an interface?
+- Modport is a construct that lets you group signals and specify their directions. They are needed because by default nets are inout. So if two modules are driving it with different values, you can have a value of X.
+
+### 233. Are interfaces synthesizable?
+- Yes, interfaces are synthesizable.
+
+### 234. What is a clocking block and what are the benefits of using clocking blocks inside an interface?
+- A clocking block let's you define clock behavior for you signals, so the rest of the code can be focused on transactions and logical behavior. It can only be declared inside of a module or an interface.
+```
+clocking c1 @ (posedge clk);
+  default input #1step output #4;
+  input a;
+  output b;
+endclocking
+```
+
+### 235. What is the difference between the following two ways of specifying skews in a clocking block?
+```
+1) input #1step req1;
+2) input #1ns req1;
+```
+- The first one, the input will be sampled one timestep before the clock edge. In the second one, it will be sampled 1ns before the clock edge.
+### 234. What is a clocking block and what are the benefits of using clocking blocks inside an interface?
+- 
