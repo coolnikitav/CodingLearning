@@ -58,4 +58,31 @@
 
 ![image](https://github.com/user-attachments/assets/c20c59c5-a3c2-47b8-8c06-ba90a4b9780d)
 
-## Obtaining VTC And Metrics Of Interest: Analytical Method![image](https://github.com/user-attachments/assets/99a2061e-a2a5-4351-9293-22636f8412b9)
+## Obtaining VTC And Metrics Of Interest: Analytical Method
+![image](https://github.com/user-attachments/assets/99a2061e-a2a5-4351-9293-22636f8412b9)
+
+## VTC For An Inverter With a Resistive Load: V_OH
+- Q: Derive the equation for V_OH for the inverter with resistive load.
+  
+![image](https://github.com/user-attachments/assets/b44d7e40-b838-4951-9903-394ec46c484a)
+
+## VTC For An Inverter With a Resistive Load: V_OL
+- Q: Derive the equation for V_OL for the inverter with resistive load.
+  
+![image](https://github.com/user-attachments/assets/a08e3c4c-a1e6-4c11-b723-7775a450f559)
+
+## VTC For An Inverter With a Resistive Load: V_M
+- Q: Derive the equation for V_M for the inverter with resistive load.
+
+![image](https://github.com/user-attachments/assets/afdac065-e53f-44b4-a4bf-52b12f664872)
+
+## Design For V_OL
+![image](https://github.com/user-attachments/assets/6f3effb2-d957-4701-870c-5f5eed4aa74d)
+
+## CMOS Inverter: Analytical Method
+- Q: Do the exercise for V_OL.
+
+![image](https://github.com/user-attachments/assets/29e1629a-0556-4b9d-b597-5080630499bf)
+
+## CMOS Inverter: Analytical Method - Pinch-Off Based Saturation
+![image](https://github.com/user-attachments/assets/9b32747e-0a0d-4713-8df6-fc7c12da9ef9)
