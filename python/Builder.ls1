@@ -1,0 +1,16 @@
+function Create-ZipFile {
+	param (
+		[string] $sourceFolder,
+		[string] $folderAddress
+	)
+	$zipFile = $folderAddress + ".zip"
+	Compress-Archive -Path $sourceFolder -DestinationPath $zipFile
+	if (Test-Path -Path "$zipFile") {
+        Write-Host "CentralDrive_EV_$centralDriveVersion has been packaged successfully" -ForegroundColor Green
+    } else {
+        Write-Host "CentralDrive_EV_$centralDriveVersion has failed to package" -ForegroundColor Red
+		Delete-Folder -name "ETASData" -address $centralDrivePackagesAddress
+		Read-Host -Prompt "Press Enter to exit"
+		exit
+    }
+}

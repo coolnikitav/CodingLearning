@@ -1,1 +1,0 @@
-How do I create a service that has the following path to executable: C:\eng_apps\sim_client\shawl.exe run --name sim_client_service -- C:\eng_apps\sim_client\sim_client.exe start usctd0470w9l 443 C:\eng_apps\sim_client\config.json "C:\ProgramData\ETAS\Experiment Environment\3.7\SimTCMConfiguration.txt"
