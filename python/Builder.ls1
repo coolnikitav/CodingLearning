@@ -1,16 +1,26 @@
 function Create-ZipFile {
-	param (
-		[string] $sourceFolder,
-		[string] $folderAddress
-	)
-	$zipFile = $folderAddress + ".zip"
-	Compress-Archive -Path $sourceFolder -DestinationPath $zipFile
-	if (Test-Path -Path "$zipFile") {
+    param (
+        [string] $sourceFolder,
+        [string] $folderAddress
+    )
+    $zipFile = $folderAddress + ".zip"
+    
+    # Check if the zip file already exists, and if so, delete it
+    if (Test-Path -Path $zipFile) {
+        Remove-Item -Path $zipFile -Force
+        Write-Host "Existing zip file '$zipFile' has been deleted." -ForegroundColor Yellow
+    }
+
+    # Create the zip file
+    Compress-Archive -Path $sourceFolder -DestinationPath $zipFile
+
+    # Check if the zip file was successfully created
+    if (Test-Path -Path $zipFile) {
         Write-Host "CentralDrive_EV_$centralDriveVersion has been packaged successfully" -ForegroundColor Green
     } else {
         Write-Host "CentralDrive_EV_$centralDriveVersion has failed to package" -ForegroundColor Red
-		Delete-Folder -name "ETASData" -address $centralDrivePackagesAddress
-		Read-Host -Prompt "Press Enter to exit"
-		exit
+        Delete-Folder -name "ETASData" -address $centralDrivePackagesAddress
+        Read-Host -Prompt "Press Enter to exit"
+        exit
     }
 }
