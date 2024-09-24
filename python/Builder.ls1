@@ -1,26 +1,33 @@
-function Create-ZipFile {
-    param (
-        [string] $sourceFolder,
-        [string] $folderAddress
-    )
-    $zipFile = $folderAddress + ".zip"
-    
-    # Check if the zip file already exists, and if so, delete it
-    if (Test-Path -Path $zipFile) {
-        Remove-Item -Path $zipFile -Force
-        Write-Host "Existing zip file '$zipFile' has been deleted." -ForegroundColor Yellow
-    }
+pub struct SimConfig {
+    #[serde(
+        rename(deserialize = "Capabilities"),
+        rename(serialize = "Capabilities")
+    )]
+    pub capabilities: Vec<String>,
 
-    # Create the zip file
-    Compress-Archive -Path $sourceFolder -DestinationPath $zipFile
+    #[serde(
+        rename(deserialize = "Modifications"),
+        rename(serialize = "Modifications")
+    )]
+    pub modification: Vec<String>,
 
-    # Check if the zip file was successfully created
-    if (Test-Path -Path $zipFile) {
-        Write-Host "CentralDrive_EV_$centralDriveVersion has been packaged successfully" -ForegroundColor Green
-    } else {
-        Write-Host "CentralDrive_EV_$centralDriveVersion has failed to package" -ForegroundColor Red
-        Delete-Folder -name "ETASData" -address $centralDrivePackagesAddress
-        Read-Host -Prompt "Press Enter to exit"
-        exit
-    }
+    #[serde(
+        rename(deserialize = "Fault Injection"),
+        rename(serialize = "Fault Injection")
+    )]
+    pub fault_injection: bool,
+
+    #[serde(rename(deserialize = "Location"), rename(serialize = "Location"))]
+    pub location: String,
+
+    #[serde(rename(deserialize = "SimType"), rename(serialize = "SimType"))]
+    #[serde(default = "SimType::new")]
+    pub sim_type: SimType,
+
+    #[serde(rename(deserialize = "Product Ini Locations"), rename(serialize = "Product Ini Locations"))]
+    pub product_ini_locations: HashMap<String, String>,
+
+    #[serde(rename(deserialize = "Available To Public"), rename(serialize = "Available To Public"))]
+    #[serde(default = "bool::false")]
+    pub available_to_public: bool,
 }
