@@ -86,3 +86,34 @@
 
 ## CMOS Inverter: Analytical Method - Pinch-Off Based Saturation
 ![image](https://github.com/user-attachments/assets/9b32747e-0a0d-4713-8df6-fc7c12da9ef9)
+
+## CMOS Inverter: Analytical Method - Velocity Saturation
+![image](https://github.com/user-attachments/assets/a0683917-0d24-47f4-81a2-4b4a183bad6b)
+
+## CMOS Inverter: Sizing For V_M
+- Q1: What is our most desirable value of V_M?
+
+![image](https://github.com/user-attachments/assets/c83deedc-0d31-4af7-a345-d86f4e0e605e)
+
+- A1: Vdd/2
+
+## CMOS Inverter: Sizing For V_M = V_DD/2
+![image](https://github.com/user-attachments/assets/33f6a738-e15a-47a6-8338-68a3a35f2243)
+
+## Change In VTC With Sizing And/Or Process Variations
+- Q: How does VTC curve shift with a strong PMOS, weak NMOS? What about strong NMOS, weak PMOS?
+
+![image](https://github.com/user-attachments/assets/45577c44-ed1c-476b-81a3-aaf86985de9e)
+
+## Determining V_IH And V_IL: CMOS Inverter
+![image](https://github.com/user-attachments/assets/ef9324aa-8741-4933-8e3a-2d26b79645dc)
+
+## Inverter Gain
+![image](https://github.com/user-attachments/assets/9a5ddb97-91b1-4517-899f-d37480eabd1e)
+
+## Inverter Gain As A Function Of Vdd
+- Q: Draw the Vout vs Vin curve you would see at Vdd = 2.5, 1.5, 0.5, 0.2, 0.1, 0.05V
+
+![image](https://github.com/user-attachments/assets/701eab56-5c84-48c1-9d64-653f82b596ea)
+
+You can make an inverter even if the NMOS or a PMOS are in the off state. At that point you are talking about "which device is more on/off".
