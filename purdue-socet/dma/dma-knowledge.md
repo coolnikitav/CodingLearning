@@ -1,0 +1,5 @@
+- The DMA communicates with the CPU, memory, and peripherals over an AHB-lite bus. It acts as a slave to receive configuration data from the CPU and as a master to initiate transfers to and from peripherals and memory.
+- Read controller reads from a source register and puts the data into a fifo.
+- Write controller takes data from the fifo and writes it to the destination register.
+- CPU writes to the registers in the DMA to configure its mode of operation. To write to the registers, the CPU needs to write to their memory mapping.
+- DMA only uses non-cacheable regions of data to prevent coherency issues with CPU writing to cache.
