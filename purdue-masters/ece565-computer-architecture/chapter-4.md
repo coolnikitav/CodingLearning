@@ -356,3 +356,36 @@ T and Told for store are empty because there were no registers to rename
 
 - A1: Nothing ever made it to memory because we were in a speculative state.
 
+## Module 4.9 Out-of-Order Memory Operations
+
+### Out of Order Memory Operations
+![image](https://github.com/user-attachments/assets/209cb0c6-f469-4bcd-b08c-fd565261fee6)
+
+### Data Memory Functional Unit
+![image](https://github.com/user-attachments/assets/b2b204c0-b09d-4546-8459-f9c22206781a)
+
+### Simple Data Memory FU: D$/TLB + SQ
+![image](https://github.com/user-attachments/assets/14ec8f99-eeb9-4573-9cae-ab939b2c995b)
+
+### Data Memory FU "Pipeline"
+![image](https://github.com/user-attachments/assets/3432f77a-4f20-4f3e-a137-5a1bd56be81a)
+
+### "Out-of-Order" Load Execution
+![image](https://github.com/user-attachments/assets/2a187a81-2923-49eb-bee6-3bc077a4c8e4)
+
+CAM - content addressable memory, FA$ - fully associative cache
+
+### Conservative Load Scheduling
+![image](https://github.com/user-attachments/assets/5ac77f5c-81df-47f3-abc4-52cb210f3860)
+
+### Opportunistic Memory Scheduling
+![image](https://github.com/user-attachments/assets/20e115b8-cefb-40e1-a085-3e2905f92c21)
+
+### D$/TLB + SQ + LQ
+![image](https://github.com/user-attachments/assets/fe3cf573-57e7-43cd-95b1-867abef175d5)
+
+### Advanced Memory "Pipeline" (LQ Only)
+![image](https://github.com/user-attachments/assets/5732e1c2-9787-4c2a-a315-ae115c6a13be)
+
+### Detecting Memory Ordering Violations
+![image](https://github.com/user-attachments/assets/5faed9f8-a274-4803-9bc2-e7d3328f6c57)
