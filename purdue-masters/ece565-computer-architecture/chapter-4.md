@@ -226,3 +226,57 @@ cycle 10:
 - A7: True
 - A8: False
 - A9: True
+
+## Module 4.5 Overview of Precise Interrupts and the Reorder Buffer
+
+### This Unit: Dynamic Scheduling 2
+![image](https://github.com/user-attachments/assets/ed7d77de-9f4f-4bb1-9ff9-3608de066441)
+
+### Superscalar + Out-of-Order + Speculation
+![image](https://github.com/user-attachments/assets/4b03347e-01dd-4721-9718-9a840b096d64)
+
+### Speculation and Precise Interrupts
+![image](https://github.com/user-attachments/assets/c197c7dc-2bdc-4b4b-a14e-7f9e4667d26e)
+
+### Precise State
+- Q: When you mispredict a branch, what do you do with younger instructions that have already completed?
+
+![image](https://github.com/user-attachments/assets/4c0e6afc-df48-4fe2-b791-7a7f7a280d94)
+
+### Precise State Options
+![image](https://github.com/user-attachments/assets/5a42a506-01ab-477a-8f97-599be3025b79)
+
+### The Problem With Precise State
+![image](https://github.com/user-attachments/assets/de14e732-767f-43b3-b5da-89d4ed83e1f1)
+
+### Jim Smith's Re-Order Buffer (ROB)
+- Q1: What is RS on this slide?
+
+![image](https://github.com/user-attachments/assets/609c1e90-8a0a-4d88-8c18-b46b96a1f21c)
+
+- A1: Reservation stations.
+
+### Complete and Retire
+![image](https://github.com/user-attachments/assets/a3e20633-4bd3-4103-8b24-af5f77794eec)
+
+### Load/Store Queue (LSQ)
+![image](https://github.com/user-attachments/assets/a71cc43c-912e-4b80-b303-6006774e3eb4)
+
+## Module 4.6 Memory Dependence and the Load/Store Queue
+
+### ROB + LSQ
+![image](https://github.com/user-attachments/assets/e877c27d-ad95-4cb7-860c-aea535c6f0c3)
+
+### P6
+- Q: Describe P6.
+  
+![image](https://github.com/user-attachments/assets/d78d66ad-4fe1-46fd-a810-d471704f131b)
+
+### P6 Data Structures
+![image](https://github.com/user-attachments/assets/6b5e3038-102f-4453-b73f-c93c9a4144f0)
+
+### P6 (Tomasulo + ROB) Redux
+![image](https://github.com/user-attachments/assets/dd921222-5ef3-42c1-bebe-a3d6a715caf4)
+
+### The Problem with P6
+![image](https://github.com/user-attachments/assets/280ba66d-a954-47a1-adb5-6cd880365b25)
