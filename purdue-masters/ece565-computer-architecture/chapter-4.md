@@ -280,3 +280,22 @@ cycle 10:
 
 ### The Problem with P6
 ![image](https://github.com/user-attachments/assets/280ba66d-a954-47a1-adb5-6cd880365b25)
+
+## Module 4.7 The R10K Microarchitecture
+
+### MIPS R10K: Alternative Implementation
+![image](https://github.com/user-attachments/assets/51d19b8a-a661-4ba5-b588-90bfa9c34f06)
+
+### Register Renaming in R10K
+- Q: What does the number of physical registers equal to?
+  
+![image](https://github.com/user-attachments/assets/decf1239-c169-40f2-a274-9fccbca4f8de)
+
+### Register Renaming Example
+![image](https://github.com/user-attachments/assets/19264d42-e029-4295-b9ab-a68203ca10c5)
+
+### Freeing Registers in R10K
+- Q: What registers get freed when add retires, sub retires, mul, div:
+![image](https://github.com/user-attachments/assets/d55f6a17-a895-4ac3-b1a9-afcc05c3ecb6)
+
+![image](https://github.com/user-attachments/assets/bc7402fe-aca3-4d5d-bd5b-9fbde158bd53)
