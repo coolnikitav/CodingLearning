@@ -299,3 +299,60 @@ cycle 10:
 ![image](https://github.com/user-attachments/assets/d55f6a17-a895-4ac3-b1a9-afcc05c3ecb6)
 
 ![image](https://github.com/user-attachments/assets/bc7402fe-aca3-4d5d-bd5b-9fbde158bd53)
+
+### R10K Pipeline
+![image](https://github.com/user-attachments/assets/90c3617f-b1ab-4f9f-bf00-0721b92d92ba)
+
+### R10K Dispatch (D)
+![image](https://github.com/user-attachments/assets/f4490019-f2d2-46df-89c6-2dc7489f5597)
+
+### R10K Complete (C)
+![image](https://github.com/user-attachments/assets/49bd5407-543b-4e4c-81dd-bc6e2afc64d6)
+
+### R10K Data Structures
+- Q: Fill out the table.
+  
+![image](https://github.com/user-attachments/assets/556d9319-6285-4114-859b-adfe70d56af1)
+
+### R10K: Cycle 1
+![image](https://github.com/user-attachments/assets/ad7bb00b-999e-4b2e-8410-ed4da8e7974f)
+
++ means the value is already computed
+
+### R10K: Cycle 2
+![image](https://github.com/user-attachments/assets/e963f497-584d-4c45-8f33-76b69952c5ec)
+
+### R10K: Cycle 3
+![image](https://github.com/user-attachments/assets/9ee8d355-3ef4-431a-b1bc-060fced22888)
+
+### R10K: Cycle 4
+T and Told for store are empty because there were no registers to rename
+
+![image](https://github.com/user-attachments/assets/dedfb4d7-2c25-4e33-8129-14ee42e83038)
+
+### R10K: Cycle 5
+![image](https://github.com/user-attachments/assets/d3213a34-bdc2-4e07-ad28-72add23c844c)
+
+### Precise State in R10K
+- Q: What are the 2 ways of restoring a state in R10K?
+  
+![image](https://github.com/user-attachments/assets/1c0ef976-f9ae-44be-ba02-1758ab882782)
+
+## Module 4.8 Precise State Operation in the R10K Microarchitecture
+
+### R10K: Cycle 5 (with precise state)
+![image](https://github.com/user-attachments/assets/fde9015a-fb1d-42ab-a124-0fe7ce215d80)
+
+### R10K: Cycle 6 (with precise state)
+![image](https://github.com/user-attachments/assets/23fd242c-2b4d-4a55-8f25-b51e319ba261)
+
+### R10K: Cycle 7 (with precise state)
+![image](https://github.com/user-attachments/assets/2836643b-c995-409e-a266-5f17a0a04fba)
+
+### R10K: Cycle 8 (with precise state)
+- Q1: How is D$ write undone?
+
+![image](https://github.com/user-attachments/assets/a0770e28-3c4d-466c-ad14-8fc480bd9f84)
+
+- A1: Nothing ever made it to memory because we were in a speculative state.
+
