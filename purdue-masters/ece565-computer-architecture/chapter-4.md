@@ -389,3 +389,12 @@ CAM - content addressable memory, FA$ - fully associative cache
 
 ### Detecting Memory Ordering Violations
 ![image](https://github.com/user-attachments/assets/5faed9f8-a274-4803-9bc2-e7d3328f6c57)
+
+## Module 4.10 Intelligent Load Scheduling
+
+### Intelligent Load Scheduling
+![image](https://github.com/user-attachments/assets/0a768b81-c706-48aa-9c4a-fb25d9f10eac)
+
+### Memory Dependence Prediction
+![image](https://github.com/user-attachments/assets/c7f2a0f4-0687-4283-91c9-4e35fca26fbd)
+
