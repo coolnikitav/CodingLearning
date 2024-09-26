@@ -35,3 +35,12 @@ I_N(V_OUT) means I_N is a function of V_OUT
 ![image](https://github.com/user-attachments/assets/c4186bf5-28e4-4f2e-b219-8e1e39b60b7b)
 
 ## Summary V_DD/2 > V_TSBN
+![image](https://github.com/user-attachments/assets/60bc3894-3cf2-40d6-a64e-e530cb9cd3ad)
+
+## Summary V_DD/2 < V_TSBN
+![image](https://github.com/user-attachments/assets/9162284e-2e0c-4f56-a5d1-489201f7fa80)
+
+## Rise Time and Fall Time
+![image](https://github.com/user-attachments/assets/57035930-bc57-40c6-af5c-7771aedfb2d3)
+
+The function is complicated
