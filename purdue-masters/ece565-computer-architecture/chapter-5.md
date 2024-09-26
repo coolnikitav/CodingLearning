@@ -45,3 +45,55 @@ The setup allows 1021 and 1022 to be fetched in order, even though in terms of b
 - Q: Consider a 10 instruction loop body with an 8-issue processor. If 20% of the instructions are branches, what is ILP limited to?
 
 ![image](https://github.com/user-attachments/assets/99c0bcca-a79a-498f-b51d-1dc58af3324f)
+
+### Parallel Non-Sequential Fetch
+![image](https://github.com/user-attachments/assets/4945a9dd-ba15-421c-b8fc-26317249f6e1)
+
+### Trace Cache
+![image](https://github.com/user-attachments/assets/f50bf482-5d98-421b-8bfd-2950360cfd29)
+
+### Trace Cache Example
+![image](https://github.com/user-attachments/assets/d68ee3c0-8208-4a41-842c-9bbf6954492e)
+
+### Aside: Multiple-Issue CISC
+![image](https://github.com/user-attachments/assets/16114bb2-6f5f-4bd1-85e8-4b0fea5e5c45)
+
+### Wide Decode
+![image](https://github.com/user-attachments/assets/98b18d8c-90eb-4bf3-b299-fabf007fd1cc)
+
+### N^2 Dependence Cross-Check
+- Q: Describe the N^2 dependence cross-check in superscalar
+  
+![image](https://github.com/user-attachments/assets/37a71723-87f0-4023-a0a9-88b4aa421efd)
+
+### Superscalar Stalls
+- Q1: Describe rigid and fluid methods.
+- Q: What is each of their impacts on CPI and the clock.
+
+![image](https://github.com/user-attachments/assets/05cd4a8d-b62a-41a5-9ca3-aa9b7185fb02)
+
+- A1: In rigid, instructions stay together. If one stalls, they both stall.
+
+### Wide Execute
+![image](https://github.com/user-attachments/assets/ecba15e3-6bfc-4b22-85d3-0112ed9337b5)
+
+### Wide Memory Access
+- Q: What are the 4 options to allow multiple loads/stores? Describe each of them.
+
+![image](https://github.com/user-attachments/assets/3882b927-8931-4e9a-9b55-0af8866f8853)
+
+### N^2 Bypass Network
+![image](https://github.com/user-attachments/assets/89330bce-77ab-4110-9372-5470ab36d015)
+
+### Clustering
+- Q: What is steering in clustering?
+
+![image](https://github.com/user-attachments/assets/a1c07f0b-8adf-4330-b226-1fe078a37d21)
+
+### Wide Writeback
+![image](https://github.com/user-attachments/assets/a3976fea-bc5e-4bb5-8806-dabb3afb6c85)
+
+### Multiple-Issue Implementations
+- Q: What are the 4 implementations mentioned here.
+  
+![image](https://github.com/user-attachments/assets/0702e6da-e285-4edf-9f66-0dd8a1415226)
