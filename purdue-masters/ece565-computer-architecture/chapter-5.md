@@ -97,3 +97,25 @@ The setup allows 1021 and 1022 to be fetched in order, even though in terms of b
 - Q: What are the 4 implementations mentioned here.
   
 ![image](https://github.com/user-attachments/assets/0702e6da-e285-4edf-9f66-0dd8a1415226)
+
+## Module 5.3 Alternatives: VLIW and EPIC Processors
+
+### VLIW
+![image](https://github.com/user-attachments/assets/9607beb4-1d6c-445d-a00e-19bfc4f03e3c)
+
+![image](https://github.com/user-attachments/assets/b4c9a194-2cc5-4037-b675-b216051cbe4b)
+
+### History of VLIW
+![image](https://github.com/user-attachments/assets/d03c6f5f-f0cf-4d69-acce-557dc514b2f6)
+
+### Pure and Tainted VLIW
+![image](https://github.com/user-attachments/assets/71e27a1d-c241-4fa8-99c6-47f433fdbdff)
+
+### What Does VLIW Actually Buy Us?
+![image](https://github.com/user-attachments/assets/5f96df3e-791a-47b5-8bcc-810fa5585306)
+
+### EPIC
+![image](https://github.com/user-attachments/assets/1110a34b-ff89-4172-bdfb-7c699157bb5b)
+
+### ILP and Static Scheduling
+![image](https://github.com/user-attachments/assets/a9e699e6-053c-4a5a-98a4-38870eda42c0)
