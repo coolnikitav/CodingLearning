@@ -22,4 +22,16 @@ Note: it is assumed that the input is a step input.
 - Q: What is the equation for I_N in terms of Vout and C_L:
   ![image](https://github.com/user-attachments/assets/0fb3dd16-259f-4699-83c0-0a1355567e1d)
 
+![image](https://github.com/user-attachments/assets/83769c9d-9297-4a8f-8d16-020e87baa97a)
+
 I_N(V_OUT) means I_N is a function of V_OUT
+
+![image](https://github.com/user-attachments/assets/5f4c0d6a-4ded-4530-bc73-fdcb3b884955)
+
+![image](https://github.com/user-attachments/assets/c791c1a3-43ac-4183-b986-beffe81a45e0)
+
+![image](https://github.com/user-attachments/assets/72461ada-0078-426d-8d74-c51cdfe8d212)
+
+![image](https://github.com/user-attachments/assets/c4186bf5-28e4-4f2e-b219-8e1e39b60b7b)
+
+## Summary V_DD/2 > V_TSBN
