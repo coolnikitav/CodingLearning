@@ -119,3 +119,64 @@ The setup allows 1021 and 1022 to be fetched in order, even though in terms of b
 
 ### ILP and Static Scheduling
 ![image](https://github.com/user-attachments/assets/a9e699e6-053c-4a5a-98a4-38870eda42c0)
+
+## Module 5.4 Alternatives: Static Scheduling, Loop Unrolling
+### Code EXample: SAXPY
+![image](https://github.com/user-attachments/assets/3d8d23d8-bc5c-4a61-bdc5-4b78976806b0)
+
+### SAXPY Performance and Utilization
+- Q: Draw a pipeline diagram of a single issue pipeline and then double issue pipeline.
+  
+![image](https://github.com/user-attachments/assets/0c00f544-ae48-460b-9a3a-2ad0ffbdddec)
+
+![image](https://github.com/user-attachments/assets/9690aa45-4fa7-4c0a-a84c-e042114ea0cc)
+
+### Schedule and Issue
+![image](https://github.com/user-attachments/assets/db27088f-289c-431a-a503-93ca327457f4)
+
+### Instruction Scheduling
+![image](https://github.com/user-attachments/assets/4d92c273-9f87-4650-9ba6-336832b1cabe)
+
+### Aside: Profiling
+![image](https://github.com/user-attachments/assets/d27a01f8-df0c-4047-9a1f-bc161596acbe)
+
+### Loop Unrolling SAXPY
+![image](https://github.com/user-attachments/assets/29980a59-6d89-483b-9643-85d4ef7f978a)
+
+### Unrolling SAXPY 1: Fuse Iterations
+![image](https://github.com/user-attachments/assets/b9cd4c6a-4287-45ea-a07a-dda9eeb927fa)
+
+### Unrolling SAXPY 2: Pipeline Schedule
+![image](https://github.com/user-attachments/assets/8f629c73-dd51-4a30-bb65-0b2b296c935c)
+
+### Unrolling SAXPY 3: Rename Registers
+![image](https://github.com/user-attachments/assets/94602fdb-23fe-40ad-9e09-ad59032722b4)
+
+### Unrolling SAXPY Performance/Utilization
+- Q: What is the speedup compared to the single issue pipeline without any optimizations? (Look at the pipeline diagram below)
+
+![image](https://github.com/user-attachments/assets/9e2bd29c-0f4a-48a6-a157-9acf1d4ebe93)
+
+### What About Leftover Iterations?
+![image](https://github.com/user-attachments/assets/4f680eeb-5e30-4505-8ed1-af8d959a8b77)
+
+### Loop Unrolling Shortcomings
+![image](https://github.com/user-attachments/assets/9c02582f-6cbe-4b6f-8442-016736d60e7f)
+
+## Module 5.5 Alternatives: Software Pipelining
+### Software Pipelining
+![image](https://github.com/user-attachments/assets/46a9bc35-070b-4331-bda9-79ebcdc42130)
+
+### Software Pipelined Recurrence Example
+![image](https://github.com/user-attachments/assets/f5175467-df9f-4dce-82ae-703ad235e926)
+
+### Software Pipelining Pipeline Diagrams
+![image](https://github.com/user-attachments/assets/980b8423-03fa-4073-89e8-03b8aeee7dcf)
+
+### Software Pipelining Example
+- Q: What is the fill and the drain part?
+
+![image](https://github.com/user-attachments/assets/15c2f0e7-3b1d-4231-a027-f9b61cf073e5)
+
+### Software Pipelining Pipeline Diagram
+![image](https://github.com/user-attachments/assets/3a01f93c-c148-4cd4-8058-ea74957f2998)
