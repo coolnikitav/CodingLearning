@@ -38,9 +38,22 @@ I_N(V_OUT) means I_N is a function of V_OUT
 ![image](https://github.com/user-attachments/assets/60bc3894-3cf2-40d6-a64e-e530cb9cd3ad)
 
 ## Summary V_DD/2 < V_TSBN
-![image](https://github.com/user-attachments/assets/9162284e-2e0c-4f56-a5d1-489201f7fa80)
+![image](https://github.com/user-attachments/assets/07e217d3-b9d5-43dc-842d-5687b2d887b6)
 
 ## Rise Time and Fall Time
 ![image](https://github.com/user-attachments/assets/57035930-bc57-40c6-af5c-7771aedfb2d3)
 
 The function is complicated
+
+## Load Capacitance
+- Q: Let's say we have inverter 1 connected to inverter 2. Draw all of the load capacitances that are affecting inverter1.
+
+![image](https://github.com/user-attachments/assets/d1aef686-9620-4671-9983-e6aa8f208946)
+
+## Miller Capacitance
+![image](https://github.com/user-attachments/assets/47e26e2f-a8b8-4aa5-b15b-1113741cdfca)
+
+## Fanout (FO)
+![image](https://github.com/user-attachments/assets/47ffaba8-1fda-4b26-ae1f-b9ec854b8137)
+
+Fanout is determined in terms of C_L_EXT only, not C_L_INT.
