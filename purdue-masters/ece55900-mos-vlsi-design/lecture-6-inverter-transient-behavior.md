@@ -48,7 +48,7 @@ The function is complicated
 ## Load Capacitance
 - Q: Let's say we have inverter 1 connected to inverter 2. Draw all of the load capacitances that are affecting inverter1.
 
-![image](https://github.com/user-attachments/assets/d1aef686-9620-4671-9983-e6aa8f208946)
+![image](https://github.com/user-attachments/assets/360f8a14-daac-4c42-a424-11d77c226f44)
 
 ## Miller Capacitance
 ![image](https://github.com/user-attachments/assets/47e26e2f-a8b8-4aa5-b15b-1113741cdfca)
@@ -57,3 +57,23 @@ The function is complicated
 ![image](https://github.com/user-attachments/assets/47ffaba8-1fda-4b26-ae1f-b9ec854b8137)
 
 Fanout is determined in terms of C_L_EXT only, not C_L_INT.
+
+## Increase In Delay Due To Finite Input Slew Rate
+![image](https://github.com/user-attachments/assets/6d5f4ba9-cdc4-47e7-ab08-e4832b943f4a)
+
+## Decrease In Delay With Increasing V_DD
+- Q1: What is the cost you are paying with increasing V_DD?
+- Q: Why does delay decrease with increase in V_DD?
+
+![image](https://github.com/user-attachments/assets/d07ad95f-8329-42ef-937c-e858103223a7)
+
+- A1: More power/energy use.
+
+## Impact Of Transistor Sizing
+- Q: When s increases, does intrinsic capacitance increase/decrease? What about resistance of the MOSFETs?
+- Q: Draw delay vs s graph. Explain why its steep in some places and flat in others.
+
+![image](https://github.com/user-attachments/assets/8139c2a1-d01e-47d6-ae96-bd0828e253c3)
+
+## Impact Of W_P/W_N
+![image](https://github.com/user-attachments/assets/fca622ac-b2f5-49e1-a799-179d6f9ed9c4)
