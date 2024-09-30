@@ -195,5 +195,27 @@ endclocking
 2) input #1ns req1;
 ```
 - The first one, the input will be sampled one timestep before the clock edge. In the second one, it will be sampled 1ns before the clock edge.
-### 234. What is a clocking block and what are the benefits of using clocking blocks inside an interface?
-- 
+
+### 236. What are the main regions inside a SystemVerilog simulation time step?
+- Preponed, active, observed, reactive, postponed
+- Preponed is to evaluate the inputs. It is executed only once
+- Active consists of active, inactive, and NBA (non-blocking assignments). RTL and behavioral code are scheduled, as well as non-blocking statements are evaluated, in the active region. Blocking statements and assignments with #0 delays are executed in the inactive region. Evaluation of RHS happens in the active region.
+- Observed region is for evaluation of property expressions (used in concurrent assertions).
+- Reactive region is used to schedule blocking assignments, #0 delay assignments, and nonblocking assignments.
+- Postponed region is for events like $monitor and $strobe to be executed in this region. $display events are scheduled for execution in Active and Reactive regions.
+
+### 237. Given following constraints, which of the following options are wrong?
+```
+rand logic [15:0] a, b, c;
+constraint c_abc {
+  a < c;
+  b == a;
+  c < 30;
+  b > 25;
+}
+
+1) b can be any value between 26 and 29
+2) c can be any value between 0 and 29
+3) c can be any value between 26 and 29
+```
+- 2 and 3 are wrong. c cannot be 25 or less because b needs to be less than c and greater than 25
