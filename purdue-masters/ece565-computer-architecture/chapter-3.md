@@ -238,10 +238,3 @@
 
 ### Research: Perceptron Predictor
 ![image](https://github.com/user-attachments/assets/d20c9283-e294-4f61-a411-c67100a5188b)
-
-### Driving an RC-Line
-- Q1: Why is the c_w * L divided by 2?
-
-![image](https://github.com/user-attachments/assets/3e97d3fa-beaa-466e-a9f4-fce47e970196)
-
-- A1: Because of the distributed effect.
