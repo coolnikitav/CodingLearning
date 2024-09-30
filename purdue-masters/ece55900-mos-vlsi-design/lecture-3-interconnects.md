@@ -119,3 +119,10 @@ Big C is total capacitance. Small c is capacitance per unit length.
 
 ### RC Models: Lumped vs Distributed
 ![image](https://github.com/user-attachments/assets/ccde7d8a-692b-4635-b5d0-80dd54544f14)
+
+### Driving an RC-Line
+- Q1: Why is the c_w * L divided by 2?
+
+![image](https://github.com/user-attachments/assets/3e97d3fa-beaa-466e-a9f4-fce47e970196)
+
+- A1: Because of the distributed effect.
