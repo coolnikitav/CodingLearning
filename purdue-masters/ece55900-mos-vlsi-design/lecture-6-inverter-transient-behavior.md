@@ -77,3 +77,34 @@ Fanout is determined in terms of C_L_EXT only, not C_L_INT.
 
 ## Impact Of W_P/W_N
 ![image](https://github.com/user-attachments/assets/fca622ac-b2f5-49e1-a799-179d6f9ed9c4)
+
+## Optimal W_P/W_N For Minimum Avg. Delay
+![image](https://github.com/user-attachments/assets/5bf31f16-a0c0-4ac2-bab9-03faa4bce817)
+
+- Q: What are C_IN, C_LINT, and C_L in terms of gate, drain, and load capacitances?
+
+![image](https://github.com/user-attachments/assets/fa719a7d-2255-4fd5-ac46-23938a9d5e49)
+
+![image](https://github.com/user-attachments/assets/6a1bae3a-2159-45c2-ba0a-99370f8007c2)
+
+![image](https://github.com/user-attachments/assets/fbe7c137-41f5-4554-8f4c-9cab8255d895)
+
+## Simple Expression For Inverter Delay For A Fixed beta
+- Q: What is the expression for both propagation delays in terms of R_N, R_P, and C_L?
+  
+![image](https://github.com/user-attachments/assets/9923133a-ff6d-416f-afe5-e8c2ebbf1595)
+
+![image](https://github.com/user-attachments/assets/df9d72f5-06a6-40e8-a6eb-eb6c491d0607)
+
+![image](https://github.com/user-attachments/assets/8178dc6f-4502-4643-acce-b12757ca7e96)
+
+- Q: What is the propagation delay in terms of the intrinsic delay and fanout?
+
+![image](https://github.com/user-attachments/assets/d9bbbc33-68bd-43db-ac87-8d3809db4f1a)
+
+![image](https://github.com/user-attachments/assets/53ebb1ae-1705-4ecd-b557-4f3d32f829d1)
+
+![image](https://github.com/user-attachments/assets/a75c2229-9546-4b3b-87cf-6af98c358aa3)
+
+## Example
+![image](https://github.com/user-attachments/assets/24061483-6dd2-4782-8586-3fa0ed130cf8)
