@@ -1,24 +1,29 @@
-use std::process::Command;
-use std::str;
-
-fn is_service_running(service_name: &str) -> bool {
-    // Execute the command: `sc query <service_name>`
-    let output = Command::new("sc")
-        .arg("query")
-        .arg(service_name)
-        .output()
-        .expect("Failed to execute command");
-
-    // Convert the output to a string and check for "RUNNING" status
-    let output_str = str::from_utf8(&output.stdout).unwrap_or("").to_lowercase();
-    output_str.contains("running")
-}
-
-fn main() {
-    let service_name = "wuauserv"; // Example service name (Windows Update)
-    if is_service_running(service_name) {
-        println!("The service {} is running.", service_name);
-    } else {
-        println!("The service {} is not running.", service_name);
-    }
-}
+egui::ScrollArea::horizontal()
+        .max_width(f32::INFINITY)
+        .show(ui, |ui| {
+            if sim_team_mode_enabled {
+                // sim_team_mode shows an additional "Logging Service" column
+                let builder = TableBuilder::new(ui)
+                    .columns(egui_extras::Column::auto(), 2)
+                    .columns(egui_extras::Column::remainder(), 8)
+                    .striped(true)
+                    .resizable(true)
+                    .auto_shrink([false, false])
+                    .max_scroll_height(f32::INFINITY)
+                    .sense(egui::Sense::click());
+            } else {
+                let builder = TableBuilder::new(ui)
+                    .columns(egui_extras::Column::auto(), 2)
+                    .columns(egui_extras::Column::remainder(), 7)
+                    .striped(true)
+                    .resizable(true)
+                    .auto_shrink([false, false])
+                    .max_scroll_height(f32::INFINITY)
+                    .sense(egui::Sense::click());
+            }
+            builder
+                .header(30.0, |mut header| {
+                    header.col(|ui| {
+                        let label = egui::Label::new("#").wrap();
+                        ui.add(label);
+                    });
