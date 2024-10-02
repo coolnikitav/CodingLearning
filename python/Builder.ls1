@@ -1,29 +1,51 @@
-egui::ScrollArea::horizontal()
-        .max_width(f32::INFINITY)
-        .show(ui, |ui| {
-            if sim_team_mode_enabled {
-                // sim_team_mode shows an additional "Logging Service" column
-                let builder = TableBuilder::new(ui)
-                    .columns(egui_extras::Column::auto(), 2)
-                    .columns(egui_extras::Column::remainder(), 8)
-                    .striped(true)
-                    .resizable(true)
-                    .auto_shrink([false, false])
-                    .max_scroll_height(f32::INFINITY)
-                    .sense(egui::Sense::click());
-            } else {
-                let builder = TableBuilder::new(ui)
-                    .columns(egui_extras::Column::auto(), 2)
-                    .columns(egui_extras::Column::remainder(), 7)
-                    .striped(true)
-                    .resizable(true)
-                    .auto_shrink([false, false])
-                    .max_scroll_height(f32::INFINITY)
-                    .sense(egui::Sense::click());
-            }
-            builder
-                .header(30.0, |mut header| {
-                    header.col(|ui| {
-                        let label = egui::Label::new("#").wrap();
-                        ui.add(label);
-                    });
+#[derive(Serialize, Debug, Deserialize, Clone, PartialEq)]
+pub struct SimMessage {
+    pub host_name: String,
+    user_name: String,
+    status: Status,
+    pub logging_service_running: bool,
+    pub config: SimConfig,
+    pub tcm_types: Option<Vec<TCMType>>,
+    pub products_installed: Option<Vec<Product>>,
+}
+
+impl SimMessage {
+    pub fn new(
+        config: SimConfig,
+        host_name: String,
+        user_name: String,
+        status: Status,
+        logging_service_running: bool,
+        tcm_types: Option<Vec<TCMType>>,
+        products_installed: Option<Vec<Product>>,
+    ) -> Self {
+        SimMessage {
+            host_name,
+            user_name,
+            status,
+            logging_service_running,
+            config,
+            tcm_types,
+            products_installed,
+        }
+    }
+
+    pub fn set_status(&mut self, status: Status) {
+        self.status = status;
+    }
+
+    pub fn set_user_name(&mut self, user_name: String) {
+        self.user_name = user_name;
+    }
+
+    pub fn status(&self) -> &Status {
+        &self.status
+    }
+
+    pub fn user_name(&self) -> Option<&str> {
+        match self.status {
+            Status::Connected | Status::ConnectedEERunning => Some(self.user_name.as_str()),
+            _ => None,
+        }
+    }
+}
