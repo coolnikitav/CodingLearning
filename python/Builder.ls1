@@ -1,33 +1,24 @@
-pub struct SimConfig {
-    #[serde(
-        rename(deserialize = "Capabilities"),
-        rename(serialize = "Capabilities")
-    )]
-    pub capabilities: Vec<String>,
+use std::process::Command;
+use std::str;
 
-    #[serde(
-        rename(deserialize = "Modifications"),
-        rename(serialize = "Modifications")
-    )]
-    pub modification: Vec<String>,
+fn is_service_running(service_name: &str) -> bool {
+    // Execute the command: `sc query <service_name>`
+    let output = Command::new("sc")
+        .arg("query")
+        .arg(service_name)
+        .output()
+        .expect("Failed to execute command");
 
-    #[serde(
-        rename(deserialize = "Fault Injection"),
-        rename(serialize = "Fault Injection")
-    )]
-    pub fault_injection: bool,
+    // Convert the output to a string and check for "RUNNING" status
+    let output_str = str::from_utf8(&output.stdout).unwrap_or("").to_lowercase();
+    output_str.contains("running")
+}
 
-    #[serde(rename(deserialize = "Location"), rename(serialize = "Location"))]
-    pub location: String,
-
-    #[serde(rename(deserialize = "SimType"), rename(serialize = "SimType"))]
-    #[serde(default = "SimType::new")]
-    pub sim_type: SimType,
-
-    #[serde(rename(deserialize = "Product Ini Locations"), rename(serialize = "Product Ini Locations"))]
-    pub product_ini_locations: HashMap<String, String>,
-
-    #[serde(rename(deserialize = "Available To Public"), rename(serialize = "Available To Public"))]
-    #[serde(default = "bool::false")]
-    pub available_to_public: bool,
+fn main() {
+    let service_name = "wuauserv"; // Example service name (Windows Update)
+    if is_service_running(service_name) {
+        println!("The service {} is running.", service_name);
+    } else {
+        println!("The service {} is not running.", service_name);
+    }
 }
