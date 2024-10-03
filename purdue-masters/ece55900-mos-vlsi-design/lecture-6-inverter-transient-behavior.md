@@ -107,4 +107,28 @@ Fanout is determined in terms of C_L_EXT only, not C_L_INT.
 ![image](https://github.com/user-attachments/assets/a75c2229-9546-4b3b-87cf-6af98c358aa3)
 
 ## Example
-![image](https://github.com/user-attachments/assets/24061483-6dd2-4782-8586-3fa0ed130cf8)
+![image](https://github.com/user-attachments/assets/e4516a4e-549f-4410-a4dc-498e054da76b)
+
+## Example: Design 1
+![image](https://github.com/user-attachments/assets/27186452-80c5-45f5-b283-b0f41471cca2)
+
+## Example: Design 2
+![image](https://github.com/user-attachments/assets/5fe86528-7c8b-4d74-86f9-5488689997f8)
+
+## Example: Choice Between The Two Designs
+- Q1: Why should we choose design 1 if fanout is small and why should we choose design 2 if fanout is large?
+  
+![image](https://github.com/user-attachments/assets/dc70aef7-6fff-4c7b-a502-58d39a469c40)
+
+- A1: The second inverter charges the output capacitance at a faster rate (variable delay), but it has an additional inverter (fixed delay).
+
+## Generalization To N Inverters
+- Make sure you understand what is going on here:
+  
+![image](https://github.com/user-attachments/assets/897a5986-fe8f-4835-8ad9-e7845162c75f)
+
+## Design Example From Your Textbook
+![image](https://github.com/user-attachments/assets/68143f8b-fef3-416e-9f29-45079b5c643a)
+
+## Inverter Driving A Long Wire
+![image](https://github.com/user-attachments/assets/9bf87d7b-ad11-4bbe-8806-3324192b187c)
