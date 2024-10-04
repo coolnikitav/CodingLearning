@@ -219,3 +219,61 @@ constraint c_abc {
 3) c can be any value between 26 and 29
 ```
 - 2 and 3 are wrong. c cannot be 25 or less because b needs to be less than c and greater than 25
+
+### 238. Will there be any difference in the values generated in the following constraints?
+```
+class ABSolveBefore;
+  rand bit A;
+  rand bit [1:0] B;
+  constraint c_ab {
+    (A == 0) -> B == 0;
+    solve A before B;
+  }
+endclass
+
+class ABSolveBefore;
+  rand bit A;
+  rand bit [1:0] B;
+  constraint c_ab {
+    (A == 0) -> B == 0;
+    solve B before A;
+  }
+endclass
+```
+- The first constraint will have a value of A = 0 and B = 0 50% of the time and have A = 1 and B = 1,2,3 the other 50% of the time.
+- The second constraint will have a value of B = 0 and A = 0 25% of the time and have B = 1,2,3 and A = 1 the other 75% of the time.
+
+### 239. What is a unique constraint in SystemVerilog?
+- Unique constraints are used to randomize varaibles to make sure that numbers are unique.
+
+### 240. How can we disable or enable constraints selectively in a class?
+- With constraint_mode(0);
+```
+class ABC;
+  rand bit a;
+
+  constraint a_zero { a == 0; }
+endclass
+
+ABC abc = new();
+abc.constraint_mode(0);  // turn off all constraints
+abc.a_zero.constraint_mode(0);  // turn off a particular constraint
+```
+
+### 241. Given a Packet class with the following constraints, how can we generate a packet object with address value greater than 200?
+```
+class Packet;
+  rand bit [31:0] addr;
+  constraint c_addr { addr inside [0:100]; }
+endclass
+```
+- Answer:
+
+```
+Packet p = new();
+p.c_addr.constraint_mode(0);
+p.randomize() with { addr >= 200; }
+```
+
+### 242. What are pre_randomize() and post_randomize() functions?
+- pre_randomize() is called before randomize() and is useful for overriding any constraints. post_randomize() is called after randomize() and is useful to override results of randomization
