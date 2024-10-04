@@ -132,3 +132,12 @@ Fanout is determined in terms of C_L_EXT only, not C_L_INT.
 
 ## Inverter Driving A Long Wire
 ![image](https://github.com/user-attachments/assets/9bf87d7b-ad11-4bbe-8806-3324192b187c)
+
+![image](https://github.com/user-attachments/assets/3e4ed51e-731d-440a-9d39-43999a4df858)
+
+![image](https://github.com/user-attachments/assets/bc37961f-ca9e-46a2-b4a8-ec209779eb7a)
+
+## Resistance Shielding Effect
+![image](https://github.com/user-attachments/assets/45738b82-bba0-4a37-9df1-2c94f8aa0b8d)
+
+- Note: the elmore delay model cannot really be applied when the destination is in the middle.
