@@ -66,3 +66,21 @@
 
 ### This Unit: Caches
 ![image](https://github.com/user-attachments/assets/75305b0a-46bb-42a2-8979-d8c0d54f9d98)
+
+## Module 7.4 Basic Cache Operation
+
+### Cache Operation
+- Q: What is a frame in cache?
+
+![image](https://github.com/user-attachments/assets/9060dbe7-8def-4177-af82-6abdb8b52e25)
+
+Note: at startup, all valid bits are zero.
+
+![image](https://github.com/user-attachments/assets/ef3ae2c2-c5f4-48f7-a773-ff7a34567b0c)
+
+### Example of cache operation
+![image](https://github.com/user-attachments/assets/7595ad49-e552-4a12-81fe-5e82ba80f129)
+
+- Q: Fill in this cache:![image](https://github.com/user-attachments/assets/c2c08c58-439f-4dad-a73f-b830ebd110c8)
+
+![image](https://github.com/user-attachments/assets/c6c24fd3-d9d0-4af0-9fe6-9c72411e19a4)
