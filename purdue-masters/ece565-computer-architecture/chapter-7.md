@@ -30,3 +30,19 @@
 ### Challenge: CPU-Memory Gap
 ![image](https://github.com/user-attachments/assets/dee8232f-001f-4c93-b5d8-338e5d2317c8)
 
+## Module 7.2 Understanding Locality
+
+### Locality
+![image](https://github.com/user-attachments/assets/b00785f0-debb-4545-9518-fdcec49b9e80)
+
+### Two Flavors of Locality
+![image](https://github.com/user-attachments/assets/37467b57-b6fd-423d-ac9d-f7ae4e319141)
+
+### Connect Locality and Caches
+![image](https://github.com/user-attachments/assets/010b57cc-0253-4a4f-924a-541f991497f4)
+
+### Illusion of Speed and Capacity
+![image](https://github.com/user-attachments/assets/c305189f-8df0-458e-96fc-af23d49fdaa4)
+
+### Why Caches Work
+![image](https://github.com/user-attachments/assets/76d831c9-ee36-4f62-8abd-dc843ea5a4e6)
