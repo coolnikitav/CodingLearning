@@ -46,3 +46,23 @@
 
 ### Why Caches Work
 ![image](https://github.com/user-attachments/assets/76d831c9-ee36-4f62-8abd-dc843ea5a4e6)
+
+## Module 7.3 Levels of the Memory Hierarchy: Key Differences and Similarities
+
+### Exploiting Locality: Memory Hierarchy
+![image](https://github.com/user-attachments/assets/36920a49-afda-4711-ac26-ae5e3f8db6cb)
+
+### Concrete Memory Hierarchy
+![image](https://github.com/user-attachments/assets/bc1ba1d1-7ed0-4b13-8031-8c1657938a36)
+
+### Register <-> Main memory
+![image](https://github.com/user-attachments/assets/aa0cd50f-f3ae-43dd-9071-25f15579ab85)
+
+### Disk <-> Memory
+![image](https://github.com/user-attachments/assets/2b89941e-9d76-4006-b62c-d9c64cb37745)
+
+### Cache <-> Memory
+![image](https://github.com/user-attachments/assets/012447a5-300c-4667-b2ed-6fc4114c9ddf)
+
+### This Unit: Caches
+![image](https://github.com/user-attachments/assets/75305b0a-46bb-42a2-8979-d8c0d54f9d98)
