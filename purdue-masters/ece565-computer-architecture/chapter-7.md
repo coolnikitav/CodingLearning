@@ -201,3 +201,36 @@ Note: at startup, all valid bits are zero.
 ![image](https://github.com/user-attachments/assets/072c9406-7206-4e1c-8e9d-c4d7d722ff53)
 
 Note: cycles-lost-to-interference because of structural hazards where memory and fetch are in the same cycle
+
+## Module 7.11 The 3C Model
+
+### Advanced Caches
+![image](https://github.com/user-attachments/assets/b57d73d2-02af-450f-8189-c8dc16f8be1a)
+
+### Classifying Misses: 3(4) C Model
+- Q: What are the 4 Cs?
+
+![image](https://github.com/user-attachments/assets/ac7f480c-d6bd-4a3d-80a6-cc90aba63ed2)
+
+### Fundamental Cache Parameters
+![image](https://github.com/user-attachments/assets/5f57466d-d629-4c12-9423-9ade952b8890)
+
+### Increase Cache Size
+![image](https://github.com/user-attachments/assets/ee745183-5625-4983-87ba-c6f46321c318)
+
+### Block Size
+![image](https://github.com/user-attachments/assets/c64bde0d-dd06-449f-b8e8-fddf2e37d644)
+
+### Effect of Block Size on Miss Rate
+![image](https://github.com/user-attachments/assets/cc56b009-88db-4768-98bd-b1c2569840cd)
+
+### Block Size and Tag Overhead
+![image](https://github.com/user-attachments/assets/cc26700b-7678-4b39-9539-96c3f31c0737)
+
+### Increase Associativity
+![image](https://github.com/user-attachments/assets/a3cb8ba4-243c-4d73-a1f1-032bb4d51d4a)
+
+### Mark Hill's "Bigger and Dumber is Better"
+![image](https://github.com/user-attachments/assets/0fed678d-eef5-4943-87b7-56cd68b3c0d0)
+
+![image](https://github.com/user-attachments/assets/0525bab7-7a39-47c1-982e-92b392c30b13)
