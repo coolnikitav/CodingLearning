@@ -184,3 +184,20 @@ Note: at startup, all valid bits are zero.
 
 ### Buffering Writes 3 of 3: Writeback Buffer
 ![image](https://github.com/user-attachments/assets/c36a9281-a2a4-4595-82c7-2b84faf8549b)
+
+## Module 7.10 Quantifying Cache Overheads
+
+### Calculating Tag Overhead
+![image](https://github.com/user-attachments/assets/b86bb03f-9da8-4c6d-b387-de7be2e31969)
+
+### Cache Type
+- Q1: What does dynamic response mean?
+
+![image](https://github.com/user-attachments/assets/dbada6e1-bdf7-49e5-aec3-f2ff2e16b5ac)
+
+- A1: If we have a small loop that accesses a lot of data, we can have a small portion of the unified cache be instructions and the rest be data.
+
+### Cache Type
+![image](https://github.com/user-attachments/assets/072c9406-7206-4e1c-8e9d-c4d7d722ff53)
+
+Note: cycles-lost-to-interference because of structural hazards where memory and fetch are in the same cycle
