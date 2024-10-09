@@ -149,3 +149,38 @@ Note: at startup, all valid bits are zero.
 
 ### Performance
 ![image](https://github.com/user-attachments/assets/97130312-f04e-41de-a740-3d624c1104b0)
+
+## Module 7.9 Replacement and Write-Handling
+
+### Q3. Block Replacement
+![image](https://github.com/user-attachments/assets/2f28d950-67e8-44be-8e44-8685fee9f00b)
+
+### NRU
+![image](https://github.com/user-attachments/assets/2bf9081e-3987-440c-96d3-0c9f755dd38f)
+
+### Writes
+![image](https://github.com/user-attachments/assets/1310dd46-c224-4e71-a2e9-16adfdee711a)
+
+### Tag/Data Access
+![image](https://github.com/user-attachments/assets/d29ae30d-cbd3-4a6d-80bc-cf2ffd757aa3)
+
+![image](https://github.com/user-attachments/assets/505b1d9b-c7e5-45fb-9743-448282770cf9)
+
+![image](https://github.com/user-attachments/assets/3faeba28-4cb0-43c7-9ee3-e3f77dc7a1a7)
+
+### Write-Through vs Write-Back
+![image](https://github.com/user-attachments/assets/86d72e38-03b9-4712-a35b-e554de74f980)
+
+### Write-allocate vs Write-non-allocate
+- Q: Which one is more common for write-through and which one for write-back?
+
+![image](https://github.com/user-attachments/assets/a61e9e12-d0e6-4a37-97cd-fc3c897e15d4)
+
+### Buffering Writes 1 of 3: Store Queues
+![image](https://github.com/user-attachments/assets/adbc0592-21f4-48a5-8d93-899951156a94)
+
+### Buffering Writes 2 of 3: Write Buffer
+![image](https://github.com/user-attachments/assets/418239eb-4e57-461f-b6b5-b622d32de425)
+
+### Buffering Writes 3 of 3: Writeback Buffer
+![image](https://github.com/user-attachments/assets/c36a9281-a2a4-4595-82c7-2b84faf8549b)
