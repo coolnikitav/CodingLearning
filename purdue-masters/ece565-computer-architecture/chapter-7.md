@@ -278,3 +278,6 @@ Note: cycles-lost-to-interference because of structural hazards where memory and
 
 ### Address Prediction for Prefetching
 ![image](https://github.com/user-attachments/assets/cf157548-afec-4ac9-b098-782207a11d78)
+
+## Module 7.14 More Optimizations (Prefetch, Critical word first/Early restart/Multilevel caches)
+
