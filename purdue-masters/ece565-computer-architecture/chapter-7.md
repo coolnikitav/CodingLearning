@@ -234,3 +234,47 @@ Note: cycles-lost-to-interference because of structural hazards where memory and
 ![image](https://github.com/user-attachments/assets/0fed678d-eef5-4943-87b7-56cd68b3c0d0)
 
 ![image](https://github.com/user-attachments/assets/0525bab7-7a39-47c1-982e-92b392c30b13)
+
+## Module 7.12 Advanced Techniques: Software Restructuring
+
+### Advanced Caches
+![image](https://github.com/user-attachments/assets/d575bfbc-a653-4d4c-9a2c-082cd7536aaf)
+
+### Software Restructuring: Data
+![image](https://github.com/user-attachments/assets/bc8523c4-c5fb-4e8f-880a-c484ab842847)
+
+### Restructuring Loops
+- Q: What is loop fusion and loop fission and why would you use them?
+
+![image](https://github.com/user-attachments/assets/d7f1a4ea-229d-427d-ab56-b04de60fa5eb)
+
+### Array Merging
+![image](https://github.com/user-attachments/assets/22716e22-cf1b-40d6-a0ae-dc353dc0222c)
+
+### Software Restructuring: Data
+- Q: What is loop tiling/blocking?
+  
+![image](https://github.com/user-attachments/assets/620dca37-19fb-41d9-923b-6aa161f5d3db)
+
+### Blocking/tiling
+![image](https://github.com/user-attachments/assets/3864871a-590f-46b4-99b1-bfc024a865d0)
+
+### Software Restructuring: Code
+![image](https://github.com/user-attachments/assets/417eed9f-dafd-44c2-a8fa-d5e066172aaf)
+
+## Module 7.3 Advanced Techniques: Prefetching
+
+### Nature of Capacity Misses
+![image](https://github.com/user-attachments/assets/306355dc-83c4-42cf-aca1-c607136dfeb3)
+
+### Reducing Capacity Misses: Prefetching
+![image](https://github.com/user-attachments/assets/983968ad-ded9-4827-beea-88c8db1088b8)
+
+### Software Prefetching
+![image](https://github.com/user-attachments/assets/16710e6c-b88e-4b36-a924-9bceb183fe3e)
+
+### Hardware Prefetching
+![image](https://github.com/user-attachments/assets/e77f5e9a-3ddc-4878-a877-9c9c81c378fb)
+
+### Address Prediction for Prefetching
+![image](https://github.com/user-attachments/assets/cf157548-afec-4ac9-b098-782207a11d78)
