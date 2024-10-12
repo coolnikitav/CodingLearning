@@ -277,3 +277,81 @@ p.randomize() with { addr >= 200; }
 
 ### 242. What are pre_randomize() and post_randomize() functions?
 - pre_randomize() is called before randomize() and is useful for overriding any constraints. post_randomize() is called after randomize() and is useful to override results of randomization
+
+### 243. Write constraints to generate elements of a dynamic array (abc as shown in code below) such that each element is less than 10 and the array size is less than 10.
+```
+class dynamic_array;
+  rand unsigned int abc[];
+endclass
+```
+
+- Answer:
+```
+class dynamic_array();
+  rand unsigned int abc[];
+
+  constraint c_abc_len {
+    abc.size() < 10;
+    foreach(abc[i])
+      abc[i] < 10;
+  }
+endclass
+```
+
+### 244. Write constraints to create a random array of integers such that array size is between 10 and 16 and the values of array are in descending order?
+```
+class array_abc;
+  rand unsigned int myarray[];
+endclass
+```
+
+- Answer:
+
+```
+class array_abc;
+  rand unsigned int myarray[];
+
+  constraint my_array_value_size {
+    myarray.size inside {[10:16]};
+
+    foreach(myarray[i])
+      if (i > 0)
+        myarray[i] < myarray[i-1];        
+  }
+endclass
+```
+
+### 245. How can we use constraints to generate a dynamic array with random but unique values? Refer to the code below:
+```
+class TestClass;
+  rand bit[3:0] my_array[];
+endclass
+```
+
+- Answer:
+
+```
+class TestClass;
+  rand bit[3:0] my_array[];
+
+  constraint my_array_unique {
+    unique { my_array };
+  }
+endclass
+```
+
+### 246. Given a 32 bit address field as a class member, write a constraint to generate a random value such that it always has 10 bits as 1 and not two bits next to each other should be 1
+- Answer:
+```
+class A;
+  bit [31:0] ABC;
+
+  constraint ABC_c {
+    foreach(ABC[i])
+      if (i > 0)
+        ABC[i] & ABC[i-1] == 0;
+
+    $countones(ABC) == 10;
+  }
+endclass
+```
