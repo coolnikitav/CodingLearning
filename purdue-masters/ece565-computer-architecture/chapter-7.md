@@ -357,3 +357,6 @@ Note: If you want the 8th word, it will load words 8 through 16, and then 1 thro
 ![image](https://github.com/user-attachments/assets/04ec6beb-1d0d-418f-aa27-e8508875abca)
 
 ![image](https://github.com/user-attachments/assets/b6fa3265-782c-4ed3-a293-3dfbf5b76b05)
+
+### Seznec's skewed-associative caches
+![image](https://github.com/user-attachments/assets/36508106-c57c-49f7-9be9-4fa73e3cfe8b)
