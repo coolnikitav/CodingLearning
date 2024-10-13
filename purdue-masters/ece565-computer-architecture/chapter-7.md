@@ -281,3 +281,79 @@ Note: cycles-lost-to-interference because of structural hazards where memory and
 
 ## Module 7.14 More Optimizations (Prefetch, Critical word first/Early restart/Multilevel caches)
 
+### Reducing Miss Cost: Beyond Simple Block
+![image](https://github.com/user-attachments/assets/37768ea0-7ed5-4cad-9aae-a20edc147d50)
+
+![image](https://github.com/user-attachments/assets/08bd9c2a-2d33-45ad-bd7d-ec1e4a8c2412)
+
+### Miss cost #1: Subblocking
+![image](https://github.com/user-attachments/assets/3c828ce7-9e11-4a72-b2a9-20ffbe7cf573)
+
+### Miss cost #2: Critical Word First
+![image](https://github.com/user-attachments/assets/4377f59e-927d-45c9-9f5d-5b01b573f50d)
+
+Note: If you want the 8th word, it will load words 8 through 16, and then 1 through 7.
+
+### Miss Cost #3: Overlap Misses
+![image](https://github.com/user-attachments/assets/323cfa31-2a1f-4fd8-ae0e-6bf7a050f9d6)
+
+### Latency vs Bandwidth
+![image](https://github.com/user-attachments/assets/7ca700e9-581f-4397-8d86-27e165958445)
+
+![image](https://github.com/user-attachments/assets/d22e3b49-d9ee-40a2-b627-e8666befd809)
+
+### Lockup Free Cache
+![image](https://github.com/user-attachments/assets/0b4c9ada-1b5a-4f32-a298-0ac1f9c732d4)
+
+![image](https://github.com/user-attachments/assets/90aa77fb-3001-4ce7-89c8-f4dcca090603)
+
+![image](https://github.com/user-attachments/assets/4ad15d0b-4318-4053-bd76-12f65686dc0f)
+
+### Miss cost #4: Multi-level caches
+![image](https://github.com/user-attachments/assets/5d180f56-ab14-4c39-8767-1869cd0ad60d)
+
+### Memory Hierarchy Design
+![image](https://github.com/user-attachments/assets/ca40cd7b-6599-4971-9400-3cd322f2b362)
+
+### Hierarchy: Inclusion vs Exclusion
+![image](https://github.com/user-attachments/assets/92f3d202-8356-4c30-a249-25e668af5ad5)
+
+### Inclusion
+![image](https://github.com/user-attachments/assets/9e98b717-2bb4-4241-b5f9-b3e8993d7bce)
+
+### Memory Performance Equation
+![image](https://github.com/user-attachments/assets/ff07e75d-9ccf-4896-afb9-aea78001b4ab)
+
+### Hierarchy Performance
+![image](https://github.com/user-attachments/assets/97ad703c-04bd-443a-82b1-29eca6352bce)
+
+### Local vs Global Miss Rates
+![image](https://github.com/user-attachments/assets/b6370190-f923-4923-ba81-028c7de0c1bb)
+
+### Performance Calculation 1
+- Q: Do this calculation.
+  
+![image](https://github.com/user-attachments/assets/0bcf9702-d847-472d-bfb6-343a765e8cb3)
+
+### Performance Calculation 2
+- Q: Do this calculation.
+  
+![image](https://github.com/user-attachments/assets/3e369dc1-a293-465d-a91d-c01795fe5943)
+
+### Conflict Misses #1: Jouppi's Victim Cache
+![image](https://github.com/user-attachments/assets/509ebe36-6db7-40df-9ff4-a73c1167d8c3)
+
+![image](https://github.com/user-attachments/assets/5399ad91-40c4-4fd4-846f-661bad5ab74a)
+
+## Module 15. More on Victim caches skewed-associative caches
+
+### Victim Cache Performance
+![image](https://github.com/user-attachments/assets/99ef36df-2c01-4354-b2d5-424ed6399837)
+
+### Jouppi's stream buffers
+![image](https://github.com/user-attachments/assets/c2ab957e-7bb8-48d9-8af7-d5ed0c63c549)
+
+### Conflict Misses #2: Seznec's Skewed-Associative Cache
+![image](https://github.com/user-attachments/assets/04ec6beb-1d0d-418f-aa27-e8508875abca)
+
+![image](https://github.com/user-attachments/assets/b6fa3265-782c-4ed3-a293-3dfbf5b76b05)
