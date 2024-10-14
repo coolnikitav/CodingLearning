@@ -355,3 +355,22 @@ class A;
   }
 endclass
 ```
+
+### 247. What is the difference between "fork-join", "fork-join_any", and "fork-join_none"?
+- fork join launches tasks in parallel and waits for all of them to finish before moving onto the next part of the code
+- fork-join_any launches tasks in parallel and waits for one of them to finish
+- fork-join_none launches tasks in parallel and doesn't wait for any of them to finish
+
+### 248. What is the use of "wait fork" and "disable fork" constructs?
+- wait fork allows to wait until all the threads in a fork have finished. This allows to execute statements between fork-join_any/join_none and wait fork.
+- disable fork cancels remaining threads after a fork.
+
+### 249. What is the difference between hard and soft constraints?
+- Hard constraints always need to be satisfied. Soft constraints don't have to be satisfied if they are in conflict with hard constraints or soft constraints with higher priority.
+```
+class A;
+  rand bit a;
+
+  constraint { soft a == 1 };
+endclass
+```
