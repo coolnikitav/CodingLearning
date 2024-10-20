@@ -29,3 +29,9 @@
 
 ## Computing The Sensitizing Function
 ![image](https://github.com/user-attachments/assets/4b9ea838-9a9f-4b66-a57b-81f7cdc6cfc5)
+
+## Switching Activity Factor Considering Both Spatial Correlation And Temporal Correlation
+![image](https://github.com/user-attachments/assets/6f7884d0-570e-438b-b40b-69b4d98ac0a1)
+
+## Summary: Switching Activity of Function Z
+![image](https://github.com/user-attachments/assets/b0f54a2d-99df-42d8-be75-9fe7de613913)
