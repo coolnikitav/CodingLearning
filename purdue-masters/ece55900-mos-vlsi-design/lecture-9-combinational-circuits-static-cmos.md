@@ -84,3 +84,44 @@
 ![image](https://github.com/user-attachments/assets/6daf6d67-a821-4d80-8fa5-3da53600a9bb)
 
 ![image](https://github.com/user-attachments/assets/b91c0d1b-a000-424e-bcd4-c369d0ceaf7c)
+
+## Dependance of Delay on Fan-In
+![image](https://github.com/user-attachments/assets/2f2796bf-4112-49a3-9154-6ed9507d23ae)
+
+![image](https://github.com/user-attachments/assets/9e3c90f4-0869-4b98-8e75-da156a7ffd99)
+
+![image](https://github.com/user-attachments/assets/be90b0c1-a1c3-413c-9e04-3703972816d2)
+
+## Dependence of Delay on Fan-Out
+![image](https://github.com/user-attachments/assets/9836eb28-f1c6-4475-8c89-7dbd21115fb1)
+
+## Increasing Speed: Design Technique 1
+- Q: What is the first technique? What are the trade-offs?
+
+![image](https://github.com/user-attachments/assets/a089eb7a-72e6-4468-97d7-845d15d5f2f8)
+
+## Increasing Speed: Design Technique 2
+- Q: What is the second technique?
+
+![image](https://github.com/user-attachments/assets/ad83049a-fb54-488a-a821-4e05cf68bb4a)
+
+Note: critical path: the longest path
+
+## Increasing Speed: Design Technique 3
+- Q: What is the third technique?
+
+![image](https://github.com/user-attachments/assets/1109334f-d7c0-47e9-8b73-6fbc502265a8)
+
+## Increasing Speed: Design Technique 4
+![image](https://github.com/user-attachments/assets/d2ab5dd0-8812-4ccb-89aa-b61ffbc09f31)
+
+## Recall: Inverter Delay
+![image](https://github.com/user-attachments/assets/22df778d-e043-47ab-829e-b04d93aab7ac)
+
+## Simplifying Assumptions
+![image](https://github.com/user-attachments/assets/5a9b46f0-af34-49e2-95bc-d62071d94bd6)
+
+## Generalization Beyond Inverters
+- Q: What is the equation for delay for a logic gate?
+
+![image](https://github.com/user-attachments/assets/b4c2bfdf-10e6-4c4d-a5e5-8eecc4f83d07)
