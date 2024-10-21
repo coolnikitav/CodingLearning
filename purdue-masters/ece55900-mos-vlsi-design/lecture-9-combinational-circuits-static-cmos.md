@@ -49,3 +49,38 @@
 
 ## Layouts: Multi-Fingered Transistors
 ![image](https://github.com/user-attachments/assets/45fac8e2-8b01-420e-a300-4daa063a8490)
+
+## CMOS Properties
+![image](https://github.com/user-attachments/assets/c906ca01-ed52-491d-88c4-4b7beea8abc8)
+
+## Switch Delay Model
+![image](https://github.com/user-attachments/assets/708c5e87-a9b8-45f2-8fb6-22a3b4b951bc)
+
+![image](https://github.com/user-attachments/assets/e33f584b-ee27-4435-96e1-e6ca101c875d)
+
+## Input-Dependent Delay: NAND2
+![image](https://github.com/user-attachments/assets/20b75613-4f55-4659-aa41-a205fb49b33a)
+
+![image](https://github.com/user-attachments/assets/c16ae4be-76ee-4093-bf17-70cc281951cd)
+
+![image](https://github.com/user-attachments/assets/dc9cd638-5cc8-41c3-9cbf-4021f9e161d3)
+
+![image](https://github.com/user-attachments/assets/45cf3a27-7a47-4ef9-b398-dc5eb77b3406)
+
+![image](https://github.com/user-attachments/assets/9adb92ab-07d9-4389-a149-40f6a2d435a9)
+
+![image](https://github.com/user-attachments/assets/03da5e27-e5f2-4863-ac7e-163089b041bc)
+
+![image](https://github.com/user-attachments/assets/057fd10b-301f-442d-8403-0c5bdcac5128)
+
+## Input-Dependent Delay: NAND2 (Input a closer to output)
+![image](https://github.com/user-attachments/assets/0ab88701-07fd-4182-b4df-ba42c736fe8f)
+
+## Transistor Sizing For Equal "Worst-Case" Rise and Fall Delays
+![image](https://github.com/user-attachments/assets/ee7c5219-aafb-43d5-946c-e9470241e8cb)
+
+- Note: for the parallel network, we only consider one of the transistors connected because that will give us the worst-case scenario.
+
+![image](https://github.com/user-attachments/assets/6daf6d67-a821-4d80-8fa5-3da53600a9bb)
+
+![image](https://github.com/user-attachments/assets/b91c0d1b-a000-424e-bcd4-c369d0ceaf7c)
