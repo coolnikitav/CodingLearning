@@ -1,1 +1,27 @@
-
+# Function to load or create a new config.json
+function Load-Config($computer) {
+    $configFolderPath = "\\$computer\C$\path\to\config"  # Set the path to where config.json should be
+    $configPath = "$configFolderPath\config.json"
+    
+    # Check if the directory exists, if not create it
+    if (-not (Test-Path $configFolderPath)) {
+        Write-Host "Config folder not found on $computer. Creating folder." -ForegroundColor Yellow
+        New-Item -ItemType Directory -Path $configFolderPath | Out-Null
+    }
+    
+    if (Test-Path $configPath) {
+        return Get-Content -Path $configPath | ConvertFrom-Json
+    } else {
+        Write-Host "config.json not found on $computer. Creating a new one." -ForegroundColor Yellow
+        # Prompt the user to fill in all the fields for a new config file
+        $configTemplate = @{}
+        $fields = @("Field1", "Field2", "Field3")  # Customize fields as needed
+        foreach ($field in $fields) {
+            $value = Read-Host "Enter value for $field"
+            $configTemplate[$field] = $value
+        }
+        $configTemplate | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath
+        Write-Host "Created new config.json on $computer" -ForegroundColor Green
+        return $configTemplate
+    }
+}
