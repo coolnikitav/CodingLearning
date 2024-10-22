@@ -1,1 +1,144 @@
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+	$arguments = "& '" + $myinvocation.mycommand.definition + "'"
+	Start-Process powershell -Verb runAs -ArgumentList $arguments
+	Break
+}
 
+$ErrorActionPreference = "Stop"
+
+Add-Type -AssemblyName PresentationFramework
+
+# Define the list of computers
+$computers = @(
+	"Computer1",
+	"Computer2",
+	"Computer3"
+)
+
+# Load WPF XAML for computer selection
+[xml]$ComputerSelectionXaml = @"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        Title="Select Computers" Height="300" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Select computers to modify the config.json file:" Margin="10" />
+        <ListBox Name="ComputerListBox" Grid.Row="1" Margin="10" SelectionMode="Multiple">
+            $($computers | ForEach-Object { "<ListBoxItem Content='$_' />" })
+        </ListBox>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Name="SelectAllButton" Content="Select All" Width="75" Margin="5" />
+			<Button Name="OkButton" Content="OK" Width="75" Margin="5" />
+            <Button Name="CancelButton" Content="Cancel" Width="75" Margin="5" />
+        </StackPanel>
+    </Grid>
+</Window>
+"@
+
+# Load the GUI
+$reader = (New-Object System.Xml.XmlNodeReader $ComputerSelectionXaml)
+$window = [Windows.Markup.XamlReader]::Load($reader)
+
+# Get WPF elements
+$OkButton = $window.FindName("OkButton")
+$CancelButton = $window.FindName("CancelButton")
+$ComputerListBox = $window.FindName("ComputerListBox")
+$SelectAllButton = $window.FindName("SelectAllButton")
+
+# Variables to store selected computers and state of Select All
+$selectedComputers = New-Object System.Collections.ObjectModel.ObservableCollection[System.String]
+$selectAllState = [ref] $false
+
+# OK Button functionality
+$OkButton.Add_Click({
+    $ComputerListBox.SelectedItems | ForEach-Object {
+		$selectedComputers.Add($_.Content)
+	}
+    $window.DialogResult = $true
+    $window.Close()
+})
+
+# Cancel Button functionality
+$CancelButton.Add_Click({
+    $window.DialogResult = $false
+    $window.Close()
+})
+
+# Toggle Select All / Deselect All
+$SelectAllButton.Add_Click({
+	if ($selectAllState.Value -eq $false) {
+		$ComputerListBox.SelectAll()
+		$SelectAllButton.Content = "Deselect All"
+	} else {
+		$ComputerListBox.UnselectAll()
+		$SelectAllButton.Content = "Select All"
+	}
+	$selectAllState.Value = -not $selectAllState.Value
+})
+
+# Show the window and wait for user input
+$window.ShowDialog()
+
+# Function to load or create a new config.json
+function Load-Config($computer) {
+    $configPath = "\\$computer\C$\config.json"
+    if (Test-Path $configPath) {
+        return Get-Content -Path $configPath | ConvertFrom-Json
+    } else {
+        Write-Host "config.json not found on $computer. Creating a new one." -ForegroundColor Yellow
+        # Prompt the user to fill in all the fields for a new config file
+        $configTemplate = @{}
+        $fields = @("Field1", "Field2", "Field3")  # Customize fields as needed
+        foreach ($field in $fields) {
+            $value = Read-Host "Enter value for $field"
+            $configTemplate[$field] = $value
+        }
+        $configTemplate | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath
+        Write-Host "Created new config.json on $computer" -ForegroundColor Green
+        return $configTemplate
+    }
+}
+
+# Function to save updated config.json to a remote computer
+function Save-Config($computer, $config) {
+    $configPath = "\\$computer\C$\config.json"
+    $config | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath
+    Write-Host "Updated config.json on $computer" -ForegroundColor Green
+}
+
+# Function to prompt user for input to edit config
+function Edit-Config($config, $isMultiple) {
+    foreach ($property in $config.PSObject.Properties.Name) {
+        $currentValue = if ($isMultiple) { "" } else { $config.$property }
+        $newValue = Read-Host "Enter value for '$property' (Current: '$currentValue')"
+        if ($newValue) {
+            $config.$property = $newValue
+        }
+    }
+    return $config
+}
+
+# Main script to edit config.json
+if ($selectedComputers.Count -eq 1) {
+    # Single computer selected
+    $computer = $selectedComputers[0]
+    $config = Load-Config $computer
+    if ($config) {
+        $editedConfig = Edit-Config $config $false
+        Save-Config $computer $editedConfig
+    }
+} elseif ($selectedComputers.Count -gt 1) {
+    # Multiple computers selected, show blank config fields
+    $configTemplate = Load-Config $selectedComputers[0]
+    if ($configTemplate) {
+        $editedConfig = Edit-Config $configTemplate $true
+        foreach ($computer in $selectedComputers) {
+            Save-Config $computer $editedConfig
+        }
+    }
+}
+
+Read-Host -Prompt "Press Enter to exit"
