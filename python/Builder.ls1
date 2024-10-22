@@ -1,1 +1,98 @@
-sc create "sim_client_service" binPath= "\"C:\eng_apps\sim_client\shawl.exe\" run --name sim_client_service -- \"C:\eng_apps\sim_client\sim_client.exe\" start usced2ua81121l8 443 \"C:\eng_apps\sim_client\config.json\" \"C:\ProgramData\ETAS\Experiment Environment\3.7\SimTCMConfiguration.txt\""
+# This will launch powershell in admin mode. So of the commands in the script require elevated priveleges
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+	$arguments = "& '" + $myinvocation.mycommand.definition + "'"
+	Start-Process powershell -Verb runAs -ArgumentList $arguments
+	Break
+}
+
+$ErrorActionPreference = "Stop"  # The script will stop on any error
+
+Add-Type -AssemblyName PresentationFramework
+
+# Define the list of computers
+$computers = @(
+	"A",
+  "B",
+  "C"
+)
+
+# Create the XAML for the GUI
+[xml]$HILSelectionXaml = @"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        Title="Select Computers" Height="725" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Select computers to install the service on:" Margin="10" />
+        <ListBox Name="HILSelectionComputerListBox" Grid.Row="1" Margin="10" SelectionMode="Multiple">
+            $($computers | ForEach-Object { "<ListBoxItem Content='$_' />" })
+        </ListBox>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Name="HILSelectionSelectAllButton" Content="Select All" Width="75" Margin="5" />
+			<Button Name="HILSelectionOkButton" Content="OK" Width="75" Margin="5" />
+            <Button Name="HILSelectionCancelButton" Content="Cancel" Width="75" Margin="5" />
+        </StackPanel>
+    </Grid>
+</Window>
+"@
+
+# Load the HILSelectionXaml
+$HILSelectionReader = (New-Object System.Xml.XmlNodeReader $HILSelectionXaml)
+$HILSelectionWindow = [Windows.Markup.XamlReader]::Load($HILSelectionReader)
+
+# Get the WPF elements
+$HILSelectionOkButton = $HILSelectionWindow.FindName("HILSelectionOkButton")
+$HILSelectionCancelButton = $HILSelectionWindow.FindName("HILSelectionCancelButton")
+$HILSelectionComputerListBox = $HILSelectionWindow.FindName("HILSelectionComputerListBox")
+$HILSelectionSelectAllButton = $HILSelectionWindow.FindName("HILSelectionSelectAllButton")
+
+# Selected computers array
+$selectedComputers = New-Object System.Collections.ObjectModel.ObservableCollection[System.String]
+$selectAllState = [ref] $false
+
+# Function to close the window and return the selected computers
+$HILSelectionOkButton.Add_Click({
+    $HILSelectionComputerListBox.SelectedItems | ForEach-Object {
+		$selectedComputers.Add($_.Content)
+	}
+    $HILSelectionWindow.DialogResult = $true
+    $HILSelectionWindow.Close()
+})
+
+# Function to close the window without selecting computers
+$HILSelectionCancelButton.Add_Click({
+    $HILSelectionWindow.DialogResult = $false
+    $HILSelectionWindow.Close()
+})
+
+# Function to toggle select all / deselect all
+$HILSelectionSelectAllButton.Add_Click({
+	if ($selectAllState.Value -eq $false) {
+		$HILSelectionComputerListBox.SelectAll()
+		$HILSelectionSelectAllButton.Content = "Deselect All"
+	} else {
+		$HILSelectionComputerListBox.UnselectAll()
+		$HILSelectionSelectAllButton.Content = "Select all"
+	}
+	$selectAllState.Value = -not $selectAllState.Value
+})
+
+
+function Edit-Config {
+	if (!(Test-Path "$supportAppsPackagesAddress\SupportApps_$supportAppsVersion.zip")) {
+	  Write-Host "The $supportAppsVersion version is not found" -ForegroundColor Red
+	  Read-Host -Prompt "Press Enter to exit"
+	  exit
+	}
+	foreach ($computer in $selectedComputers) {
+		$networkDrive = "\\$computer\C$"
+		Write-Host "SupportApps on $computer installed successfully" -ForegroundColor Green
+	}
+}
+
+Edit-Config
+
+Read-Host -Prompt "Press Enter to exit"
