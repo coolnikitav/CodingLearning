@@ -1,1 +1,208 @@
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    $arguments = "& '" + $myinvocation.mycommand.definition + "'"
+    Start-Process powershell -Verb runAs -ArgumentList $arguments
+    Break
+}
 
+$ErrorActionPreference = "Stop"  # The script will stop on any error
+
+Add-Type -AssemblyName PresentationFramework
+
+# Define the list of computers
+$computers = @(
+    "ComputerA",
+    "ComputerB",
+    "ComputerC"
+)
+
+# Function to create the GUI for computer selection
+function Show-ComputerSelectionWindow {
+    [xml]$HILSelectionXaml = @"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        Title="Select Computers" Height="725" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Select computers:" Margin="10" />
+        <ListBox Name="ComputerListBox" Grid.Row="1" Margin="10" SelectionMode="Multiple">
+            $($computers | ForEach-Object { "<ListBoxItem Content='$_' />" })
+        </ListBox>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Name="SelectAllButton" Content="Select All" Width="75" Margin="5" />
+            <Button Name="OkButton" Content="OK" Width="75" Margin="5" />
+            <Button Name="CancelButton" Content="Cancel" Width="75" Margin="5" />
+        </StackPanel>
+    </Grid>
+</Window>
+"@
+
+    $reader = (New-Object System.Xml.XmlNodeReader $HILSelectionXaml)
+    $window = [Windows.Markup.XamlReader]::Load($reader)
+
+    $okButton = $window.FindName("OkButton")
+    $cancelButton = $window.FindName("CancelButton")
+    $computerListBox = $window.FindName("ComputerListBox")
+    $selectAllButton = $window.FindName("SelectAllButton")
+
+    $selectedComputers = New-Object System.Collections.ObjectModel.ObservableCollection[System.String]
+    $selectAllState = [ref] $false
+
+    # Handle OK button click
+    $okButton.Add_Click({
+        $computerListBox.SelectedItems | ForEach-Object {
+            $selectedComputers.Add($_.Content)
+        }
+        $window.DialogResult = $true
+        $window.Close()
+    })
+
+    # Handle Cancel button click
+    $cancelButton.Add_Click({
+        $window.DialogResult = $false
+        $window.Close()
+    })
+
+    # Handle Select All button click
+    $selectAllButton.Add_Click({
+        if ($selectAllState.Value -eq $false) {
+            $computerListBox.SelectAll()
+            $selectAllButton.Content = "Deselect All"
+        } else {
+            $computerListBox.UnselectAll()
+            $selectAllButton.Content = "Select All"
+        }
+        $selectAllState.Value = -not $selectAllState.Value
+    })
+
+    $window.ShowDialog() | Out-Null
+    return $selectedComputers
+}
+
+# Function to create the GUI for modifying the fields
+function Show-FieldModificationWindow {
+    param (
+        [hashtable]$configFields
+    )
+
+    [xml]$FieldSelectionXaml = @"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        Title="Modify Fields" Height="625" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Name="FieldStackPanel" Grid.Row="0" Margin="10">
+            <TextBlock Text="Notes:" Margin="5" />
+            <TextBox Name="NotesField" Margin="5" Width="350" />
+
+            <TextBlock Text="Fault Injection (True/False):" Margin="5" />
+            <ComboBox Name="FaultInjectionField" Margin="5" Width="100">
+                <ComboBoxItem Content="True" />
+                <ComboBoxItem Content="False" />
+            </ComboBox>
+
+            <TextBlock Text="SimType (Walk-Up or SimFarm):" Margin="5" />
+            <ComboBox Name="SimTypeField" Margin="5" Width="150">
+                <ComboBoxItem Content="Walk-Up" />
+                <ComboBoxItem Content="SimFarm" />
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Name="OkButton" Content="OK" Width="75" Margin="5" />
+            <Button Name="CancelButton" Content="Cancel" Width="75" Margin="5" />
+        </StackPanel>
+    </Grid>
+</Window>
+"@
+
+    $reader = (New-Object System.Xml.XmlNodeReader $FieldSelectionXaml)
+    $window = [Windows.Markup.XamlReader]::Load($reader)
+
+    $okButton = $window.FindName("OkButton")
+    $cancelButton = $window.FindName("CancelButton")
+    $notesField = $window.FindName("NotesField")
+    $faultInjectionField = $window.FindName("FaultInjectionField")
+    $simTypeField = $window.FindName("SimTypeField")
+
+    $modifiedFields = @{}
+
+    # Handle OK button click
+    $okButton.Add_Click({
+        $modifiedFields["Notes"] = $notesField.Text
+        $modifiedFields["FaultInjection"] = $faultInjectionField.SelectedItem.Content
+        $modifiedFields["SimType"] = $simTypeField.SelectedItem.Content
+
+        $window.DialogResult = $true
+        $window.Close()
+    })
+
+    # Handle Cancel button click
+    $cancelButton.Add_Click({
+        $window.DialogResult = $false
+        $window.Close()
+    })
+
+    $window.ShowDialog() | Out-Null
+    return $modifiedFields
+}
+
+# Function to modify the config.json file on the selected computers
+function Modify-Config {
+    param (
+        [string[]]$selectedComputers,
+        [hashtable]$modifiedFields
+    )
+
+    foreach ($computer in $selectedComputers) {
+        $networkPath = "\\$computer\C$\path\to\config.json"
+
+        if (!(Test-Path $networkPath)) {
+            Write-Host "Config file not found on $computer" -ForegroundColor Red
+            continue
+        }
+
+        $configContent = Get-Content -Path $networkPath -Raw | ConvertFrom-Json
+
+        if ($selectedComputers.Count -eq 1) {
+            # Display current config.json contents for a single computer
+            Write-Host "Current config.json on $computer:`n$($configContent | ConvertTo-Json -Depth 10)"
+        }
+
+        # Apply modified fields to the config file
+        foreach ($field in $modifiedFields.Keys) {
+            $configContent.$field = $modifiedFields[$field]
+        }
+
+        $configContent | ConvertTo-Json -Depth 10 | Set-Content -Path $networkPath -Force
+        Write-Host "Config file updated on $computer" -ForegroundColor Green
+    }
+}
+
+# Main script logic
+$selectedComputers = Show-ComputerSelectionWindow
+
+if ($selectedComputers.Count -eq 0) {
+    Write-Host "No computers selected. Exiting..." -ForegroundColor Yellow
+} else {
+    # Load default config fields
+    $configFields = @{
+        "Notes" = ""
+        "FaultInjection" = $false
+        "SimType" = "Walk-Up"
+    }
+
+    $modifiedFields = Show-FieldModificationWindow -configFields $configFields
+
+    if ($modifiedFields.Count -eq 0) {
+        Write-Host "No fields modified. Exiting..." -ForegroundColor Yellow
+    } else {
+        Modify-Config -selectedComputers $selectedComputers -modifiedFields $modifiedFields
+    }
+}
+
+Read-Host -Prompt "Press Enter to exit"
