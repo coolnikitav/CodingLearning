@@ -125,3 +125,41 @@ Note: critical path: the longest path
 - Q: What is the equation for delay for a logic gate?
 
 ![image](https://github.com/user-attachments/assets/b4c2bfdf-10e6-4c4d-a5e5-8eecc4f83d07)
+
+## Parasitic Delay or Intrinsic Delay
+![image](https://github.com/user-attachments/assets/3e790222-bc7b-423c-b0f9-1b2b6122bf80)
+
+## Recipe for Parasitic Delay
+![image](https://github.com/user-attachments/assets/0f51ec21-4048-4ee8-82a3-bdce841d2244)
+
+## Example: Parasitic Delay Or Intrinsic Delay
+![image](https://github.com/user-attachments/assets/95b1439c-9230-46a6-8512-df9122376544)
+
+Note: mu = 2 means mobility of electrons is twice than of holes
+
+![image](https://github.com/user-attachments/assets/48d1e9af-3b3c-4350-88a5-7b24602fcbf8)
+
+![image](https://github.com/user-attachments/assets/c0ae406b-988d-4d71-9df5-0ad277240e72)
+
+## Parasitic Delay or Intrinsic Delay
+![image](https://github.com/user-attachments/assets/180d3290-54a1-4530-b403-a936982ceed3)
+
+## Logical Effort
+- Q: How is logical effort calculated?
+
+![image](https://github.com/user-attachments/assets/f1265002-5e3d-4936-b52f-d6ff03a6de25)
+
+![image](https://github.com/user-attachments/assets/f7ecf75b-cad0-4558-9d97-f75a741fafe3)
+
+## Recipe for Logical Effort
+![image](https://github.com/user-attachments/assets/925d370d-93cb-498a-81fc-571261805ca5)
+
+![image](https://github.com/user-attachments/assets/4fd0774a-1965-400a-ae65-caf8dd0583dd)
+
+## Logical Effort
+![image](https://github.com/user-attachments/assets/1fd4a81d-607b-4c5d-9b86-350792669389)
+
+## Dependence of Delay on Fan-Out
+![image](https://github.com/user-attachments/assets/2ee77622-821a-4fef-91bf-bc8057e65bd1)
+
+## Sizing Considering Equalization of Resistance vs Equalization of Input Capacitance
