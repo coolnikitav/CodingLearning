@@ -163,3 +163,31 @@ Note: mu = 2 means mobility of electrons is twice than of holes
 ![image](https://github.com/user-attachments/assets/2ee77622-821a-4fef-91bf-bc8057e65bd1)
 
 ## Sizing Considering Equalization of Resistance vs Equalization of Input Capacitance
+![image](https://github.com/user-attachments/assets/0b4d1524-346d-440b-a445-cd0c7f556e79)
+
+![image](https://github.com/user-attachments/assets/6b920846-9edc-402a-ace6-83ee3fc11830)
+
+Note: resistance has increased on the right
+
+![image](https://github.com/user-attachments/assets/40bf7b1f-c667-4523-8401-73d7440918ba)
+
+![image](https://github.com/user-attachments/assets/d7028b3d-3624-40c4-a683-802a8d6822ec)
+
+## Delay Optimization For a Path
+![image](https://github.com/user-attachments/assets/32313d86-142f-4379-a73e-d716bd37bae9)
+
+## Definitions
+![image](https://github.com/user-attachments/assets/587ca3e0-b82f-45b2-8cc1-35a461641e8f)
+
+## Fanout And Branching
+![image](https://github.com/user-attachments/assets/e52a2edf-18cb-4e57-8058-099c8e48ec3b)
+
+## Procedure To Minimize Path Delay
+![image](https://github.com/user-attachments/assets/8841b92e-ff2d-4af3-b260-6105980f6f8c)
+
+## Example 1
+![image](https://github.com/user-attachments/assets/a7488b98-0149-42a5-ac2f-1fbb3016e3e4)
+
+![image](https://github.com/user-attachments/assets/7d6216b3-b3e9-4c94-9eb3-6761f0dbfae6)
+
+![image](https://github.com/user-attachments/assets/989c8d14-5398-4c33-a1b6-3061ce731d87)
