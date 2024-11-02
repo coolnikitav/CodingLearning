@@ -191,3 +191,14 @@ Note: resistance has increased on the right
 ![image](https://github.com/user-attachments/assets/7d6216b3-b3e9-4c94-9eb3-6761f0dbfae6)
 
 ![image](https://github.com/user-attachments/assets/989c8d14-5398-4c33-a1b6-3061ce731d87)
+
+![image](https://github.com/user-attachments/assets/3aeeb556-dee2-4dcb-b809-75bc5d4c1ccd)
+
+## Example 2
+![image](https://github.com/user-attachments/assets/c726625f-c44f-47f6-8769-3809ef982d06)
+
+![image](https://github.com/user-attachments/assets/dcb2259a-e65f-4403-adc9-dfe1c0d05f2a)
+
+![image](https://github.com/user-attachments/assets/c9af08da-137e-4a5e-a935-91f47fbbc398)
+
+![image](https://github.com/user-attachments/assets/fe695cad-7713-4940-bebc-9c3053268d09)
