@@ -63,3 +63,17 @@ Note: BLSA = bit level sense amplifiers
 
 ### Research: Processing in Memory
 ![image](https://github.com/user-attachments/assets/53f85c0c-a782-4090-8140-dc23715ca863)
+
+## Module 8.3 Introduction to Virtual Memory
+
+### Memory Hierarchy Review
+![image](https://github.com/user-attachments/assets/bdb31dd2-b2bb-4a1b-809c-beabf81eb3fb)
+
+### Concerete Memory Hierarchy
+![image](https://github.com/user-attachments/assets/70f4195a-65b0-4ad3-bfb4-56ba191c6bcd)
+
+### Memory Organization
+![image](https://github.com/user-attachments/assets/cbbba8e2-a140-4b91-82c8-be5efc97fe47)
+
+### Virtual Memory - basic 4 Q's
+![image](https://github.com/user-attachments/assets/4307733f-5036-45d7-be00-7ce55cc67b02)
