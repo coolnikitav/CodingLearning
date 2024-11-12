@@ -86,3 +86,21 @@ Note: extremely small short circuit current because clock rise/fall times are ve
 ![image](https://github.com/user-attachments/assets/38573eab-9f62-4fa9-b8bd-71116695b557)
 
 Note: dynamic always starts at Vdd, so alpha 2 is higher
+
+## Design Issue 1: Charge Leakage
+![image](https://github.com/user-attachments/assets/97bc3105-2ee7-4f2e-930d-a7e484b76842)
+
+Note: leakage is small, so this only has affect when time period is very large
+
+## Solution To Charge Leakage: Keeper
+![image](https://github.com/user-attachments/assets/783a3537-22d0-4e8b-9e5b-f9b335c0461f)
+
+## Designing Dynamic Gates With Keepers
+![image](https://github.com/user-attachments/assets/28a32fee-f56a-4f8f-a4f4-c7835f3842be)
+
+Note: your PDN needs to be strong or keeper needs to be weak, so Vout is below the trip point of the inverter
+
+## Design Issue 2: Charge Sharing 
+![image](https://github.com/user-attachments/assets/fd6b9a36-32bb-4ba9-b89b-a6a80283be64)
+
+![image](https://github.com/user-attachments/assets/acde4edb-a16e-4a26-81b9-47f6b3cdb0cb)
