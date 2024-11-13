@@ -104,3 +104,32 @@ Note: your PDN needs to be strong or keeper needs to be weak, so Vout is below t
 ![image](https://github.com/user-attachments/assets/fd6b9a36-32bb-4ba9-b89b-a6a80283be64)
 
 ![image](https://github.com/user-attachments/assets/acde4edb-a16e-4a26-81b9-47f6b3cdb0cb)
+
+## Solutions To Charge Sharing
+![image](https://github.com/user-attachments/assets/eda606ff-8de5-4cc8-9f54-a11c868f6186)
+
+## Design Issue 3: Clock Feedthrough
+![image](https://github.com/user-attachments/assets/f7f60ea9-fc06-4599-a76c-446725b9e312)
+
+## Design Issue 4: Backgate Coupling
+![image](https://github.com/user-attachments/assets/d4f0388f-65d1-4989-ad4b-ef96966a7ea6)
+
+![image](https://github.com/user-attachments/assets/01c814d3-44f8-4d3b-8af2-ea26528d54a7)
+
+## Design Issue 5: Cascading Dynamic Gates
+![image](https://github.com/user-attachments/assets/8181a802-9e5f-4820-a835-02b0ea206434)
+
+Note: since you cannot have 1 to 0 transitions at the second input, you cannot cascade gates like this
+
+## Solution: Domino Logic
+![image](https://github.com/user-attachments/assets/3329b817-260d-442e-9626-0a39955cafdf)
+
+## Domino Logic: Properties
+![image](https://github.com/user-attachments/assets/dad5160b-f38b-4b53-9190-d749a2519a3a)
+
+Note: you want the PMOS to be strong in the skewed inverter because it needs to pull up
+
+## NP-CMOS
+![image](https://github.com/user-attachments/assets/d2c8adf1-0449-446b-8de0-ec7196936bef)
+
+![image](https://github.com/user-attachments/assets/ad556e45-3f37-4c09-b103-3923deb2c887)
