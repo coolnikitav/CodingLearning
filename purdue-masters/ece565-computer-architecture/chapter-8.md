@@ -77,3 +77,38 @@ Note: BLSA = bit level sense amplifiers
 
 ### Virtual Memory - basic 4 Q's
 ![image](https://github.com/user-attachments/assets/4307733f-5036-45d7-be00-7ce55cc67b02)
+
+## Module 8.4 Virtual Memory Seen Through the Four-Question Framework
+
+### Virtual Memory
+![image](https://github.com/user-attachments/assets/7a22ea0c-da00-4a45-bbaf-3f9ba18217b3)
+
+![image](https://github.com/user-attachments/assets/99f00779-4ee6-4221-8766-e4d7a3fd831d)
+
+![image](https://github.com/user-attachments/assets/4065dde7-2fd7-49d3-8492-d229d572281a)
+
+### Modern Uses of Virtual Memory
+![image](https://github.com/user-attachments/assets/2ce0257c-3022-46cf-86ab-c1124c4b96d3)
+
+### Virtual Memory
+![image](https://github.com/user-attachments/assets/cc869fd2-d524-468a-af7d-e5a721cd5ef2)
+
+### Back to the 4 questions
+![image](https://github.com/user-attachments/assets/b3368ab2-7a55-4861-a8a4-dd7199d7c14f)
+
+### Q2. Block Identification
+![image](https://github.com/user-attachments/assets/72c4f334-ed6c-47a3-af3b-6d7efdaeec74)
+
+### Page Table
+![image](https://github.com/user-attachments/assets/226ce5e4-51f1-49fc-80c3-66294c4de320)
+
+![image](https://github.com/user-attachments/assets/df375fd3-7abf-4f6b-9296-d1c2c5e64a44)
+
+### Replacement
+![image](https://github.com/user-attachments/assets/d3d25384-edda-4c69-a703-64c125ed36e3)
+
+### Write Handling
+![image](https://github.com/user-attachments/assets/4c4687d8-4da5-494e-8a10-6756164d4580)
+
+### Page Table
+![image](https://github.com/user-attachments/assets/a1a226ce-b30b-4829-9fbd-3ce05ed40ef1)
