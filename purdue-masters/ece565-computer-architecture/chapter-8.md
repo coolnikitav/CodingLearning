@@ -112,3 +112,52 @@ Note: BLSA = bit level sense amplifiers
 
 ### Page Table
 ![image](https://github.com/user-attachments/assets/a1a226ce-b30b-4829-9fbd-3ce05ed40ef1)
+
+## Module 8.5 Introduction To TLBs
+
+### Memory Organization Parameters
+![image](https://github.com/user-attachments/assets/6af1053b-8077-458f-9081-2638f6892f6c)
+
+### Virtual Memory
+![image](https://github.com/user-attachments/assets/f437d511-4618-43e3-b4f2-f28a99f103e0)
+
+### Exercise: Virtual Memory Design
+![image](https://github.com/user-attachments/assets/9da5ab7b-a56d-48f6-849b-d20b1b8f5359)
+
+### Address Translation
+![image](https://github.com/user-attachments/assets/49f02a77-907e-41a9-82b5-379212593b07)
+
+### Mechanics of Address Translation
+![image](https://github.com/user-attachments/assets/87936ac4-3211-4ef8-909f-0cbbe4733d9c)
+
+![image](https://github.com/user-attachments/assets/6888bd6f-970b-40d5-878f-e450554c21d9)
+
+### Translation
+![image](https://github.com/user-attachments/assets/46b9ec1f-717d-4183-9e5a-0797f25353eb)
+
+### Translation Lookaside Buffer
+![image](https://github.com/user-attachments/assets/d8d7fb96-c178-4a47-8b39-e64b7ca11fb5)
+
+### TLB
+![image](https://github.com/user-attachments/assets/63561ebf-9445-4fa5-81f6-851a3aa3f304)
+
+### TLB + Cache
+![image](https://github.com/user-attachments/assets/84ab12c2-1ef3-40ad-9f36-edd1ca2adbee)
+
+### TLB Design
+![image](https://github.com/user-attachments/assets/b127ef79-114b-4c53-b218-c6d5d85afc48)
+
+### TLB Organization
+![image](https://github.com/user-attachments/assets/17df1241-d7d5-4d96-a5af-2d9f59341468)
+
+### Design
+![image](https://github.com/user-attachments/assets/30d80e95-c296-477d-aa68-6dbbb4de51d7)
+
+## Module 8.6 Multilevel Page Tables, Inverted Page Tables, Synonyms, Virtually Indexed, Physically Tagged Caches, Page Coloring
+
+### TLB Performance
+![image](https://github.com/user-attachments/assets/65837137-f246-4087-8ca2-0883a03ab613)
+
+### TLB Misses and Miss Handling
+![image](https://github.com/user-attachments/assets/0ddc58c5-4563-4255-a6ce-5ae5602318cf)
+
