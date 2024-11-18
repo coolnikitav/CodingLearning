@@ -161,3 +161,17 @@ Note: BLSA = bit level sense amplifiers
 ### TLB Misses and Miss Handling
 ![image](https://github.com/user-attachments/assets/0ddc58c5-4563-4255-a6ce-5ae5602318cf)
 
+### Page Faults
+![image](https://github.com/user-attachments/assets/ff21485f-44ad-463e-8540-b17f9e62a4c8)
+
+### Page Table Size
+![image](https://github.com/user-attachments/assets/0c7baa66-a31a-4679-b3ef-7719487e86e4)
+
+### Multi-Level Page Table
+![image](https://github.com/user-attachments/assets/1c639ab9-a67c-476d-8f52-15ef064abfee)
+
+### Multi-Level Page Table option 1: virtual
+![image](https://github.com/user-attachments/assets/5d7ea558-f13e-4bc0-8596-f2b2e125cfab)
+
+![image](https://github.com/user-attachments/assets/c5dea91d-af15-4d89-9268-b7b2b8ec6edf)
+
