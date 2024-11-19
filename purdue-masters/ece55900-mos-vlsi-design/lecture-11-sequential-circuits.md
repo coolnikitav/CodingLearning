@@ -44,4 +44,44 @@
 ![image](https://github.com/user-attachments/assets/0f3ed99e-20f1-4cbe-8eb3-178375d35af5)
 
 ## Tranmission Gate Based Positive Non-Inverting Latch
+![image](https://github.com/user-attachments/assets/95b50f09-020a-4f55-b21e-8df0f91ff5e1)
 
+## Tranmission Gate Based Negative Non-Inverting Latch
+![image](https://github.com/user-attachments/assets/89ddd81b-b376-4d8b-be85-5c9646caf989)
+
+## Transmission Gate Based Positive Inverting Latch
+![image](https://github.com/user-attachments/assets/07191bf1-9249-410c-8b9b-09e07f952a17)
+
+## Transmission Gate Based Negative Inverting Latch
+![image](https://github.com/user-attachments/assets/9ce186cb-de82-4b3b-abbf-9cc891dda578)
+
+## Transmission Gate Based Rising Edge Triggered Flip-Flop
+![image](https://github.com/user-attachments/assets/4715ab25-237e-49ac-941b-0f3637710f3b)
+
+## Transmission Gate Based Rising Edge Triggered Flip-Flop: Setup Time
+![image](https://github.com/user-attachments/assets/e4616efa-95c1-4230-a286-fc3dac4b1557)
+
+## Transmission Gate Based Rising Edge Triggered Flip-Flop: CLK-To-Q Delay
+![image](https://github.com/user-attachments/assets/3a0c553e-1f01-4f26-b762-9b9654f1bfdf)
+
+## Transmission Gate Based Rising Edge Triggered Flip-Flop: Hold Time
+![image](https://github.com/user-attachments/assets/2493af0d-d540-40e7-8c2d-bebcc40b48b8)
+
+![image](https://github.com/user-attachments/assets/3ef767d9-bdd5-4291-83b6-2f7aac9b06a1)
+
+## Transmission Gate Based Flip-Flop: Other Flavors
+![image](https://github.com/user-attachments/assets/d90c0091-3283-43bf-ab56-51221f8a2eab)
+
+## Transmission Gate/C^2MOS Structure
+![image](https://github.com/user-attachments/assets/69d26f36-3b20-4162-9bf2-85c3c561b1f7)
+
+## Transmission Gate/C^2MOS Based Flip-Flop
+![image](https://github.com/user-attachments/assets/335caa36-5497-4587-b7b8-eba287f65cb4)
+
+![image](https://github.com/user-attachments/assets/4f5bc1da-e1ce-4f4e-a803-22da53db9b04)
+
+## Transmission Gate/C^2MOS Based Flip-Flop With Async. Reset
+![image](https://github.com/user-attachments/assets/72d9173d-d6fa-4975-a42b-2c4c6ce1d455)
+
+## Embedding Logic In Transmission Gate Based Flip-Flop: Example NAND
+![image](https://github.com/user-attachments/assets/57f99fd9-89a3-4e5d-a5b6-a29559f8f580)
