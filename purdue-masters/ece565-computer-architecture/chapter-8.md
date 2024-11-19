@@ -175,3 +175,31 @@ Note: BLSA = bit level sense amplifiers
 
 ![image](https://github.com/user-attachments/assets/c5dea91d-af15-4d89-9268-b7b2b8ec6edf)
 
+![image](https://github.com/user-attachments/assets/e38e5265-647e-48c1-a9cf-83bb616ef059)
+
+### Multi-Level Page Table option 2: physical
+![image](https://github.com/user-attachments/assets/749136e0-48b1-4f7f-ad86-6712bf741569)
+
+### Physical Page Table
+![image](https://github.com/user-attachments/assets/54d9a83b-1e47-415d-9e5e-7e8633feb722)
+
+### Option 3: hashed
+![image](https://github.com/user-attachments/assets/832240bb-5d10-405b-90dd-2bd4144b1793)
+
+### Alternative: Invverted/Hashed Page Tables
+![image](https://github.com/user-attachments/assets/5167cff1-5162-4d1a-9643-17a2f2ae87b2)
+
+### Virtual vs Physical Page Table
+![image](https://github.com/user-attachments/assets/a5756589-844b-421e-a3ac-4bfc21ab0b60)
+
+### Multi-Level Page Table (PT)
+![image](https://github.com/user-attachments/assets/20926849-cbd1-4075-ab08-99cb89ec0d61)
+
+### Page table and TLB interaction
+![image](https://github.com/user-attachments/assets/11a00a2a-0e07-4241-8f8d-05fe4aa03f99)
+
+### Physical (Address) Caches
+![image](https://github.com/user-attachments/assets/b1bccb34-4c72-411e-86aa-aff3189554f9)
+
+### Virtual Address Caches (VI/VT)
+![image](https://github.com/user-attachments/assets/8e332bbb-d80d-47bf-9b6b-5c30296bd0a6)
