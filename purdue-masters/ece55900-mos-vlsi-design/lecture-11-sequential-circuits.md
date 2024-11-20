@@ -80,8 +80,28 @@
 
 ![image](https://github.com/user-attachments/assets/4f5bc1da-e1ce-4f4e-a803-22da53db9b04)
 
+## Embedding Logic In Transmission Gate Based Flip-Flop: Example NAND
+![image](https://github.com/user-attachments/assets/57f99fd9-89a3-4e5d-a5b6-a29559f8f580)
+
+## Transmission Gate Based Flip-Flop With Reduced CLK Load
+![image](https://github.com/user-attachments/assets/49a993ea-75a4-4170-a443-cc28e24c3799)
+
+## Transmission Gate Based Flip-Flop: CLK Overlap
+![image](https://github.com/user-attachments/assets/f9a54c04-fe98-4171-9d4f-4b7b109d92ad)
+
+## S-R Latches
+![image](https://github.com/user-attachments/assets/dbb53a70-1df2-47b7-87fb-f7c8be170dfc)
+
 ## Transmission Gate/C^2MOS Based Flip-Flop With Async. Reset
 ![image](https://github.com/user-attachments/assets/72d9173d-d6fa-4975-a42b-2c4c6ce1d455)
 
-## Embedding Logic In Transmission Gate Based Flip-Flop: Example NAND
-![image](https://github.com/user-attachments/assets/57f99fd9-89a3-4e5d-a5b6-a29559f8f580)
+## Dynamic Latches And Flip-Flops: TG-Based
+![image](https://github.com/user-attachments/assets/5d513778-039a-464e-a283-efa4c0325827)
+
+## Dynamic Latches And Flip-Flops: C^2MOS
+![image](https://github.com/user-attachments/assets/615242dc-65f3-48a4-9647-dea53bb17fb1)
+
+## C^2MOS Flip-Flop: Insensitivity To CLK Overlap
+![image](https://github.com/user-attachments/assets/680b0316-8434-4aa2-99c1-2b408a6eafcf)
+
+## True Single-Phase Clock (TSPC) Latches
