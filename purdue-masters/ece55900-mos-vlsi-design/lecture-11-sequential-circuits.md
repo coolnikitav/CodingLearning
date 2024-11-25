@@ -105,3 +105,31 @@
 ![image](https://github.com/user-attachments/assets/680b0316-8434-4aa2-99c1-2b408a6eafcf)
 
 ## True Single-Phase Clock (TSPC) Latches
+![image](https://github.com/user-attachments/assets/edaee38c-6672-45a0-b119-7ff876f8b454)
+
+## Including Logic in TSPC
+![image](https://github.com/user-attachments/assets/ef687fed-b62d-4021-8f2d-b791cafe4e27)
+
+## TSPC Dynamic Latches With Reduced CLK Load
+![image](https://github.com/user-attachments/assets/8e6a91f5-22bd-4ba0-b4e0-bc21e19b3e99)
+
+![image](https://github.com/user-attachments/assets/7d343d9b-bd93-4f87-a3a1-b08d1d31a7fa)
+
+## TSPC Flip-Flop
+![image](https://github.com/user-attachments/assets/d1b8f183-a123-4e59-8b54-00b5f17de6cb)
+
+Note: if X makes transition from 1 to 0 after the rising edge, then in purple ccase, Y would already be at 0 instead of 1.
+
+## Pulsed Latches: Motivation
+![image](https://github.com/user-attachments/assets/892fe910-55e9-4c38-84ca-0921c64ab33c)
+
+## Pulsed Latches
+![image](https://github.com/user-attachments/assets/5f65ba79-a39f-4690-9eed-f2409e3f84d3)
+
+## Other Circuits Using Feedback
+
+## Ring Oscillators
+![image](https://github.com/user-attachments/assets/56b445fa-80c8-44a9-bf10-0e9683415c69)
+
+![image](https://github.com/user-attachments/assets/342f7c4f-e38d-48cb-982c-4b76c956083e)
+
