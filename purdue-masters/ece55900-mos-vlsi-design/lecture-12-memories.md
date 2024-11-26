@@ -17,3 +17,5 @@
 ## Bit-Interleaved Architecture
 ![image](https://github.com/user-attachments/assets/a96892b6-c4a5-4604-9e49-c2e9ebfad75e)
 
+## Hierarchical Memory Architecture
+![image](https://github.com/user-attachments/assets/b0e39122-17ee-431c-aaf8-7cb8f22a9caf)
