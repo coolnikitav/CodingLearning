@@ -133,3 +133,14 @@ Note: if X makes transition from 1 to 0 after the rising edge, then in purple cc
 
 ![image](https://github.com/user-attachments/assets/342f7c4f-e38d-48cb-982c-4b76c956083e)
 
+## Schmitt Triggers
+![image](https://github.com/user-attachments/assets/f7403bae-e546-4b80-841b-893313c5241f)
+
+## Noise Suppression Using Schmitt Triggers
+![image](https://github.com/user-attachments/assets/180f0738-1b88-4455-aac6-9779cce1df67)
+
+## Non-inverting Schmitt Trigger
+![image](https://github.com/user-attachments/assets/f99b4fc0-d1cf-4572-bdbe-8a88d81cef0b)
+
+## Inverting Schmitt Trigger
+![image](https://github.com/user-attachments/assets/27250689-e48d-4afa-a5f6-1031bf2c10cc)
