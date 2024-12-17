@@ -54,3 +54,18 @@
 
 ## 6-Transistor SRAM: READ
 ![image](https://github.com/user-attachments/assets/7ab4f856-74b9-4719-ab4e-0e80fe8ab855)
+
+## 6-Transistor SRAM: Cell Ratio
+![image](https://github.com/user-attachments/assets/b4145146-c1ae-4310-b5cc-4d7c3a0396cc)
+
+## 6-Transistor SRAM: Write
+![image](https://github.com/user-attachments/assets/f1a2f0a2-a1b6-42a0-8ca1-1c6a4f1ffbbd)
+
+## 6-Transistor SRAM: Pull-Up Ratio
+![image](https://github.com/user-attachments/assets/fc64617b-e062-4497-8339-5257d9e71246)
+
+## Metrics
+![image](https://github.com/user-attachments/assets/45b76ab3-5a32-49f9-9081-ed9f248cb9a5)
+
+## FinFet-Based SRAMs
+![image](https://github.com/user-attachments/assets/ef909a72-4290-4991-9222-315ac946b91a)
