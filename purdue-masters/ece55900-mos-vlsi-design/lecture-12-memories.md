@@ -69,3 +69,27 @@
 
 ## FinFet-Based SRAMs
 ![image](https://github.com/user-attachments/assets/ef909a72-4290-4991-9222-315ac946b91a)
+
+![image](https://github.com/user-attachments/assets/cbdee287-2af7-4c3c-bf1c-0fd2a6115d33)
+
+![image](https://github.com/user-attachments/assets/6244c015-24da-4c73-b51b-d8525b7badc5)
+
+![image](https://github.com/user-attachments/assets/d31fcd3e-2533-4b9e-bdb5-e99cccd10c4f)
+
+# Peripheral Circuits
+
+![image](https://github.com/user-attachments/assets/b84db382-97b5-4a64-990a-b929f619a2ed)
+
+![image](https://github.com/user-attachments/assets/23ab87e3-11bb-44b8-96d7-c5f7044cfb5c)
+
+![image](https://github.com/user-attachments/assets/a4109889-6b4d-478f-a64d-9b91eb435729)
+
+![image](https://github.com/user-attachments/assets/11529960-cc99-4674-958b-9f6c0472ea40)
+
+![image](https://github.com/user-attachments/assets/a1a69f39-adf0-4248-93ea-8c1945a42fef)
+
+![image](https://github.com/user-attachments/assets/30355655-6da4-4544-af0e-5537d41bf5b3)
+
+![image](https://github.com/user-attachments/assets/35a6b374-0314-4cbc-9d3a-d175a3f989f6)
+
+![image](https://github.com/user-attachments/assets/5bea478a-5208-4a68-b534-e02df9711e4b)
