@@ -1,27 +1,21 @@
-# Function to load or create a new config.json
-function Load-Config($computer) {
-    $configFolderPath = "\\$computer\C$\path\to\config"  # Set the path to where config.json should be
-    $configPath = "$configFolderPath\config.json"
-    
-    # Check if the directory exists, if not create it
-    if (-not (Test-Path $configFolderPath)) {
-        Write-Host "Config folder not found on $computer. Creating folder." -ForegroundColor Yellow
-        New-Item -ItemType Directory -Path $configFolderPath | Out-Null
-    }
-    
-    if (Test-Path $configPath) {
-        return Get-Content -Path $configPath | ConvertFrom-Json
-    } else {
-        Write-Host "config.json not found on $computer. Creating a new one." -ForegroundColor Yellow
-        # Prompt the user to fill in all the fields for a new config file
-        $configTemplate = @{}
-        $fields = @("Field1", "Field2", "Field3")  # Customize fields as needed
-        foreach ($field in $fields) {
-            $value = Read-Host "Enter value for $field"
-            $configTemplate[$field] = $value
-        }
-        $configTemplate | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath
-        Write-Host "Created new config.json on $computer" -ForegroundColor Green
-        return $configTemplate
-    }
-}
+def create_sim_client_service(hostname):
+    cmd = [
+        "sc",
+        f"\\{hostname}",
+        "create",
+        "sim_client_service",
+        'binPath= "C:\eng_apps\sim_client\shawl.exe" run --name sim_client_service -- "C:\eng_apps\sim_client\sim_client.exe" start USCEDMXL4082BRL 443 "C:\eng_apps\sim_client\config.json" C:\ProgramData\ETAS\Experiment Environment\3.7\SimTCMConfiguration.txt"',
+        "start= auto"
+    ]
+
+    print(cmd)
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.returncode == 0:
+        print(f"Service sim_client_service created successfully on {hostname}.")
+    else:
+        print(f"Failed to create service sim_client_service on {hostname}. Error:\n{result.stderr}")
+
+PS C:\eng_apps\elrond> & C:/Users/uzvlyo/AppData/Local/Programs/Python/Python311/python.exe c:/eng_apps/elrond/ci_scripts/sim_client_installer.py
+['sc', '\\USCED2UA81121L8', 'create', 'sim_client_service', 'binPath= "C:\\eng_apps\\sim_client\\shawl.exe" run --name sim_client_service -- "C:\\eng_apps\\sim_client\\sim_client.exe" start USCEDMXL4082BRL 443 "C:\\eng_apps\\sim_client\\config.json" C:\\ProgramData\\ETAS\\Experiment Environment\x03.7\\SimTCMConfiguration.txt"', 'start= auto']
+Failed to create service sim_client_service on USCED2UA81121L8. Error:
